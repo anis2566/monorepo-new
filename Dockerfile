@@ -12,21 +12,24 @@ RUN pnpm run build --filter=web
 FROM base AS runner
 WORKDIR /app
 
-# Don't run production as root
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Copy package files
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
-# Copy the entire Next.js build output
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+# Copy the web app
+COPY --from=builder /app/apps/web ./apps/web
 
-# Only copy public folder if it exists
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public 2>/dev/null || true
+# Copy packages (shared dependencies)
+COPY --from=builder /app/packages ./packages
 
-USER nextjs
+# Install production dependencies only
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+
+WORKDIR /app/apps/web
 
 EXPOSE 3000
 ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+ENV NODE_ENV=production
 
-CMD ["node", "apps/web/server.js"]
+CMD ["pnpm", "start"]
