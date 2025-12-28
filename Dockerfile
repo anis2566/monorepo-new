@@ -5,8 +5,26 @@ RUN corepack enable
 
 FROM base AS builder
 WORKDIR /app
-COPY . .
+
+# Copy package files first for better caching
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/database/package.json ./packages/database/
+COPY apps/web/package.json ./apps/web/
+
+# Install dependencies
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Build argument for DATABASE_URL (required for Prisma generation)
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+
+# Generate Prisma Client
+RUN pnpm --filter=@workspace/db run db:generate
+
+# Build the web app (this will use the generated Prisma client)
 RUN pnpm run build --filter=web
 
 FROM base AS runner

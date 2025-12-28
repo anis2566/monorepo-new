@@ -1,12 +1,36 @@
-import { Button } from "@workspace/ui/components/button"
+import { Button } from "@workspace/ui/components/button";
+import { prisma } from "@workspace/db";
 
-export default function Page() {
+export default async function Page() {
+  const users = await prisma.user.findMany();
+  console.log(users);
   return (
-    <div className="flex items-center justify-center min-h-svh">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-2xl font-bold">Hello World</h1>
-        <Button size="sm">Button</Button>
+    <div className="flex items-center justify-center min-h-svh p-8">
+      <div className="flex flex-col items-center justify-center gap-6 max-w-md w-full">
+        <h1 className="text-3xl font-bold tracking-tight">Database Users</h1>
+
+        <div className="w-full space-y-2">
+          {users.length === 0 ? (
+            <p className="text-muted-foreground text-center">
+              No users found in database.
+            </p>
+          ) : (
+            users.map((user) => (
+              <div
+                key={user.id}
+                className="p-4 border rounded-lg bg-card text-card-foreground shadow-sm"
+              >
+                <p className="font-medium">{user.name || "Anonymous"}</p>
+                <p className="text-sm text-muted-foreground">{user.email}</p>
+              </div>
+            ))
+          )}
+        </div>
+
+        <Button size="lg" className="w-full">
+          Refresh View
+        </Button>
       </div>
     </div>
-  )
+  );
 }
