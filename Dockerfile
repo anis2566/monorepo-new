@@ -8,10 +8,17 @@ WORKDIR /app
 
 # Copy package files first for better caching
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Copy all package.json files from packages
 COPY packages/database/package.json ./packages/database/
+COPY packages/ui/package.json ./packages/ui/
+COPY packages/eslint-config/package.json ./packages/eslint-config/
+COPY packages/typescript-config/package.json ./packages/typescript-config/
+
+# Copy app package.json
 COPY apps/web/package.json ./apps/web/
 
-# Install dependencies
+# Install all dependencies (including devDependencies needed for build)
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Copy source code
@@ -30,24 +37,24 @@ RUN pnpm run build --filter=web
 FROM base AS runner
 WORKDIR /app
 
-# Copy package files
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
+# Don't run production as root
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Copy the web app 
-COPY --from=builder /app/apps/web ./apps/web
+# Copy standalone output from builder
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 
-# Copy packages (shared dependencies)
-COPY --from=builder /app/packages ./packages
+# Copy Prisma generated client (needed at runtime)
+COPY --from=builder --chown=nextjs:nodejs /app/packages/database/generated ./packages/database/generated
 
-# Install production dependencies only
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
-
-WORKDIR /app/apps/web
+USER nextjs
 
 EXPOSE 3000
 ENV PORT=3000
 ENV NODE_ENV=production
+ENV HOSTNAME="0.0.0.0"
 
-CMD ["pnpm", "start"]
+# Server.js is created by next build from the standalone output
+CMD ["node", "apps/web/server.js"]

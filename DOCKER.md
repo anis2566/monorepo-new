@@ -57,14 +57,49 @@ The `DATABASE_URL` is required in **two places**:
 
 ### Running Migrations
 
-Before running the application for the first time, you need to run database migrations:
+Before running the application for the first time, you need to run database migrations.
+
+**IMPORTANT**: Migrations should be run **before** starting the application containers.
+
+#### Option 1: Run migrations locally before deployment
 
 ```bash
-# If using docker-compose
-docker-compose exec web pnpm --filter=@workspace/db run db:deploy
+# Set your DATABASE_URL
+export DATABASE_URL="your_production_database_url"
 
-# If using docker run
-docker exec monorepo-web pnpm --filter=@workspace/db run db:deploy
+# Run migrations
+cd packages/database
+pnpm run db:deploy
+```
+
+#### Option 2: Run migrations in a temporary container
+
+```bash
+# Build a temporary image for migrations
+docker build \
+  --build-arg DATABASE_URL="your_database_url" \
+  --target builder \
+  -t monorepo-migrations \
+  .
+
+# Run migrations
+docker run --rm \
+  -e DATABASE_URL="your_database_url" \
+  monorepo-migrations \
+  pnpm --filter=@workspace/db run db:deploy
+```
+
+#### Option 3: Using docker-compose
+
+```bash
+# Start only the database
+docker-compose up -d postgres
+
+# Wait for database to be ready, then run migrations
+docker-compose run --rm web pnpm --filter=@workspace/db run db:deploy
+
+# Start all services
+docker-compose up -d
 ```
 
 ### Environment Variables
