@@ -17,7 +17,7 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
-# Copy the web app
+# Copy the web app 
 COPY --from=builder /app/apps/web ./apps/web
 
 # Copy packages (shared dependencies)
