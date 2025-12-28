@@ -34,6 +34,9 @@ RUN pnpm --filter=@workspace/db run db:generate
 # Build the web app (this will use the generated Prisma client)
 RUN pnpm run build --filter=web
 
+# Ensure public directory exists (create if missing)
+RUN mkdir -p /app/apps/web/public
+
 FROM base AS runner
 WORKDIR /app
 

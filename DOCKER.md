@@ -158,9 +158,33 @@ For production deployments, consider:
 
 ## Multi-stage Build Benefits
 
-The Dockerfile uses a multi-stage build which:
+The Dockerfile uses a multi-stage build with Next.js standalone output which:
 
-- Reduces final image size by excluding build dependencies
-- Separates build and runtime environments
-- Improves security by minimizing attack surface
-- Optimizes layer caching for faster rebuilds
+- **Minimal Image Size**: Uses Next.js standalone output which includes only necessary files
+- **No Node Modules**: The standalone build bundles dependencies, eliminating the need for `node_modules` in production
+- **Fast Startup**: Reduced image size means faster container startup times
+- **Security**: Runs as non-root user (`nextjs`) for improved security
+- **Optimized Caching**: Layer caching ensures faster rebuilds when only code changes
+- **Monorepo Support**: Properly handles workspace dependencies including `@workspace/ui` and `@workspace/db`
+
+## Architecture
+
+### Builder Stage
+
+1. Copies all `package.json` files for optimal caching
+2. Installs all dependencies (including devDependencies needed for build)
+3. Generates Prisma Client
+4. Builds Next.js app with standalone output
+
+### Runner Stage
+
+1. Creates non-root user for security
+2. Copies only the standalone output (minimal footprint)
+3. Copies static assets and public files
+4. Copies Prisma generated client
+5. Runs the application as non-root user
+
+### Image Size Comparison
+
+- **Without standalone**: ~800MB - 1.2GB (includes all node_modules)
+- **With standalone**: ~150MB - 250MB (only necessary files)
