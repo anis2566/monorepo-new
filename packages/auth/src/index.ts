@@ -10,10 +10,7 @@ export function initAuth(options: {
   productionUrl: string;
   secret: string | undefined;
 }) {
-  const baseURL =
-    process.env.NODE_ENV === "production"
-      ? options.productionUrl
-      : options.baseUrl;
+  const baseURL = process.env.NEXT_PUBLIC_APP_URL!;
 
   return betterAuth({
     database: prismaAdapter(prisma, {
