@@ -10,7 +10,17 @@ export function initAuth(options: {
   productionUrl: string;
   secret: string | undefined;
 }) {
-  const baseURL = process.env.NEXT_PUBLIC_APP_URL!;
+  const baseURL = options.baseUrl;
+
+  if (
+    !baseURL ||
+    (!baseURL.startsWith("http://") && !baseURL.startsWith("https://"))
+  ) {
+    console.warn(
+      "Better Auth: [baseURL] is missing or invalid. It must be an absolute URL (e.g., http://localhost:3000). Current value:",
+      baseURL
+    );
+  }
 
   return betterAuth({
     database: prismaAdapter(prisma, {
