@@ -5,6 +5,8 @@ const nextConfig = {
     "@workspace/db",
     "@workspace/api",
     "@workspace/auth",
+    "@workspace/schema",
+    "@workspace/utils",
   ],
   serverExternalPackages: [],
   output: "standalone",

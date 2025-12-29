@@ -3,6 +3,7 @@ import { cache, Suspense } from "react";
 import { headers } from "next/headers";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
+import { ErrorBoundary } from "react-error-boundary";
 
 import type { AppRouter } from "@workspace/api";
 import { appRouter, createTRPCContext } from "@workspace/api";
@@ -36,7 +37,9 @@ export function HydrateClient(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense>{props.children}</Suspense>
+      <ErrorBoundary fallback={<div>Something went wrong</div>}>
+        <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
+      </ErrorBoundary>
     </HydrationBoundary>
   );
 }

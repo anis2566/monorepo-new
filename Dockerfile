@@ -14,6 +14,8 @@ COPY packages/database/package.json ./packages/database/
 COPY packages/ui/package.json ./packages/ui/
 COPY packages/api/package.json ./packages/api/
 COPY packages/auth/package.json ./packages/auth/
+COPY packages/utils/package.json ./packages/utils/
+COPY packages/schema/package.json ./packages/schema/
 COPY packages/eslint-config/package.json ./packages/eslint-config/
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 
@@ -53,6 +55,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 
 # Copy Prisma generated client (needed at runtime)
 COPY --from=builder --chown=nextjs:nodejs /app/packages/database/generated ./packages/database/generated
+
+# Copy utils and schema packages (if they contain runtime code)
+COPY --from=builder --chown=nextjs:nodejs /app/packages/utils ./packages/utils
+COPY --from=builder --chown=nextjs:nodejs /app/packages/schema ./packages/schema
 
 USER nextjs
 

@@ -1,0 +1,19 @@
+{
+  "name": "@workspace/schema",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "devDependencies": {
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "eslint": "^9.39.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

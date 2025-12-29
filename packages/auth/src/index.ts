@@ -29,20 +29,18 @@ export function initAuth(options: {
         maxAge: 30 * 60,
       },
     },
-    user: {
-      additionalFields: {
-        role: {
-          type: "string",
-          required: true,
-        },
-      },
-    },
     emailAndPassword: {
       enabled: true,
       minPasswordLength: 6,
       maxPasswordLength: 128,
       autoSignIn: true,
       requireEmailVerification: false,
+    },
+    socialProviders: {
+      google: {
+        clientId: process.env.GOOGLE_CLIENT_ID!,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      },
     },
     plugins: [nextCookies()],
   });
