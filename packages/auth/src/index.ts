@@ -10,7 +10,11 @@ export function initAuth(options: {
   productionUrl: string;
   secret: string | undefined;
 }) {
-  const baseURL = options.baseUrl;
+  const baseURL =
+    options.baseUrl ||
+    process.env.BETTER_AUTH_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    "";
 
   if (
     !baseURL ||
