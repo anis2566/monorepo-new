@@ -7,4 +7,4 @@ export const ClassNameSchema = z.object({
   description: z.string().optional(),
 });
 
-export type ClassNameSchemaType = z.infer<typeof classNameSchema>;
+export type ClassNameSchemaType = z.infer<typeof ClassNameSchema>;
