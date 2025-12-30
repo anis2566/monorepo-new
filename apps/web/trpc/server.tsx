@@ -8,7 +8,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import type { AppRouter } from "@workspace/api";
 import { appRouter, createTRPCContext } from "@workspace/api";
 
-import { auth } from "@/auth/server";
+import { auth } from "@workspace/auth";
 import { createQueryClient } from "./query-client";
 
 /**
