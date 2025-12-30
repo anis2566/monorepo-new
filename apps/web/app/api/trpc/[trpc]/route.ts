@@ -3,7 +3,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 import { appRouter, createTRPCContext } from "@workspace/api";
 
-import { auth } from "@/auth/server";
+import { auth } from "@workspace/auth";
 
 /**
  * Configure basic CORS headers
