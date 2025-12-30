@@ -8,6 +8,7 @@ import { useGetInstitutes } from "../../filters/use-get-institutes";
 import { ListCardWrapper } from "@workspace/ui/shared/list-card-wrapper";
 import { ListPagination } from "@workspace/ui/shared/list-pagination";
 import { InstituteList } from "../components/institute-list";
+import { Filter } from "../components/filter";
 
 export const InstitutesView = () => {
   const { onOpen } = useCreateInstitute();
@@ -34,6 +35,7 @@ export const InstitutesView = () => {
       />
 
       <ListCardWrapper title="Manage Institute" value={totalCount}>
+        <Filter />
         <InstituteList institutes={institutes} />
         <ListPagination
           totalCount={totalCount}

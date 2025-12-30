@@ -6,6 +6,7 @@ import { useGetStudents } from "../../filters/use-get-students";
 import { ListCardWrapper } from "@workspace/ui/shared/list-card-wrapper";
 import { ListPagination } from "@workspace/ui/shared/list-pagination";
 import { StudentList } from "../components/student-list";
+import { Filter } from "../components/filter";
 
 export const StudentsView = () => {
   const trpc = useTRPC();
@@ -23,6 +24,7 @@ export const StudentsView = () => {
 
   return (
     <ListCardWrapper title="Manage Student" value={totalCount}>
+      <Filter />
       <StudentList students={students} />
       <ListPagination
         totalCount={totalCount}

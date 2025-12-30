@@ -4,6 +4,13 @@ import { DeleteClassModal } from "@/modules/class/ui/modal/delete-class-modal";
 import { CreateInstituteModal } from "@/modules/institute/ui/modal/create-institute-modal";
 import { EditInstituteModal } from "@/modules/institute/ui/modal/edit-institute-modal";
 import { DeleteInstituteModal } from "@/modules/institute/ui/modal/delete-institute-modal";
+import { CreateSubjectModal } from "@/modules/subject/ui/modal/create-subject-modal";
+import { EditSubjectModal } from "@/modules/subject/ui/modal/edit-subject-modal";
+import { DeleteSubjectModal } from "@/modules/subject/ui/modal/delete-subject-modal";
+import { CreateChapterModal } from "@/modules/chapter/ui/modal/create-chapter-modal";
+import { EditChapterModal } from "@/modules/chapter/ui/modal/edit-chapter-modal";
+import { DeleteChapterModal } from "@/modules/chapter/ui/modal/delete-chapter-modal";
+import { DeleteStudentModal } from "@/modules/student/ui/modal/delete-student-modal";
 
 export const ModalProvider = () => {
   return (
@@ -14,6 +21,13 @@ export const ModalProvider = () => {
       <CreateInstituteModal />
       <EditInstituteModal />
       <DeleteInstituteModal />
+      <CreateSubjectModal />
+      <EditSubjectModal />
+      <DeleteSubjectModal />
+      <CreateChapterModal />
+      <EditChapterModal />
+      <DeleteChapterModal />
+      <DeleteStudentModal />
     </>
   );
 };

@@ -74,3 +74,18 @@ export type Institute = Prisma.InstituteModel
  * 
  */
 export type Student = Prisma.StudentModel
+/**
+ * Model Subject
+ * 
+ */
+export type Subject = Prisma.SubjectModel
+/**
+ * Model Chapter
+ * 
+ */
+export type Chapter = Prisma.ChapterModel
+/**
+ * Model Mcq
+ * 
+ */
+export type Mcq = Prisma.McqModel

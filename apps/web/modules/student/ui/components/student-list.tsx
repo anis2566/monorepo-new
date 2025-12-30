@@ -19,10 +19,11 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@workspace/ui/components/avatar";
-import { ListActionLink } from "@workspace/ui/shared/list-action-link";
+import { ListActionLink } from "@/components/list-action-link";
 import { Badge } from "@workspace/ui/components/badge";
 
 import { Student } from "@workspace/db";
+import { useDeleteStudent } from "@/hooks/use-student";
 
 interface StudentWithRelation extends Student {
   className: {
@@ -38,6 +39,7 @@ interface StudentListProps {
 }
 
 export const StudentList = ({ students }: StudentListProps) => {
+  const { onOpen: onDeleteOpen } = useDeleteStudent();
   const router = useRouter();
 
   const handleView = (id: string) => router.push(`/student/${id}`);
@@ -116,7 +118,7 @@ export const StudentList = ({ students }: StudentListProps) => {
                   isDanger
                   title="Delete"
                   icon={Trash2}
-                  onClick={() => {}}
+                  onClick={() => onDeleteOpen(student.id)}
                 />
               </ListActions>
             </TableCell>

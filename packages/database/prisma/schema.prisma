@@ -160,3 +160,72 @@ model Student {
   @@index([name])
   @@index([roll])
 }
+
+model Subject {
+  id    String @id @default(uuid())
+  name  String
+  group String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chapters Chapter[]
+  mcqs     Mcq[]
+
+  @@index([name])
+  @@index([group])
+}
+
+model Chapter {
+  id       String @id @default(uuid())
+  name     String
+  position Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  mcqs Mcq[]
+
+  @@index([subjectId])
+  @@index([name])
+  @@index([subjectId, name])
+}
+
+model Mcq {
+  id          String   @id @default(uuid())
+  question    String
+  options     String[]
+  statements  String[] @default([])
+  answer      String
+  type        String
+  reference   String[] @default([])
+  explanation String?
+  isMath      Boolean  @default(false)
+  session     Int
+  source      String?
+  questionUrl String?
+  context     String?
+  contextUrl  String?
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([subjectId])
+  @@index([chapterId])
+  @@index([type])
+  @@index([session])
+  @@index([isMath])
+  @@index([subjectId, chapterId])
+  @@index([subjectId, type])
+  @@index([chapterId, type])
+  @@index([type, session])
+}

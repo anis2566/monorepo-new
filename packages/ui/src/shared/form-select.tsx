@@ -64,6 +64,7 @@ export function FormSelect<T extends FieldValues>({
               }}
               value={field.value?.toString() || ""}
               disabled={disabled}
+              defaultValue={field.value?.toString() || ""}
             >
               <FormControl>
                 <SelectTrigger

@@ -12,10 +12,34 @@ export const DEFAULT_SORT_OPTIONS = [
     value: "asc",
   },
 ];
+export const EXTENDED_SORT_OPTIONS = [
+  {
+    label: "ID (Ascending)",
+    value: "id_asc",
+  },
+  {
+    label: "ID (Descending)",
+    value: "id_desc",
+  },
+  {
+    label: "Newest",
+    value: "desc",
+  },
+  {
+    label: "Oldest",
+    value: "asc",
+  },
+];
 
 export const natiionality = ["Bangladeshi", "Other"];
 export const religions = ["Islam", "Hindu", "Buddhist", "Christian", "Other"];
 export const genders = ["Male", "Female", "Other"];
+export const groups = [
+  "Common",
+  "Science",
+  "Business Studies",
+  "Humanities"
+];
 
 export const MONTHS = [
   "January",
@@ -31,3 +55,9 @@ export const MONTHS = [
   "November",
   "December",
 ];
+
+export enum MCQ_TYPE {
+  Single = "Single",
+  Multiple = "Multiple",
+  Contextual = "Contextual",
+}

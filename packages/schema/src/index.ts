@@ -47,3 +47,34 @@ export const StudentSchema = z.object({
 });
 
 export type StudentSchemaType = z.infer<typeof StudentSchema>;
+
+export const SubjectSchema = z.object({
+  name: requiredString,
+  group: requiredString,
+});
+
+export type SubjectSchemaType = z.infer<typeof SubjectSchema>;
+
+export const ChapterSchema = z.object({
+  name: requiredString,
+  position: requiredString,
+  subjectId: requiredString,
+});
+
+export type ChapterSchemaType = z.infer<typeof ChapterSchema>;
+
+const McqSchema = z.object({
+  question: requiredString,
+  answer: requiredString,
+  chapterId: requiredString,
+  subjectId: requiredString,
+  options: z.array(z.string()).min(1, { message: "required" }),
+  type: requiredString,
+  isMath: z.boolean({ message: "required" }),
+  reference: z.array(z.string()).optional(),
+  explanation: z.string().optional(),
+  context: z.string().optional(),
+  statements: z.array(z.string()).optional(),
+});
+
+export const McqsSchema = z.array(McqSchema);

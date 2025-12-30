@@ -57,7 +57,10 @@ export const ModelName = {
   Verification: 'Verification',
   ClassName: 'ClassName',
   Institute: 'Institute',
-  Student: 'Student'
+  Student: 'Student',
+  Subject: 'Subject',
+  Chapter: 'Chapter',
+  Mcq: 'Mcq'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -193,6 +196,53 @@ export const StudentScalarFieldEnum = {
 } as const
 
 export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
+
+
+export const SubjectScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  group: 'group',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
+
+
+export const ChapterScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  subjectId: 'subjectId'
+} as const
+
+export type ChapterScalarFieldEnum = (typeof ChapterScalarFieldEnum)[keyof typeof ChapterScalarFieldEnum]
+
+
+export const McqScalarFieldEnum = {
+  id: 'id',
+  question: 'question',
+  options: 'options',
+  statements: 'statements',
+  answer: 'answer',
+  type: 'type',
+  reference: 'reference',
+  explanation: 'explanation',
+  isMath: 'isMath',
+  session: 'session',
+  source: 'source',
+  questionUrl: 'questionUrl',
+  context: 'context',
+  contextUrl: 'contextUrl',
+  subjectId: 'subjectId',
+  chapterId: 'chapterId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type McqScalarFieldEnum = (typeof McqScalarFieldEnum)[keyof typeof McqScalarFieldEnum]
 
 
 export const SortOrder = {

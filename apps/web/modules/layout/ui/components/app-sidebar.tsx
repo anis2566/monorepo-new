@@ -18,6 +18,7 @@ import {
   Trophy,
   UsersRound,
   Shapes,
+  Layers3,
 } from "lucide-react";
 
 import {
@@ -92,6 +93,18 @@ const navData: NavSection[] = [
         label: "Institute",
         url: "/institute",
         icon: School,
+        subItems: [],
+      },
+      {
+        label: "Subject",
+        url: "/subject",
+        icon: BookOpen,
+        subItems: [],
+      },
+      {
+        label: "Chapter",
+        url: "/chapter",
+        icon: Layers3,
         subItems: [],
       },
       {
@@ -226,7 +239,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             <SidebarMenuButton
                               tooltip={menuItem.label}
                               className="tracking-wider"
-                              // isActive={hasActive}
+                            // isActive={hasActive}
                             >
                               {menuItem.icon && <menuItem.icon />}
                               <span>{menuItem.label}</span>
