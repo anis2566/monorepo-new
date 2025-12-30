@@ -55,7 +55,9 @@ export const ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
-  ClassName: 'ClassName'
+  ClassName: 'ClassName',
+  Institute: 'Institute',
+  Student: 'Student'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -144,6 +146,53 @@ export const ClassNameScalarFieldEnum = {
 } as const
 
 export type ClassNameScalarFieldEnum = (typeof ClassNameScalarFieldEnum)[keyof typeof ClassNameScalarFieldEnum]
+
+
+export const InstituteScalarFieldEnum = {
+  id: 'id',
+  session: 'session',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InstituteScalarFieldEnum = (typeof InstituteScalarFieldEnum)[keyof typeof InstituteScalarFieldEnum]
+
+
+export const StudentScalarFieldEnum = {
+  id: 'id',
+  session: 'session',
+  studentId: 'studentId',
+  name: 'name',
+  nameBangla: 'nameBangla',
+  fName: 'fName',
+  mName: 'mName',
+  gender: 'gender',
+  dob: 'dob',
+  nationality: 'nationality',
+  religion: 'religion',
+  imageUrl: 'imageUrl',
+  section: 'section',
+  shift: 'shift',
+  group: 'group',
+  roll: 'roll',
+  fPhone: 'fPhone',
+  mPhone: 'mPhone',
+  presentHouseNo: 'presentHouseNo',
+  presentMoholla: 'presentMoholla',
+  presentPost: 'presentPost',
+  presentThana: 'presentThana',
+  permanentVillage: 'permanentVillage',
+  permanentPost: 'permanentPost',
+  permanentThana: 'permanentThana',
+  permanentDistrict: 'permanentDistrict',
+  instituteId: 'instituteId',
+  classNameId: 'classNameId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
 
 
 export const SortOrder = {

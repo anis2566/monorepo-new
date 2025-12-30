@@ -64,3 +64,13 @@ export type Verification = Prisma.VerificationModel
  * 
  */
 export type ClassName = Prisma.ClassNameModel
+/**
+ * Model Institute
+ * 
+ */
+export type Institute = Prisma.InstituteModel
+/**
+ * Model Student
+ * 
+ */
+export type Student = Prisma.StudentModel

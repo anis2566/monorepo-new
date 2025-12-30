@@ -12,3 +12,22 @@ export const DEFAULT_SORT_OPTIONS = [
     value: "asc",
   },
 ];
+
+export const natiionality = ["Bangladeshi", "Other"];
+export const religions = ["Islam", "Hindu", "Buddhist", "Christian", "Other"];
+export const genders = ["Male", "Female", "Other"];
+
+export const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];

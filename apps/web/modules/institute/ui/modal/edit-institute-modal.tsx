@@ -1,58 +1,72 @@
 "use client";
 
+import { useEffect } from "react";
+import { useTRPC } from "@/trpc/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Send } from "lucide-react";
 
-import { ClassNameSchema, ClassNameSchemaType } from "@workspace/schema";
-import { useCreateClass } from "@/hooks/use-class";
-import { useTRPC } from "@/trpc/react";
-
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@workspace/ui/components/dialog";
 import { Form, useForm, zodResolver } from "@workspace/ui/components/form";
 import { FormInput } from "@workspace/ui/shared/form-input";
 import { FormTextArea } from "@workspace/ui/shared/form-text-area";
+
+import { useEditInstitute } from "@/hooks/use-institute";
+import { InstituteSchema, InstituteSchemaType } from "@workspace/schema";
 import { Button } from "@workspace/ui/components/button";
+import { FormSelect } from "@workspace/ui/shared/form-select";
 
-const DEFAULT_VALUES: ClassNameSchemaType = {
-  name: "",
-  description: "",
-};
+import { sessions } from "@workspace/utils";
 
-export const CreateClassModal = () => {
-  const { isOpen, onClose } = useCreateClass();
+const SESSION_OPTIONS = sessions.map((session) => ({
+  label: session,
+  value: session,
+}));
+
+export const EditInstituteModal = () => {
+  const { isOpen, onClose, instituteId, session, name } = useEditInstitute();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  const form = useForm<ClassNameSchemaType>({
-    resolver: zodResolver(ClassNameSchema),
-    defaultValues: DEFAULT_VALUES,
+  const form = useForm<InstituteSchemaType>({
+    resolver: zodResolver(InstituteSchema),
+    defaultValues: {
+      name: "",
+      session: "",
+    },
   });
 
-  const { mutate: createClass, isPending } = useMutation(
-    trpc.admin.class.createOne.mutationOptions({
+  useEffect(() => {
+    if (isOpen) {
+      form.reset({
+        name,
+        session,
+      });
+    }
+  }, [isOpen, name, session, form]);
+
+  const { mutate: updateInstitute, isPending } = useMutation(
+    trpc.admin.institute.updateOne.mutationOptions({
       onError: (err) => {
-        console.log(err.message);
         toast.error(err.message);
+        console.log(err);
       },
       onSuccess: async (data) => {
         if (!data.success) {
           toast.error(data.message);
           return;
         }
-
         toast.success(data.message);
 
         await queryClient.invalidateQueries({
-          queryKey: trpc.admin.class.getMany.queryKey(),
+          queryKey: trpc.admin.institute.getMany.queryKey(),
         });
-        form.reset(DEFAULT_VALUES);
 
         setTimeout(() => {
           onClose();
@@ -61,8 +75,11 @@ export const CreateClassModal = () => {
     })
   );
 
-  const handleSubmit = (data: ClassNameSchemaType) => {
-    createClass(data);
+  const handleSubmit = (data: InstituteSchemaType) => {
+    updateInstitute({
+      ...data,
+      instituteId,
+    });
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -75,9 +92,10 @@ export const CreateClassModal = () => {
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Set up your class</DialogTitle>
+          <DialogTitle>Edit Institute</DialogTitle>
           <DialogDescription>
-            This information will be used to create your class.
+            Make changes to your institute details. Click save when you are
+            done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -86,6 +104,14 @@ export const CreateClassModal = () => {
             className="space-y-4"
           >
             <FormInput name="name" label="Name" type="text" />
+
+            <FormSelect
+              name="session"
+              label="Session"
+              placeholder="Select session"
+              options={SESSION_OPTIONS}
+            />
+
             <FormTextArea name="description" label="Description" />
 
             <Button
@@ -97,7 +123,7 @@ export const CreateClassModal = () => {
                 <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
               ) : (
                 <span className="flex items-center gap-2">
-                  Create class
+                  Update institute
                   <Send className="h-4 w-4" />
                 </span>
               )}

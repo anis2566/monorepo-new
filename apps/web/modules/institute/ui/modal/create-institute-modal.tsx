@@ -4,8 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Send } from "lucide-react";
 
-import { ClassNameSchema, ClassNameSchemaType } from "@workspace/schema";
-import { useCreateClass } from "@/hooks/use-class";
+import { InstituteSchema, InstituteSchemaType } from "@workspace/schema";
 import { useTRPC } from "@/trpc/react";
 
 import {
@@ -17,28 +16,35 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Form, useForm, zodResolver } from "@workspace/ui/components/form";
 import { FormInput } from "@workspace/ui/shared/form-input";
-import { FormTextArea } from "@workspace/ui/shared/form-text-area";
 import { Button } from "@workspace/ui/components/button";
+import { FormSelect } from "@workspace/ui/shared/form-select";
 
-const DEFAULT_VALUES: ClassNameSchemaType = {
+import { useCreateInstitute } from "@/hooks/use-institute";
+import { sessions } from "@workspace/utils";
+
+const DEFAULT_VALUES: InstituteSchemaType = {
   name: "",
-  description: "",
+  session: "",
 };
 
-export const CreateClassModal = () => {
-  const { isOpen, onClose } = useCreateClass();
+const SESSION_OPTIONS = sessions.map((session) => ({
+  label: session,
+  value: session,
+}));
+
+export const CreateInstituteModal = () => {
+  const { isOpen, onClose } = useCreateInstitute();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  const form = useForm<ClassNameSchemaType>({
-    resolver: zodResolver(ClassNameSchema),
+  const form = useForm<InstituteSchemaType>({
+    resolver: zodResolver(InstituteSchema),
     defaultValues: DEFAULT_VALUES,
   });
 
-  const { mutate: createClass, isPending } = useMutation(
-    trpc.admin.class.createOne.mutationOptions({
+  const { mutate: createInstitute, isPending } = useMutation(
+    trpc.admin.institute.createOne.mutationOptions({
       onError: (err) => {
-        console.log(err.message);
         toast.error(err.message);
       },
       onSuccess: async (data) => {
@@ -50,7 +56,7 @@ export const CreateClassModal = () => {
         toast.success(data.message);
 
         await queryClient.invalidateQueries({
-          queryKey: trpc.admin.class.getMany.queryKey(),
+          queryKey: trpc.admin.institute.getMany.queryKey(),
         });
         form.reset(DEFAULT_VALUES);
 
@@ -61,8 +67,8 @@ export const CreateClassModal = () => {
     })
   );
 
-  const handleSubmit = (data: ClassNameSchemaType) => {
-    createClass(data);
+  const handleSubmit = (data: InstituteSchemaType) => {
+    createInstitute(data);
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -75,9 +81,9 @@ export const CreateClassModal = () => {
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Set up your class</DialogTitle>
+          <DialogTitle>Set up your institute</DialogTitle>
           <DialogDescription>
-            This information will be used to create your class.
+            This information will be used to create your institute.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -86,7 +92,13 @@ export const CreateClassModal = () => {
             className="space-y-4"
           >
             <FormInput name="name" label="Name" type="text" />
-            <FormTextArea name="description" label="Description" />
+
+            <FormSelect
+              name="session"
+              label="Session"
+              placeholder="Select session"
+              options={SESSION_OPTIONS}
+            />
 
             <Button
               type="submit"
@@ -97,7 +109,7 @@ export const CreateClassModal = () => {
                 <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
               ) : (
                 <span className="flex items-center gap-2">
-                  Create class
+                  Create institute
                   <Send className="h-4 w-4" />
                 </span>
               )}

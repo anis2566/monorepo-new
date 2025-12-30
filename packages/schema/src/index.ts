@@ -8,3 +8,42 @@ export const ClassNameSchema = z.object({
 });
 
 export type ClassNameSchemaType = z.infer<typeof ClassNameSchema>;
+
+export const InstituteSchema = z.object({
+  name: requiredString,
+  session: requiredString,
+});
+
+export type InstituteSchemaType = z.infer<typeof InstituteSchema>;
+
+export const StudentSchema = z.object({
+  session: requiredString,
+  studentId: requiredString,
+  name: requiredString,
+  nameBangla: requiredString,
+  fName: requiredString,
+  mName: requiredString,
+  gender: requiredString,
+  dob: requiredString,
+  nationality: requiredString,
+  religion: requiredString,
+  imageUrl: z.string().optional(),
+  section: z.string().optional(),
+  shift: z.string().optional(),
+  group: requiredString,
+  roll: requiredString,
+  fPhone: z.string().length(11, "Valid phone number required"),
+  mPhone: z.string().length(11, "Valid phone number required"),
+  presentHouseNo: requiredString,
+  presentMoholla: requiredString,
+  presentPost: requiredString,
+  presentThana: requiredString,
+  permanentVillage: requiredString,
+  permanentPost: requiredString,
+  permanentThana: requiredString,
+  permanentDistrict: requiredString,
+  instituteId: requiredString,
+  classNameId: requiredString,
+});
+
+export type StudentSchemaType = z.infer<typeof StudentSchema>;

@@ -16,6 +16,8 @@ import {
   Users,
   FileQuestion,
   Trophy,
+  UsersRound,
+  Shapes,
 } from "lucide-react";
 
 import {
@@ -83,8 +85,31 @@ const navData: NavSection[] = [
       {
         label: "Class",
         url: "/class",
+        icon: Shapes,
+        subItems: [],
+      },
+      {
+        label: "Institute",
+        url: "/institute",
         icon: School,
         subItems: [],
+      },
+      {
+        label: "Student",
+        url: "/student",
+        icon: UsersRound,
+        subItems: [
+          {
+            label: "New",
+            url: "/student/new",
+            icon: PlusCircle,
+          },
+          {
+            label: "List",
+            url: "/student",
+            icon: List,
+          },
+        ],
       },
     ],
   },
@@ -93,18 +118,56 @@ const navData: NavSection[] = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
 
-  // Helper function to check if a route is active
-  const isActive = (url: string) => {
+  // Improved helper function to check if a route is active
+  const isActive = (url: string, subItems?: SubItem[]) => {
+    // Exact match for root
     if (url === "/") {
       return pathname === "/";
     }
-    return pathname.startsWith(url);
+
+    // If item has sub-items, it should only be active if pathname matches exactly
+    // or if one of its children is active
+    if (subItems && subItems.length > 0) {
+      // Check if any sub-item is active
+      const hasActiveChild = subItems.some((subItem) => {
+        if (subItem.url === url) {
+          // If sub-item URL is same as parent, use exact match
+          return pathname === url;
+        }
+        // For sub-items, check if pathname matches exactly or starts with the URL
+        return (
+          pathname === subItem.url || pathname.startsWith(subItem.url + "/")
+        );
+      });
+
+      return hasActiveChild;
+    }
+
+    // For items without sub-items, use exact match or starts with
+    return pathname === url || pathname.startsWith(url + "/");
   };
 
-  // Helper function to check if any sub-item is active
-  const hasActiveSubItem = (subItems?: SubItem[]) => {
+  // Improved helper function to check if a specific sub-item is active
+  const isSubItemActive = (url: string, parentUrl: string) => {
+    // If sub-item URL equals parent URL (like "List" with /student)
+    if (url === parentUrl) {
+      return pathname === url;
+    }
+
+    // For other sub-items, check exact match or starts with
+    return pathname === url || pathname.startsWith(url + "/");
+  };
+
+  // Helper function to check if any sub-item is active (for parent highlighting)
+  const hasActiveSubItem = (subItems?: SubItem[], parentUrl?: string) => {
     if (!subItems || subItems.length === 0) return false;
-    return subItems.some((subItem) => isActive(subItem.url));
+
+    return subItems.some((subItem) => {
+      if (subItem.url === parentUrl) {
+        return pathname === parentUrl;
+      }
+      return pathname === subItem.url || pathname.startsWith(subItem.url + "/");
+    });
   };
 
   return (
@@ -146,7 +209,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 {section.items.map((menuItem) => {
                   // If menu item has sub-items, make it collapsible
                   if (menuItem.subItems && menuItem.subItems.length > 0) {
-                    const hasActive = hasActiveSubItem(menuItem.subItems);
+                    const hasActive = hasActiveSubItem(
+                      menuItem.subItems,
+                      menuItem.url
+                    );
 
                     return (
                       <Collapsible
@@ -160,7 +226,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             <SidebarMenuButton
                               tooltip={menuItem.label}
                               className="tracking-wider"
-                              isActive={hasActive}
+                              // isActive={hasActive}
                             >
                               {menuItem.icon && <menuItem.icon />}
                               <span>{menuItem.label}</span>
@@ -174,7 +240,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                   <SidebarMenuSubButton
                                     asChild
                                     className="tracking-wider"
-                                    isActive={isActive(subItem.url)}
+                                    isActive={isSubItemActive(
+                                      subItem.url,
+                                      menuItem.url
+                                    )}
                                   >
                                     <Link href={subItem.url}>
                                       {subItem.icon && <subItem.icon />}
