@@ -29,6 +29,9 @@ interface StudentWithRelation extends Student {
   className: {
     name: string;
   };
+  batch: {
+    name: string;
+  } | null;
   institute: {
     name: string;
   };
@@ -50,6 +53,7 @@ export const StudentList = ({ students }: StudentListProps) => {
         <TableRow className="bg-background/60">
           <TableHead>Student</TableHead>
           <TableHead>Class</TableHead>
+          <TableHead>Batch</TableHead>
           <TableHead>Institute</TableHead>
           <TableHead>Group</TableHead>
           <TableHead>Batch</TableHead>
@@ -84,6 +88,7 @@ export const StudentList = ({ students }: StudentListProps) => {
               </div>
             </TableCell>
             <TableCell>{student.className.name}</TableCell>
+            <TableCell>{student.batch?.name || "-"}</TableCell>
             <TableCell>{student.institute.name}</TableCell>
             <TableCell>{student.group ? student.group : "-"}</TableCell>
             <TableCell>Batch</TableCell>

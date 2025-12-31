@@ -44,7 +44,7 @@ import {
 } from "@workspace/ui/components/form";
 import { cn } from "@workspace/ui/lib/utils";
 import { genders, religions } from "@workspace/utils/constant";
-import { nationalities, sessions } from "@workspace/utils";
+import { nationalities } from "@workspace/utils";
 import { useTRPC } from "@/trpc/react";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -130,6 +130,7 @@ export default function StudentRegistrationForm() {
     queries: [
       trpc.admin.class.forSelect.queryOptions({ search: "" }),
       trpc.admin.institute.forSelect.queryOptions({ search: "" }),
+      trpc.admin.batch.forSelect.queryOptions({ search: "" }),
     ],
   });
 
@@ -141,6 +142,12 @@ export default function StudentRegistrationForm() {
 
   const instituteOptions =
     queries[1].data?.map((item) => ({
+      value: item.id,
+      label: item.name,
+    })) || [];
+
+  const batchOptions =
+    queries[2].data?.map((item) => ({
       value: item.id,
       label: item.name,
     })) || [];
@@ -168,7 +175,6 @@ export default function StudentRegistrationForm() {
     resolver: zodResolver(StudentSchema),
     mode: "onChange",
     defaultValues: {
-      session: "",
       studentId: "",
       name: "",
       nameBangla: "",
@@ -194,6 +200,7 @@ export default function StudentRegistrationForm() {
       permanentPost: "",
       permanentThana: "",
       permanentDistrict: "",
+      batchId: "",
     },
   });
 
@@ -224,7 +231,7 @@ export default function StudentRegistrationForm() {
 
   return (
     <div className="min-h-screen pb-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="">
         {/* Header */}
         <div className="text-center mb-12 animate-in fade-in slide-in-from-top duration-700">
           <h1 className="text-5xl font-bold text-slate-900 mb-3 tracking-tight">
@@ -320,36 +327,6 @@ export default function StudentRegistrationForm() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <FormField
                         control={form.control}
-                        name="session"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-slate-700 font-medium">
-                              Session <span className="text-rose-500">*</span>
-                            </FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger className="py-[22px] w-full">
-                                  <SelectValue placeholder="Select session" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {sessions.map((session) => (
-                                  <SelectItem key={session} value={session}>
-                                    {session}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
                         name="studentId"
                         render={({ field }) => (
                           <FormItem>
@@ -360,6 +337,39 @@ export default function StudentRegistrationForm() {
                             <FormControl>
                               <Input className="h-11" {...field} />
                             </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="batchId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-slate-700 font-medium">
+                              Batch
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="py-[22px] w-full">
+                                  <SelectValue placeholder="Select batch" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {batchOptions.map((batch) => (
+                                  <SelectItem
+                                    key={batch.value}
+                                    value={batch.value}
+                                  >
+                                    {batch.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                             <FormMessage />
                           </FormItem>
                         )}

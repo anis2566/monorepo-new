@@ -43,6 +43,7 @@ export const studentRouter = {
             ...input,
             dob: new Date(input.dob),
             shift: input.shift || "",
+            batchId: input.batchId || null,
           },
         });
 
@@ -142,17 +143,15 @@ export const studentRouter = {
         limit: z.number().min(1).max(100).default(10),
         sort: z.string().nullish(),
         search: z.string().nullish(),
-        session: z.string().nullish(),
         className: z.string().nullish(),
         id: z.string().nullish(),
       })
     )
     .query(async ({ input, ctx }) => {
-      const { page, limit, sort, search, session, className, id } = input;
+      const { page, limit, sort, search, className, id } = input;
 
       const where: Prisma.StudentWhereInput = {
         ...(search && { name: { contains: search } }),
-        ...(session && { session: { equals: session } }),
         ...(className && { classNameId: { equals: className } }),
         ...(id && { id: { equals: id } }),
       };
@@ -183,6 +182,11 @@ export const studentRouter = {
               },
             },
             institute: {
+              select: {
+                name: true,
+              },
+            },
+            batch: {
               select: {
                 name: true,
               },

@@ -19,6 +19,8 @@ import {
   UsersRound,
   Shapes,
   Layers3,
+  Layers2,
+  NotebookPen,
 } from "lucide-react";
 
 import {
@@ -120,6 +122,29 @@ const navData: NavSection[] = [
           {
             label: "List",
             url: "/student",
+            icon: List,
+          },
+        ],
+      },
+      {
+        label: "Batch",
+        url: "/batch",
+        icon: Layers2,
+        subItems: [],
+      },
+      {
+        label: "Exam",
+        url: "/exam",
+        icon: NotebookPen,
+        subItems: [
+          {
+            label: "New",
+            url: "/exam/new",
+            icon: PlusCircle,
+          },
+          {
+            label: "List",
+            url: "/exam",
             icon: List,
           },
         ],
@@ -239,7 +264,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             <SidebarMenuButton
                               tooltip={menuItem.label}
                               className="tracking-wider"
-                            // isActive={hasActive}
+                              // isActive={hasActive}
                             >
                               {menuItem.icon && <menuItem.icon />}
                               <span>{menuItem.label}</span>

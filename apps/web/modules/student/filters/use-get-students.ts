@@ -5,9 +5,6 @@ import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "@workspace/utils/constant";
 export const useGetStudents = () => {
   return useQueryStates({
     search: parseAsString.withDefault("").withOptions({ clearOnDefault: true }),
-    session: parseAsString
-      .withDefault("")
-      .withOptions({ clearOnDefault: true }),
     className: parseAsString
       .withDefault("")
       .withOptions({ clearOnDefault: true }),

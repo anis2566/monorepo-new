@@ -17,7 +17,6 @@ export const InstituteSchema = z.object({
 export type InstituteSchemaType = z.infer<typeof InstituteSchema>;
 
 export const StudentSchema = z.object({
-  session: requiredString,
   studentId: requiredString,
   name: requiredString,
   nameBangla: requiredString,
@@ -44,6 +43,7 @@ export const StudentSchema = z.object({
   permanentDistrict: requiredString,
   instituteId: requiredString,
   classNameId: requiredString,
+  batchId: z.string().optional(),
 });
 
 export type StudentSchemaType = z.infer<typeof StudentSchema>;
@@ -78,3 +78,39 @@ const McqSchema = z.object({
 });
 
 export const McqsSchema = z.array(McqSchema);
+
+export const BatchSchema = z.object({
+  name: requiredString,
+  classNameId: requiredString,
+});
+
+export type BatchSchemaType = z.infer<typeof BatchSchema>;
+
+export const ExamSchema = z
+  .object({
+    title: requiredString,
+    cq: z.string().optional(),
+    mcq: z.string().optional(),
+    duration: requiredString,
+    startDate: requiredString,
+    endDate: requiredString,
+    classNameIds: z.array(z.string()).min(1, { message: "required" }),
+    subjectIds: z.array(z.string()).min(1, { message: "required" }),
+    batchIds: z.array(z.string()).min(1, { message: "required" }),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.cq && !data.mcq) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "At least one of cq, mcq is required",
+        path: ["cq"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "At least one of cq, mcq is required",
+        path: ["mcq"],
+      });
+    }
+  });
+
+export type ExamSchemaType = z.infer<typeof ExamSchema>;

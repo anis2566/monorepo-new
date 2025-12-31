@@ -11,6 +11,10 @@ import { CreateChapterModal } from "@/modules/chapter/ui/modal/create-chapter-mo
 import { EditChapterModal } from "@/modules/chapter/ui/modal/edit-chapter-modal";
 import { DeleteChapterModal } from "@/modules/chapter/ui/modal/delete-chapter-modal";
 import { DeleteStudentModal } from "@/modules/student/ui/modal/delete-student-modal";
+import { CreateBatchModal } from "@/modules/batch/ui/modal/create-batch-modal";
+import { EditBatchModal } from "@/modules/batch/ui/modal/edit-batch-modal";
+import { DeleteBatchModal } from "@/modules/batch/ui/modal/delete-batch-modal";
+import { DeleteExamModal } from "@/modules/exam/ui/modal/delete-exam-modal";
 
 export const ModalProvider = () => {
   return (
@@ -28,6 +32,10 @@ export const ModalProvider = () => {
       <EditChapterModal />
       <DeleteChapterModal />
       <DeleteStudentModal />
+      <CreateBatchModal />
+      <EditBatchModal />
+      <DeleteBatchModal />
+      <DeleteExamModal />
     </>
   );
 };

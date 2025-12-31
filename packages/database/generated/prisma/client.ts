@@ -89,3 +89,33 @@ export type Chapter = Prisma.ChapterModel
  * 
  */
 export type Mcq = Prisma.McqModel
+/**
+ * Model Batch
+ * 
+ */
+export type Batch = Prisma.BatchModel
+/**
+ * Model Exam
+ * 
+ */
+export type Exam = Prisma.ExamModel
+/**
+ * Model ExamBatch
+ * 
+ */
+export type ExamBatch = Prisma.ExamBatchModel
+/**
+ * Model ExamClassName
+ * 
+ */
+export type ExamClassName = Prisma.ExamClassNameModel
+/**
+ * Model ExamStudent
+ * 
+ */
+export type ExamStudent = Prisma.ExamStudentModel
+/**
+ * Model ExamSubject
+ * 
+ */
+export type ExamSubject = Prisma.ExamSubjectModel

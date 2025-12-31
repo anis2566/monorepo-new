@@ -21,6 +21,9 @@ interface ChapterWithRelation extends Chapter {
   subject: {
     name: string;
   };
+  _count: {
+    mcqs: number;
+  };
 }
 
 interface ChapterListProps {
@@ -38,6 +41,7 @@ export const ChapterList = ({ chapters }: ChapterListProps) => {
           <TableHead>Name</TableHead>
           <TableHead>Subject</TableHead>
           <TableHead>Position</TableHead>
+          <TableHead>MCQs</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -47,6 +51,7 @@ export const ChapterList = ({ chapters }: ChapterListProps) => {
             <TableCell>{chapterItem.name}</TableCell>
             <TableCell>{chapterItem.subject.name}</TableCell>
             <TableCell>{chapterItem.position}</TableCell>
+            <TableCell>{chapterItem._count.mcqs}</TableCell>
             <TableCell>
               <ListActions>
                 <ListActionButton
@@ -57,7 +62,7 @@ export const ChapterList = ({ chapters }: ChapterListProps) => {
                       chapterItem.id,
                       chapterItem.name,
                       chapterItem.position.toString(),
-                      chapterItem.subjectId,
+                      chapterItem.subjectId
                     )
                   }
                 />

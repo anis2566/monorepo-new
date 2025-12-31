@@ -21,7 +21,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           <SidebarTrigger />
           <Link href="/">
             <Image
-              src="/logo.jjpg"
+              src="/logo.jpg"
               alt="Logo"
               width={30}
               height={30}

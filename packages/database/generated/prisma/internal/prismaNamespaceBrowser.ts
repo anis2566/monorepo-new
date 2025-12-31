@@ -60,7 +60,13 @@ export const ModelName = {
   Student: 'Student',
   Subject: 'Subject',
   Chapter: 'Chapter',
-  Mcq: 'Mcq'
+  Mcq: 'Mcq',
+  Batch: 'Batch',
+  Exam: 'Exam',
+  ExamBatch: 'ExamBatch',
+  ExamClassName: 'ExamClassName',
+  ExamStudent: 'ExamStudent',
+  ExamSubject: 'ExamSubject'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -164,7 +170,6 @@ export type InstituteScalarFieldEnum = (typeof InstituteScalarFieldEnum)[keyof t
 
 export const StudentScalarFieldEnum = {
   id: 'id',
-  session: 'session',
   studentId: 'studentId',
   name: 'name',
   nameBangla: 'nameBangla',
@@ -191,6 +196,7 @@ export const StudentScalarFieldEnum = {
   permanentDistrict: 'permanentDistrict',
   instituteId: 'instituteId',
   classNameId: 'classNameId',
+  batchId: 'batchId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -243,6 +249,78 @@ export const McqScalarFieldEnum = {
 } as const
 
 export type McqScalarFieldEnum = (typeof McqScalarFieldEnum)[keyof typeof McqScalarFieldEnum]
+
+
+export const BatchScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  classNameId: 'classNameId'
+} as const
+
+export type BatchScalarFieldEnum = (typeof BatchScalarFieldEnum)[keyof typeof BatchScalarFieldEnum]
+
+
+export const ExamScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  total: 'total',
+  duration: 'duration',
+  cq: 'cq',
+  mcq: 'mcq',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExamScalarFieldEnum = (typeof ExamScalarFieldEnum)[keyof typeof ExamScalarFieldEnum]
+
+
+export const ExamBatchScalarFieldEnum = {
+  id: 'id',
+  examId: 'examId',
+  batchId: 'batchId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExamBatchScalarFieldEnum = (typeof ExamBatchScalarFieldEnum)[keyof typeof ExamBatchScalarFieldEnum]
+
+
+export const ExamClassNameScalarFieldEnum = {
+  id: 'id',
+  examId: 'examId',
+  classNameId: 'classNameId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExamClassNameScalarFieldEnum = (typeof ExamClassNameScalarFieldEnum)[keyof typeof ExamClassNameScalarFieldEnum]
+
+
+export const ExamStudentScalarFieldEnum = {
+  id: 'id',
+  examId: 'examId',
+  studentId: 'studentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExamStudentScalarFieldEnum = (typeof ExamStudentScalarFieldEnum)[keyof typeof ExamStudentScalarFieldEnum]
+
+
+export const ExamSubjectScalarFieldEnum = {
+  id: 'id',
+  examId: 'examId',
+  subjectId: 'subjectId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExamSubjectScalarFieldEnum = (typeof ExamSubjectScalarFieldEnum)[keyof typeof ExamSubjectScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -97,6 +97,8 @@ model ClassName {
   updatedAt DateTime @updatedAt
 
   students Student[]
+  batches  Batch[]
+  exams    ExamClassName[]
 }
 
 model Institute {
@@ -115,7 +117,6 @@ model Institute {
 
 model Student {
   id          String   @id @default(uuid())
-  session     String
   studentId   String
   name        String
   nameBangla  String
@@ -150,12 +151,16 @@ model Student {
   classNameId String
   className   ClassName @relation(fields: [classNameId], references: [id], onDelete: Restrict)
 
+  batchId String?
+  batch   Batch?  @relation(fields: [batchId], references: [id], onDelete: SetNull)
+
+  exams ExamStudent[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([instituteId])
   @@index([classNameId])
-  @@index([session])
   @@index([studentId])
   @@index([name])
   @@index([roll])
@@ -171,6 +176,7 @@ model Subject {
 
   chapters Chapter[]
   mcqs     Mcq[]
+  exams    ExamSubject[]
 
   @@index([name])
   @@index([group])
@@ -228,4 +234,111 @@ model Mcq {
   @@index([subjectId, type])
   @@index([chapterId, type])
   @@index([type, session])
+}
+
+model Batch {
+  id   String @id @default(uuid())
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  classNameId String
+  className   ClassName @relation(fields: [classNameId], references: [id], onDelete: Restrict)
+
+  students Student[]
+  exams    ExamBatch[]
+
+  @@unique([name])
+  @@index([classNameId])
+}
+
+model Exam {
+  id        String   @id @default(uuid())
+  title     String
+  total     Int
+  duration  Int
+  cq        Int?
+  mcq       Int?
+  startDate DateTime
+  endDate   DateTime
+
+  status String @default("Pending")
+
+  subjects   ExamSubject[]
+  batches    ExamBatch[]
+  classNames ExamClassName[]
+  students   ExamStudent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([title])
+  @@index([status])
+  @@index([createdAt])
+  @@index([status, createdAt])
+}
+
+model ExamBatch {
+  id String @id @default(uuid())
+
+  examId String
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  batchId String
+  batch   Batch  @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([examId])
+  @@index([batchId])
+}
+
+model ExamClassName {
+  id String @id @default(uuid())
+
+  examId String
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  classNameId String
+  className   ClassName @relation(fields: [classNameId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([examId])
+  @@index([classNameId])
+}
+
+model ExamStudent {
+  id String @id @default(uuid())
+
+  examId String
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([examId])
+  @@index([studentId])
+}
+
+model ExamSubject {
+  id String @id @default(uuid())
+
+  examId String
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([examId])
+  @@index([subjectId])
 }

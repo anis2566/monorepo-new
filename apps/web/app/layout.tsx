@@ -5,6 +5,7 @@ import { Providers } from "@/components/providers";
 import { TRPCReactProvider } from "@/trpc/react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
+import "katex/dist/katex.min.css";
 
 const fontSans = Geist({
   subsets: ["latin"],
