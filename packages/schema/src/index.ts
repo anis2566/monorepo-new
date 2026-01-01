@@ -94,11 +94,16 @@ export const ExamSchema = z
     duration: requiredString,
     startDate: requiredString,
     endDate: requiredString,
+    hasSuffle: z.boolean({ message: "required" }),
+    hasRandom: z.boolean({ message: "required" }),
+    hasNegativeMark: z.boolean({ message: "required" }),
+    negativeMark: z.string().optional(),
     classNameIds: z.array(z.string()).min(1, { message: "required" }),
     subjectIds: z.array(z.string()).min(1, { message: "required" }),
     batchIds: z.array(z.string()).min(1, { message: "required" }),
   })
   .superRefine((data, ctx) => {
+    // Validate that at least one of cq or mcq is provided
     if (!data.cq && !data.mcq) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -109,6 +114,15 @@ export const ExamSchema = z
         code: z.ZodIssueCode.custom,
         message: "At least one of cq, mcq is required",
         path: ["mcq"],
+      });
+    }
+
+    // Validate negativeMark is required when hasNegativeMark is true
+    if (data.hasNegativeMark && !data.negativeMark) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Negative mark is required when negative marking is enabled",
+        path: ["negativeMark"],
       });
     }
   });

@@ -31,6 +31,7 @@ export type ExamAvgAggregateOutputType = {
   duration: number | null
   cq: number | null
   mcq: number | null
+  negativeMark: number | null
 }
 
 export type ExamSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type ExamSumAggregateOutputType = {
   duration: number | null
   cq: number | null
   mcq: number | null
+  negativeMark: number | null
 }
 
 export type ExamMinAggregateOutputType = {
@@ -49,6 +51,10 @@ export type ExamMinAggregateOutputType = {
   mcq: number | null
   startDate: Date | null
   endDate: Date | null
+  hasSuffle: boolean | null
+  hasRandom: boolean | null
+  hasNegativeMark: boolean | null
+  negativeMark: number | null
   status: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -63,6 +69,10 @@ export type ExamMaxAggregateOutputType = {
   mcq: number | null
   startDate: Date | null
   endDate: Date | null
+  hasSuffle: boolean | null
+  hasRandom: boolean | null
+  hasNegativeMark: boolean | null
+  negativeMark: number | null
   status: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -77,6 +87,10 @@ export type ExamCountAggregateOutputType = {
   mcq: number
   startDate: number
   endDate: number
+  hasSuffle: number
+  hasRandom: number
+  hasNegativeMark: number
+  negativeMark: number
   status: number
   createdAt: number
   updatedAt: number
@@ -89,6 +103,7 @@ export type ExamAvgAggregateInputType = {
   duration?: true
   cq?: true
   mcq?: true
+  negativeMark?: true
 }
 
 export type ExamSumAggregateInputType = {
@@ -96,6 +111,7 @@ export type ExamSumAggregateInputType = {
   duration?: true
   cq?: true
   mcq?: true
+  negativeMark?: true
 }
 
 export type ExamMinAggregateInputType = {
@@ -107,6 +123,10 @@ export type ExamMinAggregateInputType = {
   mcq?: true
   startDate?: true
   endDate?: true
+  hasSuffle?: true
+  hasRandom?: true
+  hasNegativeMark?: true
+  negativeMark?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -121,6 +141,10 @@ export type ExamMaxAggregateInputType = {
   mcq?: true
   startDate?: true
   endDate?: true
+  hasSuffle?: true
+  hasRandom?: true
+  hasNegativeMark?: true
+  negativeMark?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -135,6 +159,10 @@ export type ExamCountAggregateInputType = {
   mcq?: true
   startDate?: true
   endDate?: true
+  hasSuffle?: true
+  hasRandom?: true
+  hasNegativeMark?: true
+  negativeMark?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -236,6 +264,10 @@ export type ExamGroupByOutputType = {
   mcq: number | null
   startDate: Date
   endDate: Date
+  hasSuffle: boolean
+  hasRandom: boolean
+  hasNegativeMark: boolean
+  negativeMark: number
   status: string
   createdAt: Date
   updatedAt: Date
@@ -273,6 +305,10 @@ export type ExamWhereInput = {
   mcq?: Prisma.IntNullableFilter<"Exam"> | number | null
   startDate?: Prisma.DateTimeFilter<"Exam"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Exam"> | Date | string
+  hasSuffle?: Prisma.BoolFilter<"Exam"> | boolean
+  hasRandom?: Prisma.BoolFilter<"Exam"> | boolean
+  hasNegativeMark?: Prisma.BoolFilter<"Exam"> | boolean
+  negativeMark?: Prisma.FloatFilter<"Exam"> | number
   status?: Prisma.StringFilter<"Exam"> | string
   createdAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
@@ -291,6 +327,10 @@ export type ExamOrderByWithRelationInput = {
   mcq?: Prisma.SortOrderInput | Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  hasSuffle?: Prisma.SortOrder
+  hasRandom?: Prisma.SortOrder
+  hasNegativeMark?: Prisma.SortOrder
+  negativeMark?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -312,6 +352,10 @@ export type ExamWhereUniqueInput = Prisma.AtLeast<{
   mcq?: Prisma.IntNullableFilter<"Exam"> | number | null
   startDate?: Prisma.DateTimeFilter<"Exam"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Exam"> | Date | string
+  hasSuffle?: Prisma.BoolFilter<"Exam"> | boolean
+  hasRandom?: Prisma.BoolFilter<"Exam"> | boolean
+  hasNegativeMark?: Prisma.BoolFilter<"Exam"> | boolean
+  negativeMark?: Prisma.FloatFilter<"Exam"> | number
   status?: Prisma.StringFilter<"Exam"> | string
   createdAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
@@ -330,6 +374,10 @@ export type ExamOrderByWithAggregationInput = {
   mcq?: Prisma.SortOrderInput | Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  hasSuffle?: Prisma.SortOrder
+  hasRandom?: Prisma.SortOrder
+  hasNegativeMark?: Prisma.SortOrder
+  negativeMark?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -352,6 +400,10 @@ export type ExamScalarWhereWithAggregatesInput = {
   mcq?: Prisma.IntNullableWithAggregatesFilter<"Exam"> | number | null
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Exam"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"Exam"> | Date | string
+  hasSuffle?: Prisma.BoolWithAggregatesFilter<"Exam"> | boolean
+  hasRandom?: Prisma.BoolWithAggregatesFilter<"Exam"> | boolean
+  hasNegativeMark?: Prisma.BoolWithAggregatesFilter<"Exam"> | boolean
+  negativeMark?: Prisma.FloatWithAggregatesFilter<"Exam"> | number
   status?: Prisma.StringWithAggregatesFilter<"Exam"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Exam"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Exam"> | Date | string
@@ -366,6 +418,10 @@ export type ExamCreateInput = {
   mcq?: number | null
   startDate: Date | string
   endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -384,6 +440,10 @@ export type ExamUncheckedCreateInput = {
   mcq?: number | null
   startDate: Date | string
   endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -402,6 +462,10 @@ export type ExamUpdateInput = {
   mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -420,6 +484,10 @@ export type ExamUncheckedUpdateInput = {
   mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -438,6 +506,10 @@ export type ExamCreateManyInput = {
   mcq?: number | null
   startDate: Date | string
   endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -452,6 +524,10 @@ export type ExamUpdateManyMutationInput = {
   mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -466,6 +542,10 @@ export type ExamUncheckedUpdateManyInput = {
   mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -480,6 +560,10 @@ export type ExamCountOrderByAggregateInput = {
   mcq?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  hasSuffle?: Prisma.SortOrder
+  hasRandom?: Prisma.SortOrder
+  hasNegativeMark?: Prisma.SortOrder
+  negativeMark?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -490,6 +574,7 @@ export type ExamAvgOrderByAggregateInput = {
   duration?: Prisma.SortOrder
   cq?: Prisma.SortOrder
   mcq?: Prisma.SortOrder
+  negativeMark?: Prisma.SortOrder
 }
 
 export type ExamMaxOrderByAggregateInput = {
@@ -501,6 +586,10 @@ export type ExamMaxOrderByAggregateInput = {
   mcq?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  hasSuffle?: Prisma.SortOrder
+  hasRandom?: Prisma.SortOrder
+  hasNegativeMark?: Prisma.SortOrder
+  negativeMark?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -515,6 +604,10 @@ export type ExamMinOrderByAggregateInput = {
   mcq?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  hasSuffle?: Prisma.SortOrder
+  hasRandom?: Prisma.SortOrder
+  hasNegativeMark?: Prisma.SortOrder
+  negativeMark?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -525,6 +618,7 @@ export type ExamSumOrderByAggregateInput = {
   duration?: Prisma.SortOrder
   cq?: Prisma.SortOrder
   mcq?: Prisma.SortOrder
+  negativeMark?: Prisma.SortOrder
 }
 
 export type ExamScalarRelationFilter = {
@@ -534,6 +628,14 @@ export type ExamScalarRelationFilter = {
 
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
   increment?: number
   decrement?: number
   multiply?: number
@@ -605,6 +707,10 @@ export type ExamCreateWithoutBatchesInput = {
   mcq?: number | null
   startDate: Date | string
   endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -622,6 +728,10 @@ export type ExamUncheckedCreateWithoutBatchesInput = {
   mcq?: number | null
   startDate: Date | string
   endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -655,6 +765,10 @@ export type ExamUpdateWithoutBatchesInput = {
   mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -672,6 +786,10 @@ export type ExamUncheckedUpdateWithoutBatchesInput = {
   mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -689,6 +807,10 @@ export type ExamCreateWithoutClassNamesInput = {
   mcq?: number | null
   startDate: Date | string
   endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -706,6 +828,10 @@ export type ExamUncheckedCreateWithoutClassNamesInput = {
   mcq?: number | null
   startDate: Date | string
   endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -739,6 +865,10 @@ export type ExamUpdateWithoutClassNamesInput = {
   mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -756,6 +886,10 @@ export type ExamUncheckedUpdateWithoutClassNamesInput = {
   mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -773,6 +907,10 @@ export type ExamCreateWithoutStudentsInput = {
   mcq?: number | null
   startDate: Date | string
   endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -790,6 +928,10 @@ export type ExamUncheckedCreateWithoutStudentsInput = {
   mcq?: number | null
   startDate: Date | string
   endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -823,6 +965,10 @@ export type ExamUpdateWithoutStudentsInput = {
   mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -840,6 +986,10 @@ export type ExamUncheckedUpdateWithoutStudentsInput = {
   mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -857,6 +1007,10 @@ export type ExamCreateWithoutSubjectsInput = {
   mcq?: number | null
   startDate: Date | string
   endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -874,6 +1028,10 @@ export type ExamUncheckedCreateWithoutSubjectsInput = {
   mcq?: number | null
   startDate: Date | string
   endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -907,6 +1065,10 @@ export type ExamUpdateWithoutSubjectsInput = {
   mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -924,6 +1086,10 @@ export type ExamUncheckedUpdateWithoutSubjectsInput = {
   mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -999,6 +1165,10 @@ export type ExamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   mcq?: boolean
   startDate?: boolean
   endDate?: boolean
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1018,6 +1188,10 @@ export type ExamSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   mcq?: boolean
   startDate?: boolean
   endDate?: boolean
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1032,6 +1206,10 @@ export type ExamSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   mcq?: boolean
   startDate?: boolean
   endDate?: boolean
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1046,12 +1224,16 @@ export type ExamSelectScalar = {
   mcq?: boolean
   startDate?: boolean
   endDate?: boolean
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ExamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "total" | "duration" | "cq" | "mcq" | "startDate" | "endDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["exam"]>
+export type ExamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "total" | "duration" | "cq" | "mcq" | "startDate" | "endDate" | "hasSuffle" | "hasRandom" | "hasNegativeMark" | "negativeMark" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["exam"]>
 export type ExamInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subjects?: boolean | Prisma.Exam$subjectsArgs<ExtArgs>
   batches?: boolean | Prisma.Exam$batchesArgs<ExtArgs>
@@ -1079,6 +1261,10 @@ export type $ExamPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     mcq: number | null
     startDate: Date
     endDate: Date
+    hasSuffle: boolean
+    hasRandom: boolean
+    hasNegativeMark: boolean
+    negativeMark: number
     status: string
     createdAt: Date
     updatedAt: Date
@@ -1517,6 +1703,10 @@ export interface ExamFieldRefs {
   readonly mcq: Prisma.FieldRef<"Exam", 'Int'>
   readonly startDate: Prisma.FieldRef<"Exam", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Exam", 'DateTime'>
+  readonly hasSuffle: Prisma.FieldRef<"Exam", 'Boolean'>
+  readonly hasRandom: Prisma.FieldRef<"Exam", 'Boolean'>
+  readonly hasNegativeMark: Prisma.FieldRef<"Exam", 'Boolean'>
+  readonly negativeMark: Prisma.FieldRef<"Exam", 'Float'>
   readonly status: Prisma.FieldRef<"Exam", 'String'>
   readonly createdAt: Prisma.FieldRef<"Exam", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Exam", 'DateTime'>

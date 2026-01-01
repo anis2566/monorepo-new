@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, FileQuestionIcon, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 
 import {
@@ -16,6 +16,8 @@ import { ListActionButton } from "@workspace/ui/shared/list-action-button";
 import { Exam } from "@workspace/db";
 import { ListActionLink } from "@/components/list-action-link";
 import { useDeleteExam } from "@/hooks/use-exam";
+import { Badge } from "@workspace/ui/components/badge";
+import { EXAM_STATUS } from "@workspace/utils/constant";
 
 interface ExamWithRelation extends Exam {
   classNames: {
@@ -42,6 +44,19 @@ interface ExamListProps {
   exams: ExamWithRelation[];
 }
 
+const getExamStatus = (status: string) => {
+  switch (status) {
+    case EXAM_STATUS.Pending:
+      return "outline";
+    case EXAM_STATUS.Upcoming:
+      return "secondary";
+    case EXAM_STATUS.Ongoing:
+      return "default";
+    default:
+      return "destructive";
+  }
+};
+
 export const ExamList = ({ exams }: ExamListProps) => {
   const { onOpen } = useDeleteExam();
 
@@ -50,7 +65,6 @@ export const ExamList = ({ exams }: ExamListProps) => {
       <TableHeader>
         <TableRow className="bg-muted">
           <TableHead>Title</TableHead>
-          <TableHead>Total</TableHead>
           <TableHead>Subjects</TableHead>
           <TableHead>Classes</TableHead>
           <TableHead>Batches</TableHead>
@@ -59,6 +73,8 @@ export const ExamList = ({ exams }: ExamListProps) => {
           <TableHead>Total</TableHead>
           <TableHead>Duration</TableHead>
           <TableHead>Date</TableHead>
+          <TableHead>N. Marking</TableHead>
+          <TableHead>N. Marking Value</TableHead>
           <TableHead>Students</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Actions</TableHead>
@@ -68,26 +84,52 @@ export const ExamList = ({ exams }: ExamListProps) => {
         {exams.map((examItem) => (
           <TableRow key={examItem.id} className="even:bg-muted">
             <TableCell>{examItem.title}</TableCell>
-            <TableCell>{examItem.total}</TableCell>
-            <TableCell>{examItem.subjects.length}</TableCell>
-            <TableCell>{examItem.classNames.length}</TableCell>
-            <TableCell>{examItem.batches.length}</TableCell>
+            <TableCell className="max-w-[200px] truncate">
+              {examItem.subjects
+                .map((subject) => subject.subject.name)
+                .join(", ")}
+            </TableCell>
+            <TableCell className="max-w-[200px] truncate">
+              {examItem.classNames
+                .map((className) => className.className.name)
+                .join(", ")}
+            </TableCell>
+            <TableCell className="max-w-[200px] truncate">
+              {examItem.batches.map((batch) => batch.batch.name).join(", ")}
+            </TableCell>
             <TableCell>{examItem.cq}</TableCell>
             <TableCell>{examItem.mcq}</TableCell>
             <TableCell>{examItem.total}</TableCell>
             <TableCell>{examItem.duration}</TableCell>
             <TableCell>
-              {format(examItem.startDate, "dd MMM yyyy hh:mm a")} -{" "}
-              {format(examItem.endDate, "dd MMM yyyy hh:mm a")}
+              {format(examItem.startDate, "dd MMM hh:mm a")} -{" "}
+              {format(examItem.endDate, "dd MMM hh:mm a")}
             </TableCell>
+            <TableCell>
+              <Badge
+                variant={examItem.hasNegativeMark ? "default" : "destructive"}
+              >
+                {examItem.hasNegativeMark ? "Yes" : "No"}
+              </Badge>
+            </TableCell>
+            <TableCell>{examItem.negativeMark}</TableCell>
             <TableCell>{examItem._count.students}</TableCell>
-            <TableCell>{examItem.status}</TableCell>
+            <TableCell>
+              <Badge variant={getExamStatus(examItem.status)}>
+                {examItem.status}
+              </Badge>
+            </TableCell>
             <TableCell>
               <ListActions>
                 <ListActionLink
                   title="Edit"
                   icon={Edit}
                   href={`/exam/edit/${examItem.id}`}
+                />
+                <ListActionLink
+                  title="Assign Question"
+                  icon={FileQuestionIcon}
+                  href={`/exam/${examItem.id}/question`}
                 />
                 <ListActionButton
                   title="Delete"

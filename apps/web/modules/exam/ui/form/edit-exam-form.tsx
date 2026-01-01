@@ -30,6 +30,7 @@ import { FormMultiSelect } from "@workspace/ui/shared/form-multi-select";
 import { toast } from "sonner";
 import { Send } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { FormSwitch } from "@workspace/ui/shared/form-switch";
 
 interface EditExamFormProps {
   examId: string;
@@ -57,6 +58,10 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
       mcq: "",
       startDate: "",
       endDate: "",
+      hasSuffle: true,
+      hasRandom: true,
+      hasNegativeMark: false,
+      negativeMark: "",
       classNameIds: [],
       subjectIds: [],
       batchIds: [],
@@ -94,6 +99,10 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
         classNameIds: classIds,
         subjectIds: subjectIds,
         batchIds: batchIds,
+        hasSuffle: examData?.hasSuffle,
+        hasRandom: examData?.hasRandom,
+        hasNegativeMark: examData?.hasNegativeMark,
+        negativeMark: examData?.negativeMark?.toString() || "",
       });
     }
   }, [examData, form]);
@@ -223,6 +232,13 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
               disabled={isPending}
             />
 
+            <FormInput
+              name="duration"
+              label="Duration"
+              disabled={isPending}
+              type="number"
+            />
+
             <div className="space-y-2 p-4 border rounded-md">
               <Label>Marks Allocation</Label>
               <div className="flex items-center gap-5">
@@ -232,9 +248,6 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
                     checked={enableCq}
                     onCheckedChange={(checked) => {
                       setEnableCq(checked === true);
-                      if (!checked) {
-                        form.setValue("cq", "");
-                      }
                     }}
                     disabled={isPending}
                   />
@@ -246,9 +259,6 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
                     checked={enableMcq}
                     onCheckedChange={(checked) => {
                       setEnableMcq(checked === true);
-                      if (!checked) {
-                        form.setValue("mcq", "");
-                      }
                     }}
                     disabled={isPending}
                   />
@@ -277,12 +287,49 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
               </Collapsible>
             </div>
 
-            <FormInput
-              name="duration"
-              label="Duration"
-              disabled={isPending}
-              type="number"
-            />
+            <div className="space-y-2 p-4 border rounded-md">
+              <Label>Transparency</Label>
+              <FormSwitch
+                name="hasSuffle"
+                label="Suffling"
+                description="Turn on shuffle to suffle the questions"
+                onCheckedChange={(checked) => {
+                  console.log("Feature toggled:", checked);
+                }}
+              />
+
+              <FormSwitch
+                name="hasRandom"
+                label="Randomizing"
+                description="Turn on random to randomize the question options"
+                onCheckedChange={(checked) => {
+                  console.log("Feature toggled:", checked);
+                }}
+              />
+            </div>
+
+            <div className="space-y-2 p-4 border rounded-md">
+              <Label>Negative Marking</Label>
+              <FormSwitch
+                name="hasNegativeMark"
+                label="Negative Marking"
+                description="Turn on negative marking to apply negative marking"
+                onCheckedChange={(checked) => {
+                  console.log("Feature toggled:", checked);
+                }}
+              />
+
+              <Collapsible open={form.watch("hasNegativeMark")}>
+                <CollapsibleContent>
+                  <FormInput
+                    name="negativeMark"
+                    label="Negative Mark"
+                    disabled={isPending}
+                    type="text"
+                  />
+                </CollapsibleContent>
+              </Collapsible>
+            </div>
 
             <Button
               type="submit"

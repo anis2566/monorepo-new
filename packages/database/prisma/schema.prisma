@@ -254,14 +254,18 @@ model Batch {
 }
 
 model Exam {
-  id        String   @id @default(uuid())
-  title     String
-  total     Int
-  duration  Int
-  cq        Int?
-  mcq       Int?
-  startDate DateTime
-  endDate   DateTime
+  id              String   @id @default(uuid())
+  title           String
+  total           Int
+  duration        Int
+  cq              Int?
+  mcq             Int?
+  startDate       DateTime
+  endDate         DateTime
+  hasSuffle       Boolean  @default(false)
+  hasRandom       Boolean  @default(false)
+  hasNegativeMark Boolean  @default(false)
+  negativeMark    Float    @default(0)
 
   status String @default("Pending")
 

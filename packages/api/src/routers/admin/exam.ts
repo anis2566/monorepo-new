@@ -19,6 +19,10 @@ export const examRouter = {
         classNameIds,
         batchIds,
         subjectIds,
+        hasSuffle,
+        hasRandom,
+        hasNegativeMark,
+        negativeMark,
       } = input;
 
       try {
@@ -59,6 +63,10 @@ export const examRouter = {
             duration: parseInt(duration),
             startDate: new Date(startDate),
             endDate: new Date(endDate),
+            hasSuffle,
+            hasRandom,
+            hasNegativeMark,
+            negativeMark: parseFloat(negativeMark ?? "0"),
           },
           select: {
             id: true,
@@ -184,6 +192,10 @@ export const examRouter = {
                 duration: parseInt(data.duration),
                 startDate: new Date(data.startDate),
                 endDate: new Date(data.endDate),
+                hasSuffle: data.hasSuffle,
+                hasRandom: data.hasRandom,
+                hasNegativeMark: data.hasNegativeMark,
+                negativeMark: parseFloat(data.negativeMark ?? "0"),
               },
             });
 

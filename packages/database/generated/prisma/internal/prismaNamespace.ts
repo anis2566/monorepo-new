@@ -1828,6 +1828,10 @@ export const ExamScalarFieldEnum = {
   mcq: 'mcq',
   startDate: 'startDate',
   endDate: 'endDate',
+  hasSuffle: 'hasSuffle',
+  hasRandom: 'hasRandom',
+  hasNegativeMark: 'hasNegativeMark',
+  negativeMark: 'negativeMark',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
