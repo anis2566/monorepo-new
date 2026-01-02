@@ -1,13 +1,15 @@
-import { DashboardLayout } from "@/modules/layout/ui/views/dashboard-layout";
+import { ResponsiveLayout } from "@/modules/layout/ui/views/dashboard-layout";
 import { ModalProvider } from "@/providers/modal-provider";
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <DashboardLayout>
+    <ResponsiveLayout>
       {children}
       <ModalProvider />
-    </DashboardLayout>
+    </ResponsiveLayout>
   );
-};
-
-export default RootLayout;
+}

@@ -1,39 +1,32 @@
-import {
-  SidebarProvider,
-  SidebarInset,
-  SidebarTrigger,
-} from "@workspace/ui/components/sidebar";
-import { Separator } from "@workspace/ui/components/separator";
-import { AppSidebar } from "../components/app-sidebar";
-import Link from "next/link";
-import Image from "next/image";
+import { ReactNode } from "react";
+import { BottomNav } from "../components/bottom-nav";
+import { DesktopSidebar } from "../components/desktop-sidebar";
 
-interface DashboardLayoutProps {
-  children: React.ReactNode;
+interface ResponsiveLayoutProps {
+  children: ReactNode;
+  hideNav?: boolean;
 }
 
-export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+export function ResponsiveLayout({
+  children,
+  hideNav = false,
+}: ResponsiveLayoutProps) {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/40 backdrop-blur-lg border-border/50 px-6">
-          <SidebarTrigger />
-          <Link href="/">
-            <Image
-              src="/logo.jpg"
-              alt="Logo"
-              width={30}
-              height={30}
-              className="md:hidden"
-            />
-          </Link>
-          <div className="flex-1" />
+    <div className="min-h-screen bg-background flex">
+      {/* Desktop Sidebar */}
+      {!hideNav && <DesktopSidebar />}
 
-          <div className="flex items-center gap-2">{/* <UserNav /> */}</div>
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
-      </SidebarInset>
-    </SidebarProvider>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        <main className={!hideNav ? "pb-20 lg:pb-0" : ""}>{children}</main>
+
+        {/* Mobile Bottom Nav */}
+        {!hideNav && (
+          <div className="lg:hidden">
+            <BottomNav />
+          </div>
+        )}
+      </div>
+    </div>
   );
-};
+}

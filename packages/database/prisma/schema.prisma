@@ -23,6 +23,7 @@ model User {
   phone         String?
   isNewUser     Boolean  @default(true)
   role          String   @default("User")
+  isVerified    Boolean  @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
