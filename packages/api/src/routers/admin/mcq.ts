@@ -97,6 +97,40 @@ export const mcqRouter = createTRPCRouter({
       }
     }),
 
+  assignQuestionToExam: adminProcedure
+    .input(
+      z.object({
+        examId: z.string(),
+        mcqIds: z.array(z.string()),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { examId, mcqIds } = input;
+
+      try {
+        await ctx.db.examMcq.createMany({
+          data: mcqIds.map((mcqId) => ({
+            examId,
+            mcqId,
+          })),
+        });
+
+        return { success: true, message: "MCQ assigned to exam" };
+      } catch (error) {
+        console.error("Error assigning mcq to exam", error);
+
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Internal Server Error",
+          cause: error,
+        });
+      }
+    }),
+
   deleteOne: adminProcedure
     .input(
       z.object({
@@ -161,8 +195,6 @@ export const mcqRouter = createTRPCRouter({
           createdAt: "asc",
         },
       });
-
-      console.log(mcqs);
 
       // Group MCQs by subjectId
       const groupedBySubject = mcqs.reduce(

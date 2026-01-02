@@ -310,6 +310,7 @@ export type McqWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Mcq"> | Date | string
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
   chapter?: Prisma.XOR<Prisma.ChapterScalarRelationFilter, Prisma.ChapterWhereInput>
+  exams?: Prisma.ExamMcqListRelationFilter
 }
 
 export type McqOrderByWithRelationInput = {
@@ -333,6 +334,7 @@ export type McqOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   subject?: Prisma.SubjectOrderByWithRelationInput
   chapter?: Prisma.ChapterOrderByWithRelationInput
+  exams?: Prisma.ExamMcqOrderByRelationAggregateInput
 }
 
 export type McqWhereUniqueInput = Prisma.AtLeast<{
@@ -359,6 +361,7 @@ export type McqWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Mcq"> | Date | string
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
   chapter?: Prisma.XOR<Prisma.ChapterScalarRelationFilter, Prisma.ChapterWhereInput>
+  exams?: Prisma.ExamMcqListRelationFilter
 }, "id">
 
 export type McqOrderByWithAggregationInput = {
@@ -430,6 +433,7 @@ export type McqCreateInput = {
   updatedAt?: Date | string
   subject: Prisma.SubjectCreateNestedOneWithoutMcqsInput
   chapter: Prisma.ChapterCreateNestedOneWithoutMcqsInput
+  exams?: Prisma.ExamMcqCreateNestedManyWithoutMcqInput
 }
 
 export type McqUncheckedCreateInput = {
@@ -451,6 +455,7 @@ export type McqUncheckedCreateInput = {
   chapterId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  exams?: Prisma.ExamMcqUncheckedCreateNestedManyWithoutMcqInput
 }
 
 export type McqUpdateInput = {
@@ -472,6 +477,7 @@ export type McqUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subject?: Prisma.SubjectUpdateOneRequiredWithoutMcqsNestedInput
   chapter?: Prisma.ChapterUpdateOneRequiredWithoutMcqsNestedInput
+  exams?: Prisma.ExamMcqUpdateManyWithoutMcqNestedInput
 }
 
 export type McqUncheckedUpdateInput = {
@@ -493,6 +499,7 @@ export type McqUncheckedUpdateInput = {
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exams?: Prisma.ExamMcqUncheckedUpdateManyWithoutMcqNestedInput
 }
 
 export type McqCreateManyInput = {
@@ -639,6 +646,11 @@ export type McqSumOrderByAggregateInput = {
   session?: Prisma.SortOrder
 }
 
+export type McqScalarRelationFilter = {
+  is?: Prisma.McqWhereInput
+  isNot?: Prisma.McqWhereInput
+}
+
 export type McqCreateNestedManyWithoutSubjectInput = {
   create?: Prisma.XOR<Prisma.McqCreateWithoutSubjectInput, Prisma.McqUncheckedCreateWithoutSubjectInput> | Prisma.McqCreateWithoutSubjectInput[] | Prisma.McqUncheckedCreateWithoutSubjectInput[]
   connectOrCreate?: Prisma.McqCreateOrConnectWithoutSubjectInput | Prisma.McqCreateOrConnectWithoutSubjectInput[]
@@ -750,6 +762,20 @@ export type McqUpdatereferenceInput = {
   push?: string | string[]
 }
 
+export type McqCreateNestedOneWithoutExamsInput = {
+  create?: Prisma.XOR<Prisma.McqCreateWithoutExamsInput, Prisma.McqUncheckedCreateWithoutExamsInput>
+  connectOrCreate?: Prisma.McqCreateOrConnectWithoutExamsInput
+  connect?: Prisma.McqWhereUniqueInput
+}
+
+export type McqUpdateOneRequiredWithoutExamsNestedInput = {
+  create?: Prisma.XOR<Prisma.McqCreateWithoutExamsInput, Prisma.McqUncheckedCreateWithoutExamsInput>
+  connectOrCreate?: Prisma.McqCreateOrConnectWithoutExamsInput
+  upsert?: Prisma.McqUpsertWithoutExamsInput
+  connect?: Prisma.McqWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.McqUpdateToOneWithWhereWithoutExamsInput, Prisma.McqUpdateWithoutExamsInput>, Prisma.McqUncheckedUpdateWithoutExamsInput>
+}
+
 export type McqCreateWithoutSubjectInput = {
   id?: string
   question: string
@@ -768,6 +794,7 @@ export type McqCreateWithoutSubjectInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   chapter: Prisma.ChapterCreateNestedOneWithoutMcqsInput
+  exams?: Prisma.ExamMcqCreateNestedManyWithoutMcqInput
 }
 
 export type McqUncheckedCreateWithoutSubjectInput = {
@@ -788,6 +815,7 @@ export type McqUncheckedCreateWithoutSubjectInput = {
   chapterId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  exams?: Prisma.ExamMcqUncheckedCreateNestedManyWithoutMcqInput
 }
 
 export type McqCreateOrConnectWithoutSubjectInput = {
@@ -858,6 +886,7 @@ export type McqCreateWithoutChapterInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   subject: Prisma.SubjectCreateNestedOneWithoutMcqsInput
+  exams?: Prisma.ExamMcqCreateNestedManyWithoutMcqInput
 }
 
 export type McqUncheckedCreateWithoutChapterInput = {
@@ -878,6 +907,7 @@ export type McqUncheckedCreateWithoutChapterInput = {
   subjectId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  exams?: Prisma.ExamMcqUncheckedCreateNestedManyWithoutMcqInput
 }
 
 export type McqCreateOrConnectWithoutChapterInput = {
@@ -904,6 +934,106 @@ export type McqUpdateWithWhereUniqueWithoutChapterInput = {
 export type McqUpdateManyWithWhereWithoutChapterInput = {
   where: Prisma.McqScalarWhereInput
   data: Prisma.XOR<Prisma.McqUpdateManyMutationInput, Prisma.McqUncheckedUpdateManyWithoutChapterInput>
+}
+
+export type McqCreateWithoutExamsInput = {
+  id?: string
+  question: string
+  options?: Prisma.McqCreateoptionsInput | string[]
+  statements?: Prisma.McqCreatestatementsInput | string[]
+  answer: string
+  type: string
+  reference?: Prisma.McqCreatereferenceInput | string[]
+  explanation?: string | null
+  isMath?: boolean
+  session: number
+  source?: string | null
+  questionUrl?: string | null
+  context?: string | null
+  contextUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subject: Prisma.SubjectCreateNestedOneWithoutMcqsInput
+  chapter: Prisma.ChapterCreateNestedOneWithoutMcqsInput
+}
+
+export type McqUncheckedCreateWithoutExamsInput = {
+  id?: string
+  question: string
+  options?: Prisma.McqCreateoptionsInput | string[]
+  statements?: Prisma.McqCreatestatementsInput | string[]
+  answer: string
+  type: string
+  reference?: Prisma.McqCreatereferenceInput | string[]
+  explanation?: string | null
+  isMath?: boolean
+  session: number
+  source?: string | null
+  questionUrl?: string | null
+  context?: string | null
+  contextUrl?: string | null
+  subjectId: string
+  chapterId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type McqCreateOrConnectWithoutExamsInput = {
+  where: Prisma.McqWhereUniqueInput
+  create: Prisma.XOR<Prisma.McqCreateWithoutExamsInput, Prisma.McqUncheckedCreateWithoutExamsInput>
+}
+
+export type McqUpsertWithoutExamsInput = {
+  update: Prisma.XOR<Prisma.McqUpdateWithoutExamsInput, Prisma.McqUncheckedUpdateWithoutExamsInput>
+  create: Prisma.XOR<Prisma.McqCreateWithoutExamsInput, Prisma.McqUncheckedCreateWithoutExamsInput>
+  where?: Prisma.McqWhereInput
+}
+
+export type McqUpdateToOneWithWhereWithoutExamsInput = {
+  where?: Prisma.McqWhereInput
+  data: Prisma.XOR<Prisma.McqUpdateWithoutExamsInput, Prisma.McqUncheckedUpdateWithoutExamsInput>
+}
+
+export type McqUpdateWithoutExamsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  question?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.McqUpdateoptionsInput | string[]
+  statements?: Prisma.McqUpdatestatementsInput | string[]
+  answer?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.McqUpdatereferenceInput | string[]
+  explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isMath?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  session?: Prisma.IntFieldUpdateOperationsInput | number
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  context?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutMcqsNestedInput
+  chapter?: Prisma.ChapterUpdateOneRequiredWithoutMcqsNestedInput
+}
+
+export type McqUncheckedUpdateWithoutExamsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  question?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.McqUpdateoptionsInput | string[]
+  statements?: Prisma.McqUpdatestatementsInput | string[]
+  answer?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.McqUpdatereferenceInput | string[]
+  explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isMath?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  session?: Prisma.IntFieldUpdateOperationsInput | number
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  context?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type McqCreateManySubjectInput = {
@@ -944,6 +1074,7 @@ export type McqUpdateWithoutSubjectInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chapter?: Prisma.ChapterUpdateOneRequiredWithoutMcqsNestedInput
+  exams?: Prisma.ExamMcqUpdateManyWithoutMcqNestedInput
 }
 
 export type McqUncheckedUpdateWithoutSubjectInput = {
@@ -964,6 +1095,7 @@ export type McqUncheckedUpdateWithoutSubjectInput = {
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exams?: Prisma.ExamMcqUncheckedUpdateManyWithoutMcqNestedInput
 }
 
 export type McqUncheckedUpdateManyWithoutSubjectInput = {
@@ -1024,6 +1156,7 @@ export type McqUpdateWithoutChapterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subject?: Prisma.SubjectUpdateOneRequiredWithoutMcqsNestedInput
+  exams?: Prisma.ExamMcqUpdateManyWithoutMcqNestedInput
 }
 
 export type McqUncheckedUpdateWithoutChapterInput = {
@@ -1044,6 +1177,7 @@ export type McqUncheckedUpdateWithoutChapterInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exams?: Prisma.ExamMcqUncheckedUpdateManyWithoutMcqNestedInput
 }
 
 export type McqUncheckedUpdateManyWithoutChapterInput = {
@@ -1067,6 +1201,35 @@ export type McqUncheckedUpdateManyWithoutChapterInput = {
 }
 
 
+/**
+ * Count Type McqCountOutputType
+ */
+
+export type McqCountOutputType = {
+  exams: number
+}
+
+export type McqCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  exams?: boolean | McqCountOutputTypeCountExamsArgs
+}
+
+/**
+ * McqCountOutputType without action
+ */
+export type McqCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the McqCountOutputType
+   */
+  select?: Prisma.McqCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * McqCountOutputType without action
+ */
+export type McqCountOutputTypeCountExamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExamMcqWhereInput
+}
+
 
 export type McqSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1089,6 +1252,8 @@ export type McqSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   updatedAt?: boolean
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
+  exams?: boolean | Prisma.Mcq$examsArgs<ExtArgs>
+  _count?: boolean | Prisma.McqCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mcq"]>
 
 export type McqSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1162,6 +1327,8 @@ export type McqOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
 export type McqInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
+  exams?: boolean | Prisma.Mcq$examsArgs<ExtArgs>
+  _count?: boolean | Prisma.McqCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type McqIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
@@ -1177,6 +1344,7 @@ export type $McqPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   objects: {
     subject: Prisma.$SubjectPayload<ExtArgs>
     chapter: Prisma.$ChapterPayload<ExtArgs>
+    exams: Prisma.$ExamMcqPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1593,6 +1761,7 @@ export interface Prisma__McqClient<T, Null = never, ExtArgs extends runtime.Type
   readonly [Symbol.toStringTag]: "PrismaPromise"
   subject<T extends Prisma.SubjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubjectDefaultArgs<ExtArgs>>): Prisma.Prisma__SubjectClient<runtime.Types.Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   chapter<T extends Prisma.ChapterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ChapterDefaultArgs<ExtArgs>>): Prisma.Prisma__ChapterClient<runtime.Types.Result.GetResult<Prisma.$ChapterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  exams<T extends Prisma.Mcq$examsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Mcq$examsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamMcqPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2033,6 +2202,30 @@ export type McqDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Limit how many Mcqs to delete.
    */
   limit?: number
+}
+
+/**
+ * Mcq.exams
+ */
+export type Mcq$examsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExamMcq
+   */
+  select?: Prisma.ExamMcqSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExamMcq
+   */
+  omit?: Prisma.ExamMcqOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExamMcqInclude<ExtArgs> | null
+  where?: Prisma.ExamMcqWhereInput
+  orderBy?: Prisma.ExamMcqOrderByWithRelationInput | Prisma.ExamMcqOrderByWithRelationInput[]
+  cursor?: Prisma.ExamMcqWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExamMcqScalarFieldEnum | Prisma.ExamMcqScalarFieldEnum[]
 }
 
 /**

@@ -399,7 +399,8 @@ export const ModelName = {
   ExamBatch: 'ExamBatch',
   ExamClassName: 'ExamClassName',
   ExamStudent: 'ExamStudent',
-  ExamSubject: 'ExamSubject'
+  ExamSubject: 'ExamSubject',
+  ExamMcq: 'ExamMcq'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -415,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "className" | "institute" | "student" | "subject" | "chapter" | "mcq" | "batch" | "exam" | "examBatch" | "examClassName" | "examStudent" | "examSubject"
+    modelProps: "user" | "session" | "account" | "verification" | "className" | "institute" | "student" | "subject" | "chapter" | "mcq" | "batch" | "exam" | "examBatch" | "examClassName" | "examStudent" | "examSubject" | "examMcq"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1603,6 +1604,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ExamMcq: {
+      payload: Prisma.$ExamMcqPayload<ExtArgs>
+      fields: Prisma.ExamMcqFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExamMcqFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamMcqPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExamMcqFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamMcqPayload>
+        }
+        findFirst: {
+          args: Prisma.ExamMcqFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamMcqPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExamMcqFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamMcqPayload>
+        }
+        findMany: {
+          args: Prisma.ExamMcqFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamMcqPayload>[]
+        }
+        create: {
+          args: Prisma.ExamMcqCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamMcqPayload>
+        }
+        createMany: {
+          args: Prisma.ExamMcqCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExamMcqCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamMcqPayload>[]
+        }
+        delete: {
+          args: Prisma.ExamMcqDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamMcqPayload>
+        }
+        update: {
+          args: Prisma.ExamMcqUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamMcqPayload>
+        }
+        deleteMany: {
+          args: Prisma.ExamMcqDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExamMcqUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExamMcqUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamMcqPayload>[]
+        }
+        upsert: {
+          args: Prisma.ExamMcqUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamMcqPayload>
+        }
+        aggregate: {
+          args: Prisma.ExamMcqAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExamMcq>
+        }
+        groupBy: {
+          args: Prisma.ExamMcqGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExamMcqGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExamMcqCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExamMcqCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1884,6 +1959,17 @@ export const ExamSubjectScalarFieldEnum = {
 export type ExamSubjectScalarFieldEnum = (typeof ExamSubjectScalarFieldEnum)[keyof typeof ExamSubjectScalarFieldEnum]
 
 
+export const ExamMcqScalarFieldEnum = {
+  id: 'id',
+  examId: 'examId',
+  mcqId: 'mcqId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExamMcqScalarFieldEnum = (typeof ExamMcqScalarFieldEnum)[keyof typeof ExamMcqScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2087,6 +2173,7 @@ export type GlobalOmitConfig = {
   examClassName?: Prisma.ExamClassNameOmit
   examStudent?: Prisma.ExamStudentOmit
   examSubject?: Prisma.ExamSubjectOmit
+  examMcq?: Prisma.ExamMcqOmit
 }
 
 /* Types for Logging */

@@ -66,7 +66,8 @@ export const ModelName = {
   ExamBatch: 'ExamBatch',
   ExamClassName: 'ExamClassName',
   ExamStudent: 'ExamStudent',
-  ExamSubject: 'ExamSubject'
+  ExamSubject: 'ExamSubject',
+  ExamMcq: 'ExamMcq'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -325,6 +326,17 @@ export const ExamSubjectScalarFieldEnum = {
 } as const
 
 export type ExamSubjectScalarFieldEnum = (typeof ExamSubjectScalarFieldEnum)[keyof typeof ExamSubjectScalarFieldEnum]
+
+
+export const ExamMcqScalarFieldEnum = {
+  id: 'id',
+  examId: 'examId',
+  mcqId: 'mcqId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExamMcqScalarFieldEnum = (typeof ExamMcqScalarFieldEnum)[keyof typeof ExamMcqScalarFieldEnum]
 
 
 export const SortOrder = {

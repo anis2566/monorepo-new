@@ -222,6 +222,8 @@ model Mcq {
   chapterId String
   chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
+  exams ExamMcq[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -273,6 +275,7 @@ model Exam {
   batches    ExamBatch[]
   classNames ExamClassName[]
   students   ExamStudent[]
+  mcqs       ExamMcq[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -345,4 +348,20 @@ model ExamSubject {
 
   @@index([examId])
   @@index([subjectId])
+}
+
+model ExamMcq {
+  id String @id @default(uuid())
+
+  examId String
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  mcqId String
+  mcq   Mcq    @relation(fields: [mcqId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([examId])
+  @@index([mcqId])
 }

@@ -97,3 +97,8 @@ export type ExamStudent = Prisma.ExamStudentModel
  * 
  */
 export type ExamSubject = Prisma.ExamSubjectModel
+/**
+ * Model ExamMcq
+ * 
+ */
+export type ExamMcq = Prisma.ExamMcqModel
