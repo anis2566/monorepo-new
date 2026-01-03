@@ -3,6 +3,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import type { Context } from "./context";
+import { ROLE } from "@workspace/utils/constant";
 
 /**
  * Initialization of tRPC backend
@@ -62,6 +63,37 @@ export const adminProcedure = t.procedure.use(({ ctx, next }) => {
       session: { ...ctx.session, user: ctx.user },
       user: ctx.user,
       db: ctx.db,
+    },
+  });
+});
+
+export const studentProcedure = t.procedure.use(async ({ ctx, next }) => {
+  if (!ctx.session || !ctx.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  if (ctx.user.role !== ROLE.Student) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  const student = await ctx.db.student.findUnique({
+    where: { userId: ctx.user.id },
+    select: { id: true },
+  });
+
+  if (!student) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Student record not found for this user",
+    });
+  }
+
+  return next({
+    ctx: {
+      session: { ...ctx.session, user: ctx.user },
+      user: ctx.user,
+      db: ctx.db,
+      studentId: student.id,
     },
   });
 });

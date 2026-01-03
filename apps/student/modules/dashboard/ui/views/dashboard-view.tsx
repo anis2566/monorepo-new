@@ -1,3 +1,5 @@
+"use client";
+
 import { mockExams, mockResults, mockStudent } from "@/data/mock";
 import { WelcomeCard } from "../components/welcome-card";
 import { Card } from "@workspace/ui/components/card";
@@ -6,8 +8,21 @@ import { QuickStats } from "../components/quick-stats";
 import Link from "next/link";
 import { ExamCard } from "@/components/exam-card";
 import { ResultCard } from "@/components/result-card";
+import { useTRPC } from "@/trpc/react";
+import { useQuery } from "@tanstack/react-query";
 
 export const DashboardView = () => {
+  const trpc = useTRPC();
+
+  const { data } = useQuery(trpc.student.dashboard.get.queryOptions());
+
+  const {
+    exams = [],
+    student,
+    availableExam = 0,
+    completedExam = 0,
+  } = data || {};
+
   const upcomingExams = mockExams
     .filter((exam) => exam.status === "Active" || exam.status === "Pending")
     .slice(0, 3);
@@ -30,7 +45,7 @@ export const DashboardView = () => {
 
       {/* Mobile Welcome Card */}
       <div className="lg:hidden">
-        <WelcomeCard student={mockStudent} />
+        <WelcomeCard student={student || null} />
       </div>
 
       {/* Desktop Welcome + Stats Row */}
@@ -39,7 +54,7 @@ export const DashboardView = () => {
           <div className="flex items-center gap-6">
             <div className="w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center">
               <span className="text-3xl font-bold text-primary-foreground">
-                {mockStudent.name
+                {student?.name
                   .split(" ")
                   .map((n) => n[0])
                   .join("")}
@@ -48,11 +63,11 @@ export const DashboardView = () => {
             <div>
               <p className="text-muted-foreground">Welcome back 👋</p>
               <h2 className="text-2xl font-bold text-foreground">
-                {mockStudent.name}
+                {student?.name}
               </h2>
               <p className="text-muted-foreground">
-                {mockStudent.className} • {mockStudent.batch} • Roll:{" "}
-                {mockStudent.roll}
+                {student?.className.name} • {student?.batch?.name} • Roll:{" "}
+                {student?.roll}
               </p>
             </div>
           </div>
@@ -70,8 +85,8 @@ export const DashboardView = () => {
       {/* Stats Grid */}
       <div className="lg:hidden">
         <QuickStats
-          totalExams={mockExams.length}
-          completedExams={mockResults.length}
+          totalExams={availableExam}
+          completedExams={completedExam}
           averageScore={averageScore}
           streak={5}
         />
@@ -80,8 +95,8 @@ export const DashboardView = () => {
       {/* Desktop Stats */}
       <div className="hidden lg:block mb-8">
         <QuickStats
-          totalExams={mockExams.length}
-          completedExams={mockResults.length}
+          totalExams={availableExam}
+          completedExams={completedExam}
           averageScore={averageScore}
           streak={5}
         />
@@ -105,10 +120,8 @@ export const DashboardView = () => {
           </div>
 
           <div className="space-y-4">
-            {upcomingExams.length > 0 ? (
-              upcomingExams.map((exam) => (
-                <ExamCard key={exam.id} exam={exam} />
-              ))
+            {exams.length > 0 ? (
+              exams.map((exam) => <ExamCard key={exam.id} exam={exam} />)
             ) : (
               <Card className="p-8 text-center text-muted-foreground">
                 <p className="text-4xl mb-3">📚</p>

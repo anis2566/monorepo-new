@@ -388,6 +388,7 @@ export const ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
+  SmsVerification: 'SmsVerification',
   ClassName: 'ClassName',
   Institute: 'Institute',
   Student: 'Student',
@@ -416,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "className" | "institute" | "student" | "subject" | "chapter" | "mcq" | "batch" | "exam" | "examBatch" | "examClassName" | "examStudent" | "examSubject" | "examMcq"
+    modelProps: "user" | "session" | "account" | "verification" | "smsVerification" | "className" | "institute" | "student" | "subject" | "chapter" | "mcq" | "batch" | "exam" | "examBatch" | "examClassName" | "examStudent" | "examSubject" | "examMcq"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -713,6 +714,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.VerificationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.VerificationCountAggregateOutputType> | number
+        }
+      }
+    }
+    SmsVerification: {
+      payload: Prisma.$SmsVerificationPayload<ExtArgs>
+      fields: Prisma.SmsVerificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SmsVerificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmsVerificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SmsVerificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmsVerificationPayload>
+        }
+        findFirst: {
+          args: Prisma.SmsVerificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmsVerificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SmsVerificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmsVerificationPayload>
+        }
+        findMany: {
+          args: Prisma.SmsVerificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmsVerificationPayload>[]
+        }
+        create: {
+          args: Prisma.SmsVerificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmsVerificationPayload>
+        }
+        createMany: {
+          args: Prisma.SmsVerificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SmsVerificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmsVerificationPayload>[]
+        }
+        delete: {
+          args: Prisma.SmsVerificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmsVerificationPayload>
+        }
+        update: {
+          args: Prisma.SmsVerificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmsVerificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.SmsVerificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SmsVerificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SmsVerificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmsVerificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.SmsVerificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmsVerificationPayload>
+        }
+        aggregate: {
+          args: Prisma.SmsVerificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSmsVerification>
+        }
+        groupBy: {
+          args: Prisma.SmsVerificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SmsVerificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SmsVerificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SmsVerificationCountAggregateOutputType> | number
         }
       }
     }
@@ -1726,7 +1801,7 @@ export const UserScalarFieldEnum = {
   phone: 'phone',
   isNewUser: 'isNewUser',
   role: 'role',
-  isVerified: 'isVerified',
+  isVerifiedStudent: 'isVerifiedStudent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1779,6 +1854,18 @@ export const VerificationScalarFieldEnum = {
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
+export const SmsVerificationScalarFieldEnum = {
+  id: 'id',
+  identifier: 'identifier',
+  value: 'value',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SmsVerificationScalarFieldEnum = (typeof SmsVerificationScalarFieldEnum)[keyof typeof SmsVerificationScalarFieldEnum]
+
+
 export const ClassNameScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1827,6 +1914,7 @@ export const StudentScalarFieldEnum = {
   permanentPost: 'permanentPost',
   permanentThana: 'permanentThana',
   permanentDistrict: 'permanentDistrict',
+  userId: 'userId',
   instituteId: 'instituteId',
   classNameId: 'classNameId',
   batchId: 'batchId',
@@ -2162,6 +2250,7 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
+  smsVerification?: Prisma.SmsVerificationOmit
   className?: Prisma.ClassNameOmit
   institute?: Prisma.InstituteOmit
   student?: Prisma.StudentOmit

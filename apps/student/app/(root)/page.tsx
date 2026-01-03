@@ -1,4 +1,5 @@
 import { DashboardView } from "@/modules/dashboard/ui/views/dashboard-view";
+import { HydrateClient } from "@/trpc/server";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <DashboardView />;
+  return (
+    <HydrateClient>
+      <DashboardView />
+    </HydrateClient>
+  );
 }

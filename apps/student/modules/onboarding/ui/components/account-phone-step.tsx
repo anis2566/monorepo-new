@@ -6,6 +6,9 @@ import { Label } from "@workspace/ui/components/label";
 import { Checkbox } from "@workspace/ui/components/checkbox";
 import { Smartphone, Info } from "lucide-react";
 import { useState } from "react";
+import { useTRPC } from "@/trpc/react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 interface AccountPhoneStepProps {
   verifiedPhone: string;
@@ -21,6 +24,29 @@ export const AccountPhoneStep = ({
   const [useSameNumber, setUseSameNumber] = useState(true);
   const [accountPhone, setAccountPhone] = useState("");
   const [error, setError] = useState("");
+
+  const trpc = useTRPC();
+
+  const { mutate: assignAccountPhone, isPending } = useMutation(
+    trpc.user.assignAccountPhone.mutationOptions({
+      onError: (err) => {
+        toast.error(err.message);
+      },
+      onSuccess: async (data) => {
+        if (!data.success) {
+          toast.error(data.message);
+          return;
+        }
+        if (!data.success) {
+          toast.error(data.message);
+          return;
+        }
+        if (data.success) {
+          onNext({ accountPhone, useSameNumber: false });
+        }
+      },
+    })
+  );
 
   const validatePhone = (value: string) => {
     const phoneRegex = /^[0-9]{10}$/;
@@ -43,7 +69,9 @@ export const AccountPhoneStep = ({
       return;
     }
 
-    onNext({ accountPhone, useSameNumber: false });
+    assignAccountPhone({
+      accountPhone,
+    });
   };
 
   return (
@@ -85,6 +113,7 @@ export const AccountPhoneStep = ({
               setError("");
             }}
             className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+            disabled={isPending}
           />
           <label
             htmlFor="same-number"
@@ -92,7 +121,7 @@ export const AccountPhoneStep = ({
           >
             Use verified number
             <span className="block text-xs text-muted-foreground font-normal mt-0.5">
-              +91 {verifiedPhone}
+              +88 {verifiedPhone}
             </span>
           </label>
         </div>
@@ -108,7 +137,7 @@ export const AccountPhoneStep = ({
             </Label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium">
-                +91
+                +88
               </span>
               <Input
                 id="account-phone"
@@ -122,6 +151,7 @@ export const AccountPhoneStep = ({
                   setError("");
                 }}
                 className={`pl-12 ${error ? "border-destructive" : ""}`}
+                disabled={isPending}
               />
             </div>
             {error && <p className="text-xs text-destructive">{error}</p>}
@@ -135,6 +165,7 @@ export const AccountPhoneStep = ({
           size="lg"
           onClick={handleSubmit}
           className="w-full"
+          disabled={isPending}
         >
           Complete Setup
         </Button>
@@ -143,6 +174,7 @@ export const AccountPhoneStep = ({
           size="default"
           onClick={onBack}
           className="w-full hover:bg-muted hover:text-black"
+          disabled={isPending}
         >
           Back
         </Button>

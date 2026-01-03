@@ -66,7 +66,7 @@ export const examRouter = {
             hasSuffle,
             hasRandom,
             hasNegativeMark,
-            negativeMark: parseFloat(negativeMark ?? "0"),
+            ...(negativeMark && { negativeMark: parseFloat(negativeMark) }),
           },
           select: {
             id: true,
@@ -195,7 +195,9 @@ export const examRouter = {
                 hasSuffle: data.hasSuffle,
                 hasRandom: data.hasRandom,
                 hasNegativeMark: data.hasNegativeMark,
-                negativeMark: parseFloat(data.negativeMark ?? "0"),
+                ...(data.negativeMark && {
+                  negativeMark: parseFloat(data.negativeMark),
+                }),
               },
             });
 

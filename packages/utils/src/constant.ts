@@ -1,3 +1,9 @@
+export enum ROLE {
+  User = "User",
+  Student = "Student",
+  Admin = "Admin",
+}
+
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_LIMIT = 5;
 export const DEFAULT_PAGE_SIZE = 5;

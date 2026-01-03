@@ -4,13 +4,21 @@ import { Clock, BookOpen, Calendar, AlertTriangle, Play } from "lucide-react";
 import { Card } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
-import { Exam } from "@/types/exam";
 import { cn } from "@workspace/ui/lib/utils";
 import { format, formatDistanceToNow, isAfter, isBefore } from "date-fns";
 import { useRouter } from "next/navigation";
+import { Exam } from "@workspace/db";
+
+interface ExamWithRelation extends Exam {
+  subjects: {
+    subject: {
+      name: string;
+    };
+  }[];
+}
 
 interface ExamCardProps {
-  exam: Exam;
+  exam: ExamWithRelation;
   variant?: "default" | "compact";
 }
 
@@ -123,8 +131,12 @@ export function ExamCard({ exam, variant = "default" }: ExamCardProps) {
       <div className="flex items-center justify-between gap-3 pt-2">
         <div className="flex gap-2 flex-wrap">
           {exam.subjects.map((subject) => (
-            <Badge key={subject} variant="secondary" className="text-xs">
-              {subject}
+            <Badge
+              key={subject.subject.name}
+              variant="secondary"
+              className="text-xs"
+            >
+              {subject.subject.name}
             </Badge>
           ))}
         </div>

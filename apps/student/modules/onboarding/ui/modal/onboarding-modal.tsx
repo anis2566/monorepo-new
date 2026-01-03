@@ -50,7 +50,7 @@ export const OnboardingModal = () => {
       verificationPhone: stepData.phone,
     }));
     toast.success("Verification code sent!", {
-      description: `Code sent to +91 ${stepData.phone}`,
+      description: `Code sent to +88 ${stepData.phone}`,
     });
     setCurrentStep(3);
   };
@@ -129,7 +129,7 @@ export const OnboardingModal = () => {
   };
 
   return (
-    <Dialog open={user?.isVerified === false}>
+    <Dialog open={user?.isVerifiedStudent === false}>
       <DialogTitle></DialogTitle>
       <DialogContent
         className="max-w-[400px] w-[95vw] p-0 gap-0 rounded-2xl border-0 shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"

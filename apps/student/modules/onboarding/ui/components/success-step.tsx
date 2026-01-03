@@ -1,11 +1,41 @@
+"use client";
+
+import { useTRPC } from "@/trpc/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import { CheckCircle2, PartyPopper, Rocket } from "lucide-react";
+import { toast } from "sonner";
 
 interface SuccessStepProps {
   onComplete: () => void;
 }
 
 export const SuccessStep = ({ onComplete }: SuccessStepProps) => {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
+  const { mutate: completeOnboarding, isPending } = useMutation(
+    trpc.user.completeOnboarding.mutationOptions({
+      onError: (err) => {
+        toast.error(err.message);
+      },
+      onSuccess: async (data) => {
+        if (!data.success) {
+          toast.error(data.message);
+          return;
+        }
+        await queryClient.invalidateQueries({
+          queryKey: trpc.user.getVerifiedUser.queryKey(),
+        });
+        onComplete();
+      },
+    })
+  );
+
+  const handleSubmit = () => {
+    completeOnboarding();
+  };
+
   return (
     <div className="flex flex-col items-center text-center px-4 animate-fade-in">
       {/* Success Animation */}
@@ -42,7 +72,12 @@ export const SuccessStep = ({ onComplete }: SuccessStepProps) => {
       </div>
 
       {/* CTA */}
-      <Button size="xl" onClick={onComplete} className="w-full">
+      <Button
+        size="xl"
+        onClick={handleSubmit}
+        className="w-full"
+        disabled={isPending}
+      >
         Start Exploring
       </Button>
     </div>

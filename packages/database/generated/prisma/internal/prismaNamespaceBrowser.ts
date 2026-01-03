@@ -55,6 +55,7 @@ export const ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
+  SmsVerification: 'SmsVerification',
   ClassName: 'ClassName',
   Institute: 'Institute',
   Student: 'Student',
@@ -95,7 +96,7 @@ export const UserScalarFieldEnum = {
   phone: 'phone',
   isNewUser: 'isNewUser',
   role: 'role',
-  isVerified: 'isVerified',
+  isVerifiedStudent: 'isVerifiedStudent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -148,6 +149,18 @@ export const VerificationScalarFieldEnum = {
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
+export const SmsVerificationScalarFieldEnum = {
+  id: 'id',
+  identifier: 'identifier',
+  value: 'value',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SmsVerificationScalarFieldEnum = (typeof SmsVerificationScalarFieldEnum)[keyof typeof SmsVerificationScalarFieldEnum]
+
+
 export const ClassNameScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -196,6 +209,7 @@ export const StudentScalarFieldEnum = {
   permanentPost: 'permanentPost',
   permanentThana: 'permanentThana',
   permanentDistrict: 'permanentDistrict',
+  userId: 'userId',
   instituteId: 'instituteId',
   classNameId: 'classNameId',
   batchId: 'batchId',

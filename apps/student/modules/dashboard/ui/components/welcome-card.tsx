@@ -1,4 +1,3 @@
-import { Student } from "@/types/exam";
 import {
   Avatar,
   AvatarFallback,
@@ -6,9 +5,16 @@ import {
 } from "@workspace/ui/components/avatar";
 import { Bell } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
+import { Student } from "@workspace/db";
+
+interface StudentWithRelation extends Student {
+  className: {
+    name: string;
+  };
+}
 
 interface WelcomeCardProps {
-  student: Student;
+  student: StudentWithRelation | null;
 }
 
 export function WelcomeCard({ student }: WelcomeCardProps) {
@@ -19,7 +25,7 @@ export function WelcomeCard({ student }: WelcomeCardProps) {
     return "Good Evening";
   };
 
-  const initials = student.name
+  const initials = student?.name
     .split(" ")
     .map((n) => n[0])
     .join("")
@@ -30,7 +36,10 @@ export function WelcomeCard({ student }: WelcomeCardProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Avatar className="w-14 h-14 border-2 border-primary/20">
-            <AvatarImage src={student.imageUrl} alt={student.name} />
+            <AvatarImage
+              src={student?.imageUrl || ""}
+              alt={student?.name || ""}
+            />
             <AvatarFallback className="gradient-primary text-primary-foreground font-semibold">
               {initials}
             </AvatarFallback>
@@ -38,10 +47,10 @@ export function WelcomeCard({ student }: WelcomeCardProps) {
           <div>
             <p className="text-sm text-muted-foreground">{getGreeting()} 👋</p>
             <h1 className="text-xl font-bold text-foreground">
-              {student.name}
+              {student?.name}
             </h1>
             <p className="text-sm text-muted-foreground">
-              {student.className} • Roll: {student.roll}
+              {student?.className.name} • Roll: {student?.roll}
             </p>
           </div>
         </div>

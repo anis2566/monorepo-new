@@ -3,7 +3,7 @@ import { z } from "zod";
 import { Prisma } from "@workspace/db";
 import { ClassNameSchema } from "@workspace/schema";
 
-import { adminProcedure } from "../../trpc";
+import { adminProcedure, protectedProcedure } from "../../trpc";
 
 export const classRouter = {
   createOne: adminProcedure
@@ -90,7 +90,7 @@ export const classRouter = {
       };
     }),
 
-  forSelect: adminProcedure
+  forSelect: protectedProcedure
     .input(
       z.object({
         search: z.string().nullish(),

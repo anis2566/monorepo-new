@@ -60,6 +60,11 @@ export type Account = Prisma.AccountModel
  */
 export type Verification = Prisma.VerificationModel
 /**
+ * Model SmsVerification
+ * 
+ */
+export type SmsVerification = Prisma.SmsVerificationModel
+/**
  * Model ClassName
  * 
  */

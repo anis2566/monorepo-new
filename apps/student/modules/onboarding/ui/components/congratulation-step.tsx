@@ -47,7 +47,7 @@ export const CongratulationsStep = ({ onNext }: CongratulationsStepProps) => {
       </div>
 
       {/* CTA Button */}
-      <Button size="xl" onClick={onNext} className="mb-4 w-full">
+      <Button onClick={onNext} className="mb-4 w-full h-12">
         Let&apos;s Get Started
       </Button>
 

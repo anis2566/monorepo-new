@@ -16,18 +16,19 @@ datasource db {
 model User {
   id String @id @default(uuid())
 
-  name          String?
-  email         String   @unique
-  emailVerified Boolean? @default(false)
-  image         String?
-  phone         String?
-  isNewUser     Boolean  @default(true)
-  role          String   @default("User")
-  isVerified    Boolean  @default(false)
+  name              String?
+  email             String   @unique
+  emailVerified     Boolean? @default(false)
+  image             String?
+  phone             String?
+  isNewUser         Boolean  @default(true)
+  role              String   @default("User")
+  isVerifiedStudent Boolean  @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  student  Student?
   sessions Session[]
   accounts Account[]
 
@@ -89,6 +90,20 @@ model Verification {
   @@unique([identifier, value])
 }
 
+model SmsVerification {
+  id         String   @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([identifier])
+  @@index([identifier, expiresAt])
+  @@index([value])
+}
+
 model ClassName {
   id          String  @id @default(uuid())
   name        String  @unique
@@ -145,6 +160,9 @@ model Student {
   permanentPost     String
   permanentThana    String
   permanentDistrict String
+
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   instituteId String
   institute   Institute @relation(fields: [instituteId], references: [id], onDelete: Restrict)

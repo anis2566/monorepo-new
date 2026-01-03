@@ -1,3 +1,5 @@
+import { useTRPC } from "@/trpc/react";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import {
   InputOTP,
@@ -6,6 +8,7 @@ import {
 } from "@workspace/ui/components/input-otp";
 import { Shield, RefreshCw } from "lucide-react";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 interface OTPVerificationStepProps {
   phone: string;
@@ -26,6 +29,42 @@ export const OTPVerificationStep = ({
   const [resendTimer, setResendTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
 
+  const trpc = useTRPC();
+
+  const { mutate: verifyVerificationSms, isPending } = useMutation(
+    trpc.user.verifyVerificationSms.mutationOptions({
+      onError: (err) => {
+        toast.error(err.message);
+      },
+      onSuccess: async (data) => {
+        if (!data.success) {
+          toast.error(data.message);
+          return;
+        }
+        if (data.success) {
+          onNext();
+        }
+      },
+    })
+  );
+
+  const { mutate: resendVerificationSms, isPending: isResending } = useMutation(
+    trpc.user.resendVerificationSms.mutationOptions({
+      onError: (err) => {
+        toast.error(err.message);
+      },
+      onSuccess: async (data) => {
+        if (!data.success) {
+          toast.error(data.message);
+          return;
+        }
+        if (data.success) {
+          toast.success("Verification code has been sent again.");
+        }
+      },
+    })
+  );
+
   useEffect(() => {
     if (resendTimer > 0) {
       const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
@@ -44,15 +83,9 @@ export const OTPVerificationStep = ({
     setIsVerifying(true);
     setError("");
 
-    // Simulate verification
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // For demo, accept any 6-digit code
-    if (otp.length === 6) {
-      onNext();
-    } else {
-      setError("Invalid verification code. Please try again.");
-    }
+    verifyVerificationSms({
+      verificationCode: otp,
+    });
 
     setIsVerifying(false);
   };
@@ -62,7 +95,7 @@ export const OTPVerificationStep = ({
     setResendTimer(30);
     setOtp("");
     setError("");
-    onResend();
+    resendVerificationSms();
   };
 
   const maskedPhone = phone.replace(/(\d{2})(\d{4})(\d{4})/, "$1****$3");
@@ -96,6 +129,7 @@ export const OTPVerificationStep = ({
             setOtp(value);
             setError("");
           }}
+          disabled={isVerifying || isPending}
         >
           <InputOTPGroup className="gap-2">
             {[0, 1, 2, 3, 4, 5].map((index) => (
@@ -118,6 +152,7 @@ export const OTPVerificationStep = ({
           <button
             onClick={handleResend}
             className="flex items-center gap-1 text-sm text-primary font-medium hover:underline mx-auto"
+            disabled={isVerifying || isPending || isResending}
           >
             <RefreshCw className="w-3 h-3" />
             Resend Code
@@ -138,7 +173,7 @@ export const OTPVerificationStep = ({
           variant="default"
           size="lg"
           onClick={handleVerify}
-          disabled={otp.length !== 6 || isVerifying}
+          disabled={otp.length !== 6 || isVerifying || isPending || isResending}
           className="w-full"
         >
           {isVerifying ? "Verifying..." : "Verify Code"}
@@ -148,6 +183,7 @@ export const OTPVerificationStep = ({
           size="default"
           onClick={onBack}
           className="w-full hover:bg-muted hover:text-black"
+          disabled={isVerifying || isPending || isResending}
         >
           Change Number
         </Button>

@@ -9,48 +9,39 @@ import { isAfter, isBefore } from "date-fns";
 import { Search, BookOpen, Clock, CheckCircle2, XCircle } from "lucide-react";
 import { mockExams } from "@/data/mock";
 import { PageHeader } from "@/modules/layout/ui/components/page-header";
+import { useTRPC } from "@/trpc/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useGetExams } from "../../filters/use-get-exams";
+import { EXAM_STATUS } from "@workspace/utils/constant";
+import { useEffect } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
 
 export const ExamView = () => {
+  const trpc = useTRPC();
+  const [filters, setFilters] = useGetExams();
+
   const [activeTab, setActiveTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const now = new Date();
 
-  const filteredExams = mockExams.filter((exam) => {
-    const isActive =
-      isAfter(now, exam.startDate) && isBefore(now, exam.endDate);
-    const isUpcoming = isBefore(now, exam.startDate);
-    const isExpired = isAfter(now, exam.endDate);
+  const debounceSearchValue = useDebounce(searchQuery, 500);
 
-    const matchesSearch =
-      exam.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      exam.subjects.some((s) =>
-        s.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+  useEffect(() => {
+    setFilters({ ...filters, search: debounceSearchValue });
+  }, [debounceSearchValue, setFilters, filters]);
 
-    const matchesTab = (() => {
-      switch (activeTab) {
-        case "active":
-          return isActive;
-        case "upcoming":
-          return isUpcoming;
-        case "expired":
-          return isExpired;
-        default:
-          return true;
-      }
-    })();
+  const { data } = useSuspenseQuery(
+    trpc.student.exam.getMany.queryOptions(filters)
+  );
 
-    return matchesSearch && matchesTab;
-  });
+  console.log(data);
 
-  const stats = {
-    total: mockExams.length,
-    active: mockExams.filter(
-      (e) => isAfter(now, e.startDate) && isBefore(now, e.endDate)
-    ).length,
-    upcoming: mockExams.filter((e) => isBefore(now, e.startDate)).length,
-    expired: mockExams.filter((e) => isAfter(now, e.endDate)).length,
-  };
+  const {
+    totalExam = 0,
+    upcomingExam = 0,
+    activeExam = 0,
+    completedExam = 0,
+    exams = [],
+  } = data || {};
 
   return (
     <>
@@ -67,9 +58,7 @@ export const ExamView = () => {
               <BookOpen className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">
-                {stats.total}
-              </p>
+              <p className="text-2xl font-bold text-foreground">{totalExam}</p>
               <p className="text-sm text-muted-foreground">Total Exams</p>
             </div>
           </Card>
@@ -81,7 +70,7 @@ export const ExamView = () => {
               <CheckCircle2 className="w-6 h-6 text-success" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-success">{stats.active}</p>
+              <p className="text-2xl font-bold text-success">{activeExam}</p>
               <p className="text-sm text-muted-foreground">Active Now</p>
             </div>
           </Card>
@@ -93,9 +82,7 @@ export const ExamView = () => {
               <Clock className="w-6 h-6 text-warning" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-warning">
-                {stats.upcoming}
-              </p>
+              <p className="text-2xl font-bold text-warning">{upcomingExam}</p>
               <p className="text-sm text-muted-foreground">Upcoming</p>
             </div>
           </Card>
@@ -108,7 +95,7 @@ export const ExamView = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-muted-foreground">
-                {stats.expired}
+                {completedExam}
               </p>
               <p className="text-sm text-muted-foreground">Completed</p>
             </div>
@@ -118,7 +105,10 @@ export const ExamView = () => {
         {/* Search & Filter Row */}
         <div className="flex flex-col lg:flex-row gap-4 mb-6">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <Search
+              type="search"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"
+            />
             <Input
               placeholder="Search exams by title or subject..."
               value={searchQuery}
@@ -130,36 +120,48 @@ export const ExamView = () => {
           {/* Mobile Tabs */}
           <Tabs
             value={activeTab}
-            onValueChange={setActiveTab}
+            onValueChange={(value) => {
+              setActiveTab(value);
+              setFilters({
+                ...filters,
+                status: value,
+              });
+            }}
             className="lg:hidden"
           >
             <TabsList className="w-full grid grid-cols-4">
               <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="active">Active</TabsTrigger>
-              <TabsTrigger value="upcoming">Soon</TabsTrigger>
-              <TabsTrigger value="expired">Past</TabsTrigger>
+              <TabsTrigger value={EXAM_STATUS.Ongoing}>Active</TabsTrigger>
+              <TabsTrigger value={EXAM_STATUS.Upcoming}>Soon</TabsTrigger>
+              <TabsTrigger value={EXAM_STATUS.Completed}>Past</TabsTrigger>
             </TabsList>
           </Tabs>
 
           {/* Desktop Tabs */}
           <Tabs
             value={activeTab}
-            onValueChange={setActiveTab}
+            onValueChange={(value) => {
+              setActiveTab(value);
+              setFilters({
+                ...filters,
+                status: value,
+              });
+            }}
             className="hidden lg:block"
           >
             <TabsList>
               <TabsTrigger value="all">All Exams</TabsTrigger>
-              <TabsTrigger value="active">Active</TabsTrigger>
-              <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-              <TabsTrigger value="expired">Past</TabsTrigger>
+              <TabsTrigger value={EXAM_STATUS.Ongoing}>Active</TabsTrigger>
+              <TabsTrigger value={EXAM_STATUS.Upcoming}>Upcoming</TabsTrigger>
+              <TabsTrigger value={EXAM_STATUS.Completed}>Past</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
 
         {/* Exam Grid */}
         <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-          {filteredExams.length > 0 ? (
-            filteredExams.map((exam) => <ExamCard key={exam.id} exam={exam} />)
+          {exams.length > 0 ? (
+            exams.map((exam) => <ExamCard key={exam.id} exam={exam} />)
           ) : (
             <div className="col-span-full">
               <Card className="p-12 text-center text-muted-foreground">
