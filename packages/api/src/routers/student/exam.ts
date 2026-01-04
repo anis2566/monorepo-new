@@ -5,6 +5,31 @@ import { z } from "zod";
 import { Prisma } from "@workspace/db";
 
 export const examRouter = {
+  getForExam: studentProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { id } = input;
+
+      const exam = await ctx.db.exam.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!exam) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Exam not found",
+        });
+      }
+
+      return exam;
+    }),
+
   getMany: studentProcedure
     .input(
       z.object({

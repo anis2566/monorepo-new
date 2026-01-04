@@ -144,7 +144,7 @@ export function ExamCard({ exam, variant = "default" }: ExamCardProps) {
         <Button
           variant={isActive ? "default" : "outline"}
           disabled={isExpired || isUpcoming}
-          onClick={() => router.push(`/exam/${exam.id}`)}
+          onClick={() => router.push(`/exams/${exam.id}`)}
           className="flex-shrink-0"
         >
           {isActive
