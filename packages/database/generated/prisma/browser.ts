@@ -107,3 +107,13 @@ export type ExamSubject = Prisma.ExamSubjectModel
  * 
  */
 export type ExamMcq = Prisma.ExamMcqModel
+/**
+ * Model ExamAttempt
+ * 
+ */
+export type ExamAttempt = Prisma.ExamAttemptModel
+/**
+ * Model AnswerHistory
+ * 
+ */
+export type AnswerHistory = Prisma.AnswerHistoryModel

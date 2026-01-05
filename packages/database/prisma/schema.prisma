@@ -175,8 +175,9 @@ model Student {
 
   exams ExamStudent[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  attempts  ExamAttempt[]
 
   @@index([instituteId])
   @@index([classNameId])
@@ -243,8 +244,9 @@ model Mcq {
 
   exams ExamMcq[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  answerHistories AnswerHistory[]
 
   @@index([subjectId])
   @@index([chapterId])
@@ -295,6 +297,7 @@ model Exam {
   classNames ExamClassName[]
   students   ExamStudent[]
   mcqs       ExamMcq[]
+  attempts   ExamAttempt[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -383,4 +386,122 @@ model ExamMcq {
 
   @@index([examId])
   @@index([mcqId])
+}
+
+// ============================================
+// IMPROVED EXAM ATTEMPT MODEL
+// ============================================
+model ExamAttempt {
+  id String @id @default(uuid())
+
+  // Answer tracking - store detailed answer information as JSON
+  // Format: [{mcqId, selectedOption, isCorrect, answeredAt, timeSpent}]
+  answers Json[] @default([])
+
+  // Performance metrics - denormalized for fast queries
+  score            Int @default(0)
+  correctAnswers   Int @default(0)
+  wrongAnswers     Int @default(0)
+  skippedQuestions Int @default(0)
+
+  // Streak tracking for gamification
+  currentStreak Int @default(0)
+  bestStreak    Int @default(0)
+
+  // Timing information
+  startTime      DateTime?
+  endTime        DateTime?
+  duration       Int?      @default(0) // Total duration in seconds
+  lastActivityAt DateTime? // Last time user interacted (for monitoring)
+
+  // Question management
+  totalQuestions   Int // Total questions at attempt start
+  answeredCount    Int   @default(0) // Denormalized count
+  flaggedQuestions Int[] @default([])
+
+  // Exam status and behavior
+  status         String  @default("Not Started") // Not Started, In Progress, Submitted, Auto-Submitted, Abandoned
+  submissionType String? // Manual, Auto-TimeUp, Auto-TabSwitch
+
+  // Features and settings - snapshot at attempt creation
+  enableAiFeature Boolean @default(false)
+  hasNegativeMark Boolean @default(false) // Copy from exam at creation
+  negativeMark    Float   @default(0) // Copy from exam at creation
+  hasShuffle      Boolean @default(false)
+  hasRandom       Boolean @default(false)
+
+  // Anti-cheat tracking
+  tabSwitches    Int        @default(0)
+  tabSwitchTimes DateTime[] @default([])
+  warnings       Json[]     @default([]) // Store warning events
+
+  // Feedback and review
+  feedbackStatus String  @default("Pending") // Pending, Reviewed, Resolved
+  reviewNotes    String? // Admin notes
+
+  // Relations
+  examId String
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  answerHistory AnswerHistory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Indexes for performance
+  @@index([studentId])
+  @@index([examId])
+  @@index([status])
+  @@index([score])
+  @@index([createdAt])
+  @@index([studentId, examId])
+  @@index([studentId, status])
+  @@index([studentId, createdAt])
+  @@index([examId, status])
+  @@index([status, createdAt])
+  @@index([studentId, score])
+  @@index([lastActivityAt])
+  @@index([submissionType])
+  @@index([bestStreak])
+}
+
+// ============================================
+// ANSWER HISTORY MODEL (OPTIONAL BUT RECOMMENDED)
+// ============================================
+// Stores individual answer records for detailed analytics
+model AnswerHistory {
+  id String @id @default(uuid())
+
+  attemptId String
+  attempt   ExamAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  mcqId          String
+  mcq            Mcq    @relation(fields: [mcqId], references: [id], onDelete: Cascade)
+  questionNumber Int // Position in exam
+
+  // Answer details
+  selectedOption String
+  correctAnswer  String
+  isCorrect      Boolean
+
+  // Timing
+  answeredAt DateTime @default(now())
+  timeSpent  Int? // Seconds spent on this question
+
+  // Change tracking (if you allow answer changes)
+  previousAnswer String?
+  isChanged      Boolean @default(false)
+  changeCount    Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([attemptId])
+  @@index([mcqId])
+  @@index([attemptId, questionNumber])
+  @@index([answeredAt])
+  @@index([isCorrect])
 }

@@ -70,6 +70,11 @@ export const dashboardRouter = {
               },
             },
           },
+          _count: {
+            select: {
+              mcqs: true,
+            },
+          },
         },
         orderBy: {
           startDate: "desc",

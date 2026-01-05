@@ -5,16 +5,14 @@ import { ExamCard } from "@/components/exam-card";
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
 import { Card } from "@workspace/ui/components/card";
 import { Input } from "@workspace/ui/components/input";
-import { isAfter, isBefore } from "date-fns";
 import { Search, BookOpen, Clock, CheckCircle2, XCircle } from "lucide-react";
-import { mockExams } from "@/data/mock";
-import { PageHeader } from "@/modules/layout/ui/components/page-header";
 import { useTRPC } from "@/trpc/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useGetExams } from "../../filters/use-get-exams";
 import { EXAM_STATUS } from "@workspace/utils/constant";
 import { useEffect } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
+import { PageHeader } from "@/modules/layout/ui/components/page-header";
 
 export const ExamView = () => {
   const trpc = useTRPC();
@@ -32,8 +30,6 @@ export const ExamView = () => {
   const { data } = useSuspenseQuery(
     trpc.student.exam.getMany.queryOptions(filters)
   );
-
-  console.log(data);
 
   const {
     totalExam = 0,
@@ -161,7 +157,13 @@ export const ExamView = () => {
         {/* Exam Grid */}
         <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {exams.length > 0 ? (
-            exams.map((exam) => <ExamCard key={exam.id} exam={exam} />)
+            exams.map((exam) => (
+              <ExamCard
+                key={exam.id}
+                exam={exam}
+                totalQuestions={exam._count.mcqs}
+              />
+            ))
           ) : (
             <div className="col-span-full">
               <Card className="p-12 text-center text-muted-foreground">

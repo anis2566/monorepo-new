@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@workspace/ui/components/button";
-import { UserAnswer } from "@/types/exam";
 import { AlertTriangle, Send } from "lucide-react";
 import {
   AlertDialog,
@@ -15,9 +14,7 @@ import {
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog";
 import { cn } from "@workspace/ui/lib/utils";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { mockExams, mockMcqs } from "@/data/mock";
 import { useConfetti } from "@/hooks/use-confetti";
 import { useAudioFeedback } from "@/hooks/use-audio-feedback";
 import { useTabVisibility } from "@/hooks/use-tab-visibility";
@@ -25,136 +22,121 @@ import { ExamHeader } from "../components/exam-header";
 import { QuestionCard } from "../components/question-card";
 import { PerformanceStats } from "../components/perfomance-stats";
 import { MobileQuickJump } from "../components/mobile-quick-jump";
-import { ExamWarningModal } from "../modal/exam-warning-modal";
+import { useTRPC } from "@/trpc/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useExamAttempt } from "../../hooks/use-exam-attempt";
+import { toast } from "sonner";
 
 interface TakeExamProps {
   examId: string;
+  attemptId: string;
 }
 
-export default function TakeExam({ examId }: TakeExamProps) {
+export default function TakeExam({ examId, attemptId }: TakeExamProps) {
   const router = useRouter();
-  const exam = mockExams.find((e) => e.id === examId);
-  const questions = mockMcqs.slice(0, exam?.mcq || 5);
   const { fireStreakConfetti, fireBestStreakConfetti } = useConfetti();
   const { playCorrectSound, playIncorrectSound } = useAudioFeedback();
+  const trpc = useTRPC();
 
-  const [answers, setAnswers] = useState<UserAnswer[]>(
-    questions.map((q) => ({
-      mcqId: q.id,
-      selectedOption: null,
-      isCorrect: undefined,
-    }))
+  // Fetch exam data
+  const { data } = useSuspenseQuery(
+    trpc.student.exam.getForExam.queryOptions({ id: examId })
   );
+
+  const exam = data.exam;
+  const questions = data.questions;
+
+  const {
+    stats,
+    status,
+    submitAnswer,
+    submitExam,
+    handleTabSwitch,
+    onQuestionView,
+    getAnswerState,
+    isAnswered,
+    isSubmitting,
+    isAnswering,
+    getSelectedOption,
+  } = useExamAttempt(examId, attemptId, questions);
+
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const [showExitDialog, setShowExitDialog] = useState(false);
-  const [showWarningModal, setShowWarningModal] = useState(true);
-  const [examStarted, setExamStarted] = useState(false);
+  const [prevStats, setPrevStats] = useState({ streak: 0, bestStreak: 0 });
 
-  // Track previous stats for confetti triggers
-  const prevStatsRef = useRef({ streak: 0, bestStreak: 0 });
-
-  // Handle auto-submit on tab switch/close
-  const handleAutoSubmit = useCallback(() => {
-    if (!examStarted) return;
-    toast.error("Exam auto-submitted due to leaving the exam tab", {
-      duration: 5000,
-    });
-    // Use a small delay to show the toast before navigating
-    setTimeout(() => {
-      handleSubmitInternal();
-    }, 100);
-  }, [examStarted]);
-
-  useTabVisibility({
-    enabled: examStarted,
-    onVisibilityChange: (isVisible) => {
-      if (!isVisible) {
-        handleAutoSubmit();
-      }
-    },
-  });
-
-  const handleStartExam = () => {
-    setShowWarningModal(false);
-    setExamStarted(true);
-  };
-
-  const handleCancelExam = () => {
-    router.push("/exams");
-  };
-
-  // Calculate real-time stats
-  const stats = useMemo(() => {
-    let score = 0;
-    let wrong = 0;
-    let currentStreak = 0;
-    let bestStreak = 0;
-    let tempStreak = 0;
-
-    answers.forEach((answer, index) => {
-      if (answer.selectedOption !== null) {
-        const isCorrect = answer.selectedOption === questions[index]?.answer;
-        if (isCorrect) {
-          score++;
-          tempStreak++;
-          if (tempStreak > bestStreak) {
-            bestStreak = tempStreak;
-          }
-        } else {
-          wrong++;
-          tempStreak = 0;
-        }
-      }
-    });
-
-    // Calculate current streak from the end (most recent answers)
-    for (let i = answers.length - 1; i >= 0; i--) {
-      if (answers[i]?.selectedOption !== null) {
-        const isCorrect = answers[i]?.selectedOption === questions[i]?.answer;
-        if (isCorrect) {
-          currentStreak++;
-        } else {
-          break;
-        }
-      } else {
-        break;
-      }
-    }
-
-    return { score, wrong, streak: currentStreak, bestStreak };
-  }, [answers, questions]);
-
-  // Trigger confetti on streak achievements
-  useEffect(() => {
-    const prev = prevStatsRef.current;
-
-    // Check for new best streak (only when it increases)
-    if (stats.bestStreak > prev.bestStreak && stats.bestStreak >= 3) {
+  const triggerConfettiEffects = useCallback(() => {
+    if (stats.bestStreak > prevStats.bestStreak && stats.bestStreak >= 3) {
       fireBestStreakConfetti();
-    }
-    // Check for 5-streak achievement
-    else if (stats.streak === 5 && prev.streak < 5) {
+    } else if (stats.streak === 5 && prevStats.streak < 5) {
       fireStreakConfetti();
     }
 
-    prevStatsRef.current = {
+    setPrevStats({
       streak: stats.streak,
       bestStreak: stats.bestStreak,
-    };
+    });
   }, [
     stats.streak,
     stats.bestStreak,
+    prevStats,
     fireStreakConfetti,
     fireBestStreakConfetti,
   ]);
 
-  const answeredCount = answers.filter((a) => a.selectedOption !== null).length;
+  useTabVisibility({
+    enabled: status === "In Progress",
+    onVisibilityChange: (isVisible) => {
+      if (!isVisible) {
+        handleTabSwitch();
+      }
+    },
+  });
 
-  const handleSelectOption = (questionIndex: number, option: string) => {
-    // Check if already answered - don't allow changing
-    if (answers[questionIndex]?.selectedOption !== null) return;
+  const handleSelectOption = async (questionIndex: number, option: string) => {
+    const question = questions[questionIndex];
 
-    const isCorrect = option === questions[questionIndex]?.answer;
+    if (!question) {
+      return;
+    }
+
+    if (isAnswered(question.id)) {
+      return;
+    }
+
+    // ✅ FIXED: Convert answer to correct format
+    // Check if question.answer is a letter or actual text
+    let correctOptionLetter: string;
+
+    if (question.answer.length === 1 && /^[A-D]$/i.test(question.answer)) {
+      // answer is already a letter like "A", "B", "C", "D"
+      correctOptionLetter = question.answer.toUpperCase();
+    } else {
+      // answer is the actual option text, need to find which letter it is
+      const correctOptionIndex = question.options.findIndex(
+        (opt: string) => opt === question.answer
+      );
+
+      if (correctOptionIndex === -1) {
+        console.error("❌ Could not find correct answer in options!", {
+          answer: question.answer,
+          options: question.options,
+        });
+        toast.error("Error: Could not verify answer");
+        return;
+      }
+
+      // Convert index to letter: 0="A", 1="B", 2="C", 3="D"
+      correctOptionLetter = String.fromCharCode(65 + correctOptionIndex);
+    }
+
+    console.log("✅ Answer Comparison:", {
+      selectedOption: option,
+      correctOptionLetter: correctOptionLetter,
+      questionAnswer: question.answer,
+      isCorrect: option === correctOptionLetter,
+    });
+
+    const isCorrect = option === correctOptionLetter;
 
     // Play audio feedback immediately
     if (isCorrect) {
@@ -163,47 +145,24 @@ export default function TakeExam({ examId }: TakeExamProps) {
       playIncorrectSound();
     }
 
-    setAnswers((prev) =>
-      prev.map((a, i) =>
-        i === questionIndex
-          ? {
-              ...a,
-              selectedOption: option,
-              isCorrect,
-            }
-          : a
-      )
+    // Submit the answer with BOTH as letters
+    await submitAnswer(
+      questionIndex,
+      question.id,
+      option, // Selected: "A", "B", "C", "D"
+      correctOptionLetter // Correct: "A", "B", "C", "D"
     );
+
+    triggerConfettiEffects();
   };
 
   const handleTimeUp = useCallback(() => {
-    setShowSubmitDialog(true);
-  }, []);
-
-  const handleSubmitInternal = useCallback(() => {
-    let correct = 0;
-    let incorrect = 0;
-    let skipped = 0;
-
-    answers.forEach((answer, index) => {
-      if (answer.selectedOption === null) {
-        skipped++;
-      } else if (answer.selectedOption === questions[index]?.answer) {
-        correct++;
-      } else {
-        incorrect++;
-      }
-    });
-
-    const score = exam?.hasNegativeMark
-      ? correct - incorrect * (exam.negativeMark || 0)
-      : correct;
-
-    router.push("/results");
-  }, [answers, questions, exam, router]);
+    submitExam("Auto-TimeUp");
+  }, [submitExam]);
 
   const handleSubmit = () => {
-    handleSubmitInternal();
+    setShowSubmitDialog(false);
+    submitExam("Manual");
   };
 
   const handleExit = () => {
@@ -215,12 +174,28 @@ export default function TakeExam({ examId }: TakeExamProps) {
   };
 
   // Get answer state for quick jump buttons
-  const getAnswerState = (index: number) => {
-    const answer = answers[index];
-    if (answer?.selectedOption === null) return "unanswered";
-    return answer?.selectedOption === questions[index]?.answer
-      ? "correct"
-      : "incorrect";
+  const getQuickJumpState = (index: number) => {
+    const question = questions[index];
+
+    if (!question) {
+      return "unanswered";
+    }
+
+    // Convert answer to letter for comparison
+    let correctOptionLetter: string;
+    if (question.answer.length === 1 && /^[A-D]$/i.test(question.answer)) {
+      correctOptionLetter = question.answer.toUpperCase();
+    } else {
+      const correctOptionIndex = question.options.findIndex(
+        (opt: string) => opt === question.answer
+      );
+      correctOptionLetter =
+        correctOptionIndex !== -1
+          ? String.fromCharCode(65 + correctOptionIndex)
+          : "A"; // fallback
+    }
+
+    return getAnswerState(question.id, correctOptionLetter);
   };
 
   if (!exam) {
@@ -239,39 +214,69 @@ export default function TakeExam({ examId }: TakeExamProps) {
           <ExamHeader
             title={exam.title}
             totalQuestions={questions.length}
-            answeredCount={answeredCount}
+            answeredCount={stats.answered}
             duration={exam.duration}
             onTimeUp={handleTimeUp}
             onExit={handleExit}
           />
 
-          {/* Scrollable Questions List */}
           <div className="flex-1 overflow-y-auto">
             <div className="px-4 lg:px-8 py-6 lg:py-8">
               <div className="max-w-3xl mx-auto lg:mr-0 lg:max-w-none lg:pr-80">
                 <div className="space-y-6">
-                  {questions.map((question, index) => (
-                    <QuestionCard
-                      key={question.id}
-                      mcq={question}
-                      questionNumber={index + 1}
-                      selectedOption={answers[index]?.selectedOption || null}
-                      onSelectOption={(option) =>
-                        handleSelectOption(index, option)
-                      }
-                    />
-                  ))}
+                  {questions.map((question, index) => {
+                    const selectedOption = getSelectedOption(question.id);
+
+                    // Convert answer for display
+                    let correctOptionLetter: string;
+                    if (
+                      question.answer.length === 1 &&
+                      /^[A-D]$/i.test(question.answer)
+                    ) {
+                      correctOptionLetter = question.answer.toUpperCase();
+                    } else {
+                      const correctOptionIndex = question.options.findIndex(
+                        (opt: string) => opt === question.answer
+                      );
+                      correctOptionLetter =
+                        correctOptionIndex !== -1
+                          ? String.fromCharCode(65 + correctOptionIndex)
+                          : "A";
+                    }
+
+                    const answerState = getAnswerState(
+                      question.id,
+                      correctOptionLetter
+                    );
+
+                    return (
+                      <QuestionCard
+                        key={question.id}
+                        mcq={question}
+                        questionNumber={index + 1}
+                        selectedOption={selectedOption}
+                        onSelectOption={(option) =>
+                          handleSelectOption(index, option)
+                        }
+                        disabled={isAnswered(question.id) || isAnswering}
+                        answerState={answerState}
+                        onView={() => onQuestionView(index)}
+                      />
+                    );
+                  })}
                 </div>
 
-                {/* Submit Button */}
                 <div className="mt-8 pb-8">
                   <Button
                     onClick={() => setShowSubmitDialog(true)}
                     className="w-full py-6 text-base font-semibold"
                     size="lg"
+                    disabled={isSubmitting || status !== "In Progress"}
                   >
                     <Send className="w-5 h-5 mr-2" />
-                    Submit Exam ({answeredCount}/{questions.length} answered)
+                    {isSubmitting
+                      ? "Submitting..."
+                      : `Submit Exam (${stats.answered}/${questions.length} answered)`}
                   </Button>
                 </div>
               </div>
@@ -279,25 +284,24 @@ export default function TakeExam({ examId }: TakeExamProps) {
           </div>
         </div>
 
-        {/* Desktop Sidebar - Performance Stats */}
+        {/* Desktop Sidebar */}
         <aside className="hidden lg:block fixed right-0 top-0 w-72 h-screen bg-background border-l border-border overflow-y-auto pt-24 pb-8 px-4">
           <PerformanceStats
             score={stats.score}
             streak={stats.streak}
             bestStreak={stats.bestStreak}
             wrong={stats.wrong}
-            answered={answeredCount}
-            total={questions.length}
+            answered={stats.answered}
+            total={stats.total}
           />
 
-          {/* Quick Jump Navigation */}
           <div className="mt-6">
             <p className="text-sm font-medium text-muted-foreground mb-3">
               Quick Jump
             </p>
             <div className="grid grid-cols-5 gap-2">
               {questions.map((_, index) => {
-                const state = getAnswerState(index);
+                const state = getQuickJumpState(index);
                 return (
                   <button
                     key={index}
@@ -325,12 +329,11 @@ export default function TakeExam({ examId }: TakeExamProps) {
               })}
             </div>
 
-            {/* Legend */}
             <div className="mt-4 space-y-2 text-xs">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded bg-success/20 border-2 border-success" />
                 <span className="text-muted-foreground">
-                  Correct ({stats.score})
+                  Correct ({stats.correct})
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -342,7 +345,7 @@ export default function TakeExam({ examId }: TakeExamProps) {
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded bg-muted" />
                 <span className="text-muted-foreground">
-                  Unanswered ({questions.length - answeredCount})
+                  Unanswered ({stats.skipped})
                 </span>
               </div>
             </div>
@@ -352,25 +355,25 @@ export default function TakeExam({ examId }: TakeExamProps) {
         {/* Mobile Quick Jump FAB */}
         <MobileQuickJump
           totalQuestions={questions.length}
-          getAnswerState={getAnswerState}
+          getAnswerState={getQuickJumpState}
           stats={stats}
-          answeredCount={answeredCount}
+          answeredCount={stats.answered}
         />
 
-        {/* Mobile Performance Stats (collapsible at bottom) */}
+        {/* Mobile Performance Stats */}
         <div className="lg:hidden border-t border-border bg-card p-4">
           <PerformanceStats
             score={stats.score}
             streak={stats.streak}
             bestStreak={stats.bestStreak}
             wrong={stats.wrong}
-            answered={answeredCount}
-            total={questions.length}
+            answered={stats.answered}
+            total={stats.total}
           />
         </div>
       </div>
 
-      {/* Submit Confirmation Dialog */}
+      {/* Submit Dialog */}
       <AlertDialog open={showSubmitDialog} onOpenChange={setShowSubmitDialog}>
         <AlertDialogContent className="max-w-md">
           <AlertDialogHeader>
@@ -378,13 +381,13 @@ export default function TakeExam({ examId }: TakeExamProps) {
             <AlertDialogDescription asChild>
               <div className="space-y-4">
                 <p>
-                  You have answered {answeredCount} out of {questions.length}{" "}
+                  You have answered {stats.answered} out of {questions.length}{" "}
                   questions.
                 </p>
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <div className="p-2 bg-success/10 rounded-lg">
                     <p className="text-lg font-bold text-success">
-                      {stats.score}
+                      {stats.correct}
                     </p>
                     <p className="text-xs text-muted-foreground">Correct</p>
                   </div>
@@ -396,17 +399,16 @@ export default function TakeExam({ examId }: TakeExamProps) {
                   </div>
                   <div className="p-2 bg-muted rounded-lg">
                     <p className="text-lg font-bold text-muted-foreground">
-                      {questions.length - answeredCount}
+                      {stats.skipped}
                     </p>
                     <p className="text-xs text-muted-foreground">Skipped</p>
                   </div>
                 </div>
-                {questions.length - answeredCount > 0 && (
+                {stats.skipped > 0 && (
                   <div className="flex items-center gap-2 p-3 bg-warning/10 rounded-lg text-warning">
                     <AlertTriangle className="w-5 h-5 flex-shrink-0" />
                     <span className="text-sm font-medium">
-                      {questions.length - answeredCount} questions are still
-                      unanswered.
+                      {stats.skipped} questions are still unanswered.
                     </span>
                   </div>
                 )}
@@ -415,12 +417,14 @@ export default function TakeExam({ examId }: TakeExamProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Continue Exam</AlertDialogCancel>
-            <AlertDialogAction onClick={handleSubmit}>Submit</AlertDialogAction>
+            <AlertDialogAction onClick={handleSubmit} disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : "Submit"}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Exit Confirmation Dialog */}
+      {/* Exit Dialog */}
       <AlertDialog open={showExitDialog} onOpenChange={setShowExitDialog}>
         <AlertDialogContent className="max-w-md">
           <AlertDialogHeader>
@@ -440,13 +444,6 @@ export default function TakeExam({ examId }: TakeExamProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      {/* Exam Warning Modal */}
-      <ExamWarningModal
-        open={showWarningModal}
-        onConfirm={handleStartExam}
-        onCancel={handleCancelExam}
-      />
     </>
   );
 }

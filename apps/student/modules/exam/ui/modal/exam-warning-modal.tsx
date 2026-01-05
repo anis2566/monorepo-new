@@ -1,3 +1,5 @@
+"use client";
+
 import { ShieldAlert, Eye, LogOut } from "lucide-react";
 import {
   AlertDialog,
@@ -9,20 +11,66 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog";
+import { useStartExam } from "@/hooks/use-exam";
+import { useTRPC } from "@/trpc/react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-interface ExamWarningModalProps {
-  open: boolean;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
+export function ExamWarningModal() {
+  const { examId, totalQuestions, close } = useStartExam();
+  const trpc = useTRPC();
+  const router = useRouter();
 
-export function ExamWarningModal({
-  open,
-  onConfirm,
-  onCancel,
-}: ExamWarningModalProps) {
+  const { mutate: startExam, isPending } = useMutation(
+    trpc.student.exam.createAttempt.mutationOptions({
+      onError: (error) => {
+        toast.error(error.message);
+        console.error(error);
+      },
+      onSuccess: (data) => {
+        toast.success("Exam started successfully");
+
+        // Close the modal
+        close();
+
+        // ✅ Navigate with attemptId in URL
+        setTimeout(() => {
+          router.push(`/exams/${data.examId}/take/${data.id}`);
+        }, 0);
+      },
+    })
+  );
+
+  const handleStartExam = async () => {
+    if (!examId || !totalQuestions) {
+      toast.error("Missing exam data");
+      return;
+    }
+
+    startExam({
+      examId,
+      totalQuestions,
+    });
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    if (isPending) return;
+
+    if (!open) {
+      close();
+    }
+  };
+
+  const handleClose = () => {
+    close();
+  };
+
   return (
-    <AlertDialog open={open}>
+    <AlertDialog
+      open={!!(examId && totalQuestions)}
+      onOpenChange={handleOpenChange}
+    >
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
           <div className="flex items-center gap-3 mb-2">
@@ -69,15 +117,19 @@ export function ExamWarningModal({
               </div>
 
               <p className="text-xs text-muted-foreground text-center pt-2">
-                By clicking "Start Exam", you agree to these anti-cheating
-                measures.
+                By clicking &quot;Start Exam&quot;, you agree to these
+                anti-cheating measures.
               </p>
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>Go Back</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Start Exam</AlertDialogAction>
+          <AlertDialogCancel onClick={handleClose} disabled={isPending}>
+            Go Back
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={handleStartExam} disabled={isPending}>
+            {isPending ? "Starting..." : "Start Exam"}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

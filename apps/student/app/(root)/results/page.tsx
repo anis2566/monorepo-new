@@ -1,4 +1,5 @@
 import { ResultView } from "@/modules/result/ui/views/result-view";
+import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,7 +8,13 @@ export const metadata: Metadata = {
 };
 
 const Results = () => {
-  return <ResultView />;
+  prefetch(trpc.student.result.getResults.queryOptions());
+
+  return (
+    <HydrateClient>
+      <ResultView />
+    </HydrateClient>
+  );
 };
 
 export default Results;

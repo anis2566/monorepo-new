@@ -121,7 +121,13 @@ export const DashboardView = () => {
 
           <div className="space-y-4">
             {exams.length > 0 ? (
-              exams.map((exam) => <ExamCard key={exam.id} exam={exam} />)
+              exams.map((exam) => (
+                <ExamCard
+                  key={exam.id}
+                  exam={exam}
+                  totalQuestions={exam._count.mcqs}
+                />
+              ))
             ) : (
               <Card className="p-8 text-center text-muted-foreground">
                 <p className="text-4xl mb-3">📚</p>

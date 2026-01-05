@@ -68,7 +68,9 @@ export const ModelName = {
   ExamClassName: 'ExamClassName',
   ExamStudent: 'ExamStudent',
   ExamSubject: 'ExamSubject',
-  ExamMcq: 'ExamMcq'
+  ExamMcq: 'ExamMcq',
+  ExamAttempt: 'ExamAttempt',
+  AnswerHistory: 'AnswerHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -352,6 +354,63 @@ export const ExamMcqScalarFieldEnum = {
 } as const
 
 export type ExamMcqScalarFieldEnum = (typeof ExamMcqScalarFieldEnum)[keyof typeof ExamMcqScalarFieldEnum]
+
+
+export const ExamAttemptScalarFieldEnum = {
+  id: 'id',
+  answers: 'answers',
+  score: 'score',
+  correctAnswers: 'correctAnswers',
+  wrongAnswers: 'wrongAnswers',
+  skippedQuestions: 'skippedQuestions',
+  currentStreak: 'currentStreak',
+  bestStreak: 'bestStreak',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  duration: 'duration',
+  lastActivityAt: 'lastActivityAt',
+  totalQuestions: 'totalQuestions',
+  answeredCount: 'answeredCount',
+  flaggedQuestions: 'flaggedQuestions',
+  status: 'status',
+  submissionType: 'submissionType',
+  enableAiFeature: 'enableAiFeature',
+  hasNegativeMark: 'hasNegativeMark',
+  negativeMark: 'negativeMark',
+  hasShuffle: 'hasShuffle',
+  hasRandom: 'hasRandom',
+  tabSwitches: 'tabSwitches',
+  tabSwitchTimes: 'tabSwitchTimes',
+  warnings: 'warnings',
+  feedbackStatus: 'feedbackStatus',
+  reviewNotes: 'reviewNotes',
+  examId: 'examId',
+  studentId: 'studentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExamAttemptScalarFieldEnum = (typeof ExamAttemptScalarFieldEnum)[keyof typeof ExamAttemptScalarFieldEnum]
+
+
+export const AnswerHistoryScalarFieldEnum = {
+  id: 'id',
+  attemptId: 'attemptId',
+  mcqId: 'mcqId',
+  questionNumber: 'questionNumber',
+  selectedOption: 'selectedOption',
+  correctAnswer: 'correctAnswer',
+  isCorrect: 'isCorrect',
+  answeredAt: 'answeredAt',
+  timeSpent: 'timeSpent',
+  previousAnswer: 'previousAnswer',
+  isChanged: 'isChanged',
+  changeCount: 'changeCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AnswerHistoryScalarFieldEnum = (typeof AnswerHistoryScalarFieldEnum)[keyof typeof AnswerHistoryScalarFieldEnum]
 
 
 export const SortOrder = {

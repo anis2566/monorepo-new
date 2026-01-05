@@ -8,6 +8,7 @@ import { cn } from "@workspace/ui/lib/utils";
 import { format, formatDistanceToNow, isAfter, isBefore } from "date-fns";
 import { useRouter } from "next/navigation";
 import { Exam } from "@workspace/db";
+import { useStartExam } from "@/hooks/use-exam";
 
 interface ExamWithRelation extends Exam {
   subjects: {
@@ -20,14 +21,27 @@ interface ExamWithRelation extends Exam {
 interface ExamCardProps {
   exam: ExamWithRelation;
   variant?: "default" | "compact";
+  totalQuestions: number;
 }
 
-export function ExamCard({ exam, variant = "default" }: ExamCardProps) {
+export function ExamCard({
+  exam,
+  variant = "default",
+  totalQuestions,
+}: ExamCardProps) {
+  // ✅ CHANGED: Use setExamData instead of onOpen
+  const { setExamData } = useStartExam();
   const router = useRouter();
+
   const now = new Date();
   const isUpcoming = isBefore(now, exam.startDate);
   const isActive = isAfter(now, exam.startDate) && isBefore(now, exam.endDate);
   const isExpired = isAfter(now, exam.endDate);
+
+  // ✅ CHANGED: Call setExamData to open modal
+  const handleClick = () => {
+    setExamData(exam.id, totalQuestions);
+  };
 
   const getStatusBadge = () => {
     if (isExpired) {
@@ -65,7 +79,7 @@ export function ExamCard({ exam, variant = "default" }: ExamCardProps) {
           "p-4 flex items-center gap-4 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer",
           isActive && "border-success/50 bg-success/5"
         )}
-        onClick={() => isActive && router.push(`/exam/${exam.id}`)}
+        onClick={() => isActive && handleClick()}
       >
         <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0">
           <BookOpen className="w-6 h-6 text-primary-foreground" />
@@ -78,7 +92,13 @@ export function ExamCard({ exam, variant = "default" }: ExamCardProps) {
           <p className="text-sm text-muted-foreground">{getTimeInfo()}</p>
         </div>
         {isActive && (
-          <Button size="sm" onClick={() => router.push(`/exam/${exam.id}`)}>
+          <Button
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleClick();
+            }}
+          >
             <Play className="w-4 h-4" />
           </Button>
         )}
@@ -144,7 +164,7 @@ export function ExamCard({ exam, variant = "default" }: ExamCardProps) {
         <Button
           variant={isActive ? "default" : "outline"}
           disabled={isExpired || isUpcoming}
-          onClick={() => router.push(`/exams/${exam.id}`)}
+          onClick={handleClick}
           className="flex-shrink-0"
         >
           {isActive

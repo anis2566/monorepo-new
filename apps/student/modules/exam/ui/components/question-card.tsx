@@ -1,17 +1,36 @@
-import { Card } from "@workspace/ui/components/card";
-import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
-import { Flag } from "lucide-react";
-import { Button } from "@workspace/ui/components/button";
-import { Mcq } from "@/types/exam";
+import { useEffect, useRef } from "react";
+import { Card, CardContent } from "@workspace/ui/components/card";
+import { Badge } from "@workspace/ui/components/badge";
+import { CheckCircle2, XCircle } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
+import { parseMathString } from "@/lib/katex";
+
+interface Mcq {
+  id: string;
+  question: string;
+  options: string[];
+  answer: string;
+  type: string;
+  subject?: {
+    name: string;
+  };
+  chapter?: {
+    name: string;
+  };
+  isMath?: boolean;
+  explanation?: string | null;
+  statements?: string[];
+  context?: string | null;
+}
 
 interface QuestionCardProps {
   mcq: Mcq;
   questionNumber: number;
   selectedOption: string | null;
   onSelectOption: (option: string) => void;
-  showResult?: boolean;
-  isLocked?: boolean;
+  disabled?: boolean;
+  answerState?: "unanswered" | "correct" | "incorrect";
+  onView?: () => void;
 }
 
 export function QuestionCard({
@@ -19,128 +38,266 @@ export function QuestionCard({
   questionNumber,
   selectedOption,
   onSelectOption,
-  showResult = false,
-  isLocked = false,
+  disabled = false,
+  answerState = "unanswered",
+  onView,
 }: QuestionCardProps) {
-  // Question is locked if an option has been selected (instant lock) or if showResult is true
-  const locked = isLocked || selectedOption !== null;
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  const getOptionState = (option: string) => {
-    // During exam: only show selected state, no correct/incorrect feedback
-    if (!showResult) {
-      if (option === selectedOption) return "selected";
-      if (selectedOption !== null) return "disabled"; // Disable other options once one is selected
-      return "default";
+  // Call onView when component is first rendered or comes into view
+  useEffect(() => {
+    if (onView && cardRef.current) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              onView();
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+
+      observer.observe(cardRef.current);
+
+      return () => {
+        if (cardRef.current) {
+          observer.unobserve(cardRef.current);
+        }
+      };
     }
-    // In results view: show correct/incorrect states
-    if (option === mcq.answer) return "correct";
-    if (option === selectedOption && option !== mcq.answer) return "incorrect";
-    return "disabled";
-  };
+  }, [onView]);
+
+  const isAnswered = selectedOption !== null;
 
   return (
-    <Card className="overflow-hidden" id={`question-${questionNumber}`}>
-      {/* Question Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/30">
-        <Tabs defaultValue="question" className="w-auto">
-          <TabsList className="h-8 bg-transparent p-0 gap-4">
-            <TabsTrigger
-              value="question"
-              className="h-8 px-0 text-sm font-medium data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-primary rounded-none"
+    <Card
+      ref={cardRef}
+      id={`question-${questionNumber}`}
+      className={cn(
+        "scroll-mt-24 transition-all duration-200",
+        isAnswered &&
+          answerState === "correct" &&
+          "border-success/50 bg-success/5",
+        isAnswered &&
+          answerState === "incorrect" &&
+          "border-destructive/50 bg-destructive/5"
+      )}
+    >
+      <CardContent className="p-6">
+        {/* Question Header */}
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div className="flex items-center gap-3">
+            <div
+              className={cn(
+                "flex items-center justify-center w-10 h-10 rounded-full font-semibold text-sm",
+                !isAnswered && "bg-primary/10 text-primary",
+                isAnswered &&
+                  answerState === "correct" &&
+                  "bg-success/20 text-success",
+                isAnswered &&
+                  answerState === "incorrect" &&
+                  "bg-destructive/20 text-destructive"
+              )}
             >
-              Question {questionNumber}
-            </TabsTrigger>
-            {mcq.explanation && (
-              <TabsTrigger
-                value="contextual"
-                className="h-8 px-0 text-sm font-medium data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-primary rounded-none"
-              >
-                Contextual
-              </TabsTrigger>
-            )}
-          </TabsList>
-        </Tabs>
-        <Button variant="ghost" size="sm" className="text-muted-foreground h-8">
-          <Flag className="w-4 h-4 mr-1" />
-          Flag
-        </Button>
-      </div>
+              {questionNumber}
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge
+                  variant={mcq.type === "MCQ" ? "default" : "secondary"}
+                  className="text-xs"
+                >
+                  {mcq.type}
+                </Badge>
+              </div>
+            </div>
+          </div>
 
-      {/* Question Content */}
-      <div className="p-4 lg:p-6">
-        <p className="text-base lg:text-lg font-medium text-foreground leading-relaxed mb-6">
-          {mcq.question}
-        </p>
+          {/* Answer Status Badge */}
+          {isAnswered && (
+            <div className="flex items-center gap-2">
+              {answerState === "correct" ? (
+                <>
+                  <CheckCircle2 className="w-5 h-5 text-success" />
+                  <span className="text-sm font-medium text-success">
+                    Correct
+                  </span>
+                </>
+              ) : (
+                <>
+                  <XCircle className="w-5 h-5 text-destructive" />
+                  <span className="text-sm font-medium text-destructive">
+                    Wrong
+                  </span>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Context (if available) */}
+        {mcq.context && (
+          <div className="mb-4 p-4 bg-muted/50 rounded-lg border border-border">
+            <p className="text-sm text-muted-foreground font-medium mb-1">
+              Context:
+            </p>
+            <p className="text-sm">
+              {mcq.isMath ? parseMathString(mcq.context) : mcq.context}
+            </p>
+          </div>
+        )}
+
+        {/* Question Text */}
+        <div className="mb-6">
+          <p className="text-base leading-relaxed font-medium">
+            {mcq.isMath ? parseMathString(mcq.question) : mcq.question}
+          </p>
+        </div>
+
+        {/* Statements (for statement-based questions) */}
+        {mcq.statements && mcq.statements.length > 0 && (
+          <div className="mb-4 space-y-2">
+            {mcq.statements.map((statement, index) => (
+              <div
+                key={index}
+                className="p-3 bg-muted/30 rounded-md border border-border"
+              >
+                <p className="text-sm">
+                  <span className="font-semibold">Statement {index + 1}: </span>
+                  {mcq.isMath ? parseMathString(statement) : statement}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Options */}
         <div className="space-y-3">
-          {mcq.options.map((option, idx) => {
-            const state = getOptionState(option);
-            const romanNumerals = ["i", "ii", "iii", "iv", "v", "vi"];
-            const optionLabel = romanNumerals[idx] || String(idx + 1);
-            const isDisabled = locked || showResult;
+          {mcq.options.map((option, index) => {
+            const optionLabel = String.fromCharCode(65 + index); // A, B, C, D
+            const isSelected = selectedOption === optionLabel;
+            const isCorrectAnswer = mcq.answer === optionLabel;
 
             return (
               <button
-                key={idx}
-                onClick={() => !isDisabled && onSelectOption(option)}
-                disabled={isDisabled}
+                key={index}
+                onClick={() =>
+                  !disabled && !isAnswered && onSelectOption(optionLabel)
+                }
+                disabled={disabled || isAnswered}
                 className={cn(
-                  "w-full flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all duration-200",
-                  state === "default" &&
-                    "border-border bg-card hover:border-primary/50 hover:bg-primary/5",
-                  state === "selected" && "border-primary bg-primary/10",
-                  state === "correct" && "border-success bg-success/10",
-                  state === "incorrect" &&
+                  "w-full text-left p-4 rounded-lg border-2 transition-all duration-200",
+                  "hover:shadow-md active:scale-[0.99]",
+                  // Default state
+                  !isAnswered &&
+                    !isSelected &&
+                    "border-border bg-card hover:border-primary/50",
+                  // Selected but not answered yet
+                  !isAnswered && isSelected && "border-primary bg-primary/5",
+                  // Answered - show correct/incorrect
+                  isAnswered &&
+                    isSelected &&
+                    answerState === "correct" &&
+                    "border-success bg-success/10",
+                  isAnswered &&
+                    isSelected &&
+                    answerState === "incorrect" &&
                     "border-destructive bg-destructive/10",
-                  state === "disabled" &&
-                    "border-border bg-muted/50 opacity-50 cursor-not-allowed"
+                  isAnswered && !isSelected && "border-border bg-muted/30",
+                  // Show correct answer when wrong answer selected
+                  isAnswered &&
+                    answerState === "incorrect" &&
+                    isCorrectAnswer &&
+                    "border-success/50 bg-success/5",
+                  // Disabled state
+                  (disabled || isAnswered) && "cursor-not-allowed"
                 )}
               >
-                <span
-                  className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0 border-2",
-                    state === "default" &&
-                      "border-border text-muted-foreground",
-                    state === "selected" &&
-                      "border-primary bg-primary text-primary-foreground",
-                    state === "correct" &&
-                      "border-success bg-success text-success-foreground",
-                    state === "incorrect" &&
-                      "border-destructive bg-destructive text-destructive-foreground",
-                    state === "disabled" &&
-                      "border-border text-muted-foreground"
+                <div className="flex items-center gap-3">
+                  {/* Option Circle */}
+                  <div
+                    className={cn(
+                      "flex items-center justify-center w-8 h-8 rounded-full border-2 font-semibold text-sm flex-shrink-0",
+                      !isAnswered &&
+                        !isSelected &&
+                        "border-border bg-background",
+                      !isAnswered &&
+                        isSelected &&
+                        "border-primary bg-primary text-primary-foreground",
+                      isAnswered &&
+                        isSelected &&
+                        answerState === "correct" &&
+                        "border-success bg-success text-success-foreground",
+                      isAnswered &&
+                        isSelected &&
+                        answerState === "incorrect" &&
+                        "border-destructive bg-destructive text-destructive-foreground",
+                      isAnswered &&
+                        !isSelected &&
+                        isCorrectAnswer &&
+                        "border-success bg-success/20 text-success",
+                      isAnswered &&
+                        !isSelected &&
+                        !isCorrectAnswer &&
+                        "border-border bg-muted"
+                    )}
+                  >
+                    {optionLabel}
+                  </div>
+
+                  {/* Option Text */}
+                  <span
+                    className={cn(
+                      "text-sm flex-1",
+                      isAnswered &&
+                        isSelected &&
+                        answerState === "correct" &&
+                        "font-medium",
+                      isAnswered &&
+                        isSelected &&
+                        answerState === "incorrect" &&
+                        "font-medium"
+                    )}
+                  >
+                    {mcq.isMath ? parseMathString(option) : option}
+                  </span>
+
+                  {/* Status Icon */}
+                  {isAnswered && isSelected && (
+                    <>
+                      {answerState === "correct" ? (
+                        <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />
+                      ) : (
+                        <XCircle className="w-5 h-5 text-destructive flex-shrink-0" />
+                      )}
+                    </>
                   )}
-                >
-                  {optionLabel}
-                </span>
-                <span
-                  className={cn(
-                    "text-sm lg:text-base flex-1",
-                    state === "selected" && "font-medium text-primary",
-                    state === "correct" && "font-medium text-success",
-                    state === "incorrect" && "font-medium text-destructive",
-                    (state === "default" || state === "disabled") &&
-                      "text-foreground"
-                  )}
-                >
-                  {option}
-                </span>
+
+                  {/* Show correct answer indicator */}
+                  {isAnswered &&
+                    answerState === "incorrect" &&
+                    isCorrectAnswer && (
+                      <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />
+                    )}
+                </div>
               </button>
             );
           })}
         </div>
 
-        {/* Explanation (shown only in results view) */}
-        {showResult && mcq.explanation && (
-          <div className="mt-6 p-4 bg-muted/50 rounded-xl border border-border">
-            <p className="text-sm font-medium text-foreground mb-2">
+        {/* Explanation (shown after answering if available) */}
+        {isAnswered && mcq.explanation && (
+          <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+            <p className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">
               Explanation:
             </p>
-            <p className="text-sm text-muted-foreground">{mcq.explanation}</p>
+            <p className="text-sm text-blue-800 dark:text-blue-200">
+              {mcq.explanation}
+            </p>
           </div>
         )}
-      </div>
+      </CardContent>
     </Card>
   );
 }
