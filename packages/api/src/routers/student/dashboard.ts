@@ -104,7 +104,7 @@ export const dashboardRouter = {
           orderBy: {
             createdAt: "desc",
           },
-          take: 5, // ✅ Get only last 5 results for dashboard
+          take: 3, // ✅ Get only last 5 results for dashboard
         }),
       ]);
 
