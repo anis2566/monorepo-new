@@ -21,16 +21,16 @@ export const DashboardView = () => {
     student,
     availableExam = 0,
     completedExam = 0,
+    recentResults = [],
   } = data || {};
 
   const upcomingExams = mockExams
     .filter((exam) => exam.status === "Active" || exam.status === "Pending")
     .slice(0, 3);
 
-  const recentResults = mockResults.slice(0, 2);
-
   const averageScore = Math.round(
-    mockResults.reduce((acc, r) => acc + r.percentage, 0) / mockResults.length
+    recentResults.reduce((acc, r) => acc + r.percentage, 0) /
+      recentResults.length
   );
 
   return (
