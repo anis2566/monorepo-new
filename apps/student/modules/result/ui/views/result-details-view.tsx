@@ -283,11 +283,12 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                   />
 
                   {/* Time Spent Badge */}
-                  {reviewQuestion.timeSpent > 0 && (
-                    <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-                      <span>⏱️ Time spent: {reviewQuestion.timeSpent}s</span>
-                    </div>
-                  )}
+                  {reviewQuestion?.timeSpent &&
+                    reviewQuestion.timeSpent > 0 && (
+                      <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+                        <span>⏱️ Time spent: {reviewQuestion.timeSpent}s</span>
+                      </div>
+                    )}
                 </Card>
               ))}
             </div>
