@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, BookOpen, Trophy, User } from "lucide-react";
+import { Home, BookOpen, User, Medal, Award, Trophy } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@workspace/ui/lib/utils";
@@ -9,6 +9,8 @@ const navItems = [
   { href: "/", icon: Home, label: "Home" },
   { href: "/exams", icon: BookOpen, label: "Exams" },
   { href: "/results", icon: Trophy, label: "Results" },
+  { href: "/leaderboard", icon: Medal, label: "Ranks" },
+  // { href: "/achievements", icon: Award, label: "Awards" },
   { href: "/profile", icon: User, label: "Profile" },
 ];
 

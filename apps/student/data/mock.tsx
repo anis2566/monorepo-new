@@ -164,3 +164,215 @@ export const mockResults: ExamResult[] = [
     timeTaken: 42,
   },
 ];
+
+export interface LeaderboardEntry {
+  id: string;
+  rank: number;
+  studentId: string;
+  studentName: string;
+  imageUrl?: string;
+  className: string;
+  batch?: string;
+  totalScore: number;
+  totalExams: number;
+  averagePercentage: number;
+  bestStreak: number;
+  totalXp: number;
+  correctAnswers: number;
+}
+
+export type LeaderboardType = "overall" | "weekly" | "monthly" | "streak";
+
+// Mock leaderboard data
+export const mockLeaderboard: LeaderboardEntry[] = [
+  {
+    id: "1",
+    rank: 1,
+    studentId: "STD-2024-005",
+    studentName: "Fatima Khan",
+    className: "Class 10",
+    batch: "Morning Batch A",
+    totalScore: 892,
+    totalExams: 15,
+    averagePercentage: 94.2,
+    bestStreak: 28,
+    totalXp: 2850,
+    correctAnswers: 445,
+  },
+  {
+    id: "2",
+    rank: 2,
+    studentId: "STD-2024-003",
+    studentName: "Rahim Uddin",
+    className: "Class 10",
+    batch: "Morning Batch A",
+    totalScore: 856,
+    totalExams: 14,
+    averagePercentage: 91.5,
+    bestStreak: 22,
+    totalXp: 2650,
+    correctAnswers: 412,
+  },
+  {
+    id: "3",
+    rank: 3,
+    studentId: "STD-2024-001",
+    studentName: "Ahmed Rahman",
+    className: "Class 10",
+    batch: "Morning Batch A",
+    totalScore: 832,
+    totalExams: 12,
+    averagePercentage: 88.7,
+    bestStreak: 18,
+    totalXp: 2400,
+    correctAnswers: 398,
+  },
+  {
+    id: "4",
+    rank: 4,
+    studentId: "STD-2024-008",
+    studentName: "Nasrin Akter",
+    className: "Class 10",
+    batch: "Evening Batch B",
+    totalScore: 798,
+    totalExams: 13,
+    averagePercentage: 85.3,
+    bestStreak: 15,
+    totalXp: 2200,
+    correctAnswers: 372,
+  },
+  {
+    id: "5",
+    rank: 5,
+    studentId: "STD-2024-012",
+    studentName: "Karim Hossain",
+    className: "Class 10",
+    batch: "Morning Batch A",
+    totalScore: 765,
+    totalExams: 11,
+    averagePercentage: 82.1,
+    bestStreak: 14,
+    totalXp: 1950,
+    correctAnswers: 348,
+  },
+  {
+    id: "6",
+    rank: 6,
+    studentId: "STD-2024-015",
+    studentName: "Sumaiya Begum",
+    className: "Class 10",
+    batch: "Evening Batch B",
+    totalScore: 742,
+    totalExams: 12,
+    averagePercentage: 79.8,
+    bestStreak: 12,
+    totalXp: 1800,
+    correctAnswers: 325,
+  },
+  {
+    id: "7",
+    rank: 7,
+    studentId: "STD-2024-020",
+    studentName: "Jahid Islam",
+    className: "Class 10",
+    batch: "Morning Batch A",
+    totalScore: 718,
+    totalExams: 10,
+    averagePercentage: 77.5,
+    bestStreak: 11,
+    totalXp: 1650,
+    correctAnswers: 305,
+  },
+  {
+    id: "8",
+    rank: 8,
+    studentId: "STD-2024-022",
+    studentName: "Mithila Roy",
+    className: "Class 10",
+    batch: "Evening Batch B",
+    totalScore: 695,
+    totalExams: 11,
+    averagePercentage: 75.2,
+    bestStreak: 10,
+    totalXp: 1500,
+    correctAnswers: 288,
+  },
+  {
+    id: "9",
+    rank: 9,
+    studentId: "STD-2024-025",
+    studentName: "Tanvir Ahmed",
+    className: "Class 10",
+    batch: "Morning Batch A",
+    totalScore: 672,
+    totalExams: 9,
+    averagePercentage: 73.8,
+    bestStreak: 9,
+    totalXp: 1350,
+    correctAnswers: 265,
+  },
+  {
+    id: "10",
+    rank: 10,
+    studentId: "STD-2024-028",
+    studentName: "Riya Sultana",
+    className: "Class 10",
+    batch: "Evening Batch B",
+    totalScore: 648,
+    totalExams: 10,
+    averagePercentage: 71.5,
+    bestStreak: 8,
+    totalXp: 1200,
+    correctAnswers: 245,
+  },
+];
+
+// Weekly leaderboard (different rankings)
+export const mockWeeklyLeaderboard: LeaderboardEntry[] = [
+  {
+    ...mockLeaderboard[2]!,
+    rank: 1,
+    totalScore: 145,
+    totalExams: 3,
+    averagePercentage: 92.5,
+  },
+  {
+    ...mockLeaderboard[0]!,
+    rank: 2,
+    totalScore: 138,
+    totalExams: 2,
+    averagePercentage: 89.0,
+  },
+  {
+    ...mockLeaderboard[4]!,
+    rank: 3,
+    totalScore: 132,
+    totalExams: 3,
+    averagePercentage: 85.5,
+  },
+  {
+    ...mockLeaderboard[1]!,
+    rank: 4,
+    totalScore: 125,
+    totalExams: 2,
+    averagePercentage: 82.0,
+  },
+  {
+    ...mockLeaderboard[6]!,
+    rank: 5,
+    totalScore: 118,
+    totalExams: 2,
+    averagePercentage: 78.5,
+  },
+];
+
+// Streak leaderboard
+export const mockStreakLeaderboard: LeaderboardEntry[] = [
+  { ...mockLeaderboard[0]! },
+  { ...mockLeaderboard[1]! },
+  { ...mockLeaderboard[2]! },
+  { ...mockLeaderboard[3]! },
+  { ...mockLeaderboard[4]! },
+]
+  .sort((a, b) => b.bestStreak - a.bestStreak)
+  .map((entry, index) => ({ ...entry, rank: index + 1 }));

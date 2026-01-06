@@ -1,7 +1,6 @@
 "use client";
 
 import { ResultCard } from "@/components/result-card";
-import { PageHeader } from "@/modules/layout/ui/components/page-header";
 import { Card } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -115,7 +114,6 @@ export const ResultView = () => {
   if (isLoading) {
     return (
       <>
-        <PageHeader title="Results" subtitle="Your exam performance history" />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center space-y-4">
             <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto" />
@@ -129,7 +127,6 @@ export const ResultView = () => {
   if (!results || results.length === 0) {
     return (
       <>
-        <PageHeader title="Results" subtitle="Your exam performance history" />
         <div className="px-4 lg:px-8 py-4 lg:py-6 max-w-7xl mx-auto">
           <Card className="p-12 text-center">
             <Trophy className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
@@ -147,170 +144,163 @@ export const ResultView = () => {
   }
 
   return (
-    <>
-      <PageHeader
-        title="Results"
-        subtitle={`Tracking your performance across ${stats.totalExams} exam${stats.totalExams !== 1 ? "s" : ""}`}
-      />
+    <div className="px-4 lg:px-8 py-4 lg:py-6 max-w-7xl mx-auto space-y-6">
+      {/* Stats Overview - Desktop */}
+      <div className="hidden lg:grid lg:grid-cols-4 gap-4">
+        <StatsCard
+          icon={<TrendingUp className="w-6 h-6 text-primary" />}
+          value={`${stats.recentAverage}%`}
+          label="Recent Average"
+          sublabel="Last 5 exams"
+          iconBg="bg-primary/10"
+        />
+        <StatsCard
+          icon={<Award className="w-6 h-6 text-success" />}
+          value={`${stats.bestScore.toFixed(0)}%`}
+          label="Best Score"
+          sublabel="Personal record"
+          iconBg="bg-success/10"
+          valueColor="text-success"
+        />
+        <StatsCard
+          icon={<Target className="w-6 h-6 text-accent" />}
+          value={stats.totalExams.toString()}
+          label="Exams Taken"
+          sublabel={`${stats.totalCorrect}/${stats.totalQuestions} correct`}
+          iconBg="bg-accent/10"
+        />
+        <StatsCard
+          icon={<Zap className="w-6 h-6 text-warning" />}
+          value={
+            stats.improvementRate !== 0
+              ? `${stats.improvementRate > 0 ? "+" : ""}${stats.improvementRate}%`
+              : "N/A"
+          }
+          label="Improvement"
+          sublabel="vs earlier exams"
+          iconBg="bg-warning/10"
+          valueColor={
+            stats.improvementRate > 0
+              ? "text-success"
+              : stats.improvementRate < 0
+                ? "text-destructive"
+                : "text-foreground"
+          }
+        />
+      </div>
 
-      <div className="px-4 lg:px-8 py-4 lg:py-6 max-w-7xl mx-auto space-y-6">
-        {/* Stats Overview - Desktop */}
-        <div className="hidden lg:grid lg:grid-cols-4 gap-4">
-          <StatsCard
-            icon={<TrendingUp className="w-6 h-6 text-primary" />}
-            value={`${stats.recentAverage}%`}
-            label="Recent Average"
-            sublabel="Last 5 exams"
-            iconBg="bg-primary/10"
-          />
-          <StatsCard
-            icon={<Award className="w-6 h-6 text-success" />}
-            value={`${stats.bestScore.toFixed(0)}%`}
-            label="Best Score"
-            sublabel="Personal record"
-            iconBg="bg-success/10"
-            valueColor="text-success"
-          />
-          <StatsCard
-            icon={<Target className="w-6 h-6 text-accent" />}
-            value={stats.totalExams.toString()}
-            label="Exams Taken"
-            sublabel={`${stats.totalCorrect}/${stats.totalQuestions} correct`}
-            iconBg="bg-accent/10"
-          />
-          <StatsCard
-            icon={<Zap className="w-6 h-6 text-warning" />}
-            value={
-              stats.improvementRate !== 0
-                ? `${stats.improvementRate > 0 ? "+" : ""}${stats.improvementRate}%`
-                : "N/A"
-            }
-            label="Improvement"
-            sublabel="vs earlier exams"
-            iconBg="bg-warning/10"
-            valueColor={
-              stats.improvementRate > 0
-                ? "text-success"
-                : stats.improvementRate < 0
-                  ? "text-destructive"
-                  : "text-foreground"
-            }
-          />
-        </div>
+      {/* Mobile Stats */}
+      <div className="grid grid-cols-2 gap-3 lg:hidden">
+        <Card className="p-4 text-center">
+          <p className="text-2xl font-bold text-primary">
+            {stats.recentAverage}%
+          </p>
+          <p className="text-xs text-muted-foreground">Recent Avg</p>
+        </Card>
+        <Card className="p-4 text-center">
+          <p className="text-2xl font-bold text-success">
+            {stats.bestScore.toFixed(0)}%
+          </p>
+          <p className="text-xs text-muted-foreground">Best Score</p>
+        </Card>
+      </div>
 
-        {/* Mobile Stats */}
-        <div className="grid grid-cols-2 gap-3 lg:hidden">
-          <Card className="p-4 text-center">
-            <p className="text-2xl font-bold text-primary">
-              {stats.recentAverage}%
-            </p>
-            <p className="text-xs text-muted-foreground">Recent Avg</p>
-          </Card>
-          <Card className="p-4 text-center">
-            <p className="text-2xl font-bold text-success">
-              {stats.bestScore.toFixed(0)}%
-            </p>
-            <p className="text-xs text-muted-foreground">Best Score</p>
-          </Card>
-        </div>
+      {/* Filters */}
+      <Card className="p-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <BarChart3 className="w-4 h-4" />
+            <span className="font-medium">
+              Showing {filteredResults.length} of {results.length} results
+            </span>
+          </div>
 
-        {/* Filters */}
-        <Card className="p-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <BarChart3 className="w-4 h-4" />
-              <span className="font-medium">
-                Showing {filteredResults.length} of {results.length} results
-              </span>
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Time Filter */}
+            <div className="flex items-center gap-1 text-sm">
+              <Calendar className="w-4 h-4 text-muted-foreground" />
+              <button
+                onClick={() => setTimeFilter("all")}
+                className={cn(
+                  "px-3 py-1.5 rounded-md transition-colors",
+                  timeFilter === "all"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted"
+                )}
+              >
+                All Time
+              </button>
+              <button
+                onClick={() => setTimeFilter("month")}
+                className={cn(
+                  "px-3 py-1.5 rounded-md transition-colors",
+                  timeFilter === "month"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted"
+                )}
+              >
+                This Month
+              </button>
+              <button
+                onClick={() => setTimeFilter("week")}
+                className={cn(
+                  "px-3 py-1.5 rounded-md transition-colors",
+                  timeFilter === "week"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted"
+                )}
+              >
+                This Week
+              </button>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              {/* Time Filter */}
-              <div className="flex items-center gap-1 text-sm">
-                <Calendar className="w-4 h-4 text-muted-foreground" />
-                <button
-                  onClick={() => setTimeFilter("all")}
-                  className={cn(
-                    "px-3 py-1.5 rounded-md transition-colors",
-                    timeFilter === "all"
-                      ? "bg-primary text-primary-foreground"
-                      : "hover:bg-muted"
-                  )}
-                >
-                  All Time
-                </button>
-                <button
-                  onClick={() => setTimeFilter("month")}
-                  className={cn(
-                    "px-3 py-1.5 rounded-md transition-colors",
-                    timeFilter === "month"
-                      ? "bg-primary text-primary-foreground"
-                      : "hover:bg-muted"
-                  )}
-                >
-                  This Month
-                </button>
-                <button
-                  onClick={() => setTimeFilter("week")}
-                  className={cn(
-                    "px-3 py-1.5 rounded-md transition-colors",
-                    timeFilter === "week"
-                      ? "bg-primary text-primary-foreground"
-                      : "hover:bg-muted"
-                  )}
-                >
-                  This Week
-                </button>
-              </div>
-
-              {/* Sort */}
-              <div className="flex items-center gap-1 text-sm border-l pl-2">
-                <Filter className="w-4 h-4 text-muted-foreground" />
-                <button
-                  onClick={() => setSortBy("recent")}
-                  className={cn(
-                    "px-3 py-1.5 rounded-md transition-colors",
-                    sortBy === "recent"
-                      ? "bg-primary text-primary-foreground"
-                      : "hover:bg-muted"
-                  )}
-                >
-                  Recent
-                </button>
-                <button
-                  onClick={() => setSortBy("score")}
-                  className={cn(
-                    "px-3 py-1.5 rounded-md transition-colors",
-                    sortBy === "score"
-                      ? "bg-primary text-primary-foreground"
-                      : "hover:bg-muted"
-                  )}
-                >
-                  Top Score
-                </button>
-              </div>
+            {/* Sort */}
+            <div className="flex items-center gap-1 text-sm border-l pl-2">
+              <Filter className="w-4 h-4 text-muted-foreground" />
+              <button
+                onClick={() => setSortBy("recent")}
+                className={cn(
+                  "px-3 py-1.5 rounded-md transition-colors",
+                  sortBy === "recent"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted"
+                )}
+              >
+                Recent
+              </button>
+              <button
+                onClick={() => setSortBy("score")}
+                className={cn(
+                  "px-3 py-1.5 rounded-md transition-colors",
+                  sortBy === "score"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted"
+                )}
+              >
+                Top Score
+              </button>
             </div>
           </div>
-        </Card>
-
-        {/* Results Grid */}
-        <div className="space-y-4 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-6 lg:space-y-0">
-          {filteredResults.length > 0 ? (
-            filteredResults.map((result) => (
-              <ResultCard key={result.id} result={result} />
-            ))
-          ) : (
-            <div className="col-span-full">
-              <Card className="p-12 text-center text-muted-foreground">
-                <p className="text-5xl mb-4">🔍</p>
-                <p className="font-medium text-lg">No results found</p>
-                <p className="text-sm mt-1">Try adjusting your filters</p>
-              </Card>
-            </div>
-          )}
         </div>
+      </Card>
+
+      {/* Results Grid */}
+      <div className="space-y-4 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-6 lg:space-y-0">
+        {filteredResults.length > 0 ? (
+          filteredResults.map((result) => (
+            <ResultCard key={result.id} result={result} />
+          ))
+        ) : (
+          <div className="col-span-full">
+            <Card className="p-12 text-center text-muted-foreground">
+              <p className="text-5xl mb-4">🔍</p>
+              <p className="font-medium text-lg">No results found</p>
+              <p className="text-sm mt-1">Try adjusting your filters</p>
+            </Card>
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 

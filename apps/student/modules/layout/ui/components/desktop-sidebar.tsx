@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, BookOpen, Trophy, User } from "lucide-react";
+import { Home, BookOpen, Trophy, User, Medal, Award } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@workspace/ui/lib/utils";
@@ -10,6 +10,8 @@ const navItems = [
   { href: "/", icon: Home, label: "Dashboard" },
   { href: "/exams", icon: BookOpen, label: "Exams" },
   { href: "/results", icon: Trophy, label: "Results" },
+  { href: "/leaderboard", icon: Medal, label: "Leaderboard" },
+  // { href: "/achievements", icon: Award, label: "Achievements" },
   { href: "/profile", icon: User, label: "Profile" },
 ];
 
@@ -17,9 +19,9 @@ export function DesktopSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 min-h-screen bg-card border-r border-border">
+    <aside className="hidden lg:flex flex-col w-64 h-screen sticky top-0 bg-card border-r border-border">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-6 py-5 border-b border-border">
+      <div className="flex items-center gap-3 px-6 py-3 border-b border-border flex-shrink-0">
         <div className="w-10 h-10 rounded-xl flex items-center justify-center">
           <Image
             src="/logo.jpg"
@@ -31,12 +33,20 @@ export function DesktopSidebar() {
         </div>
         <div>
           <h1 className="font-bold text-foreground">Mr. Dr.</h1>
-          <p className="text-xs text-muted-foreground">Student Portal</p>
+          <div className="flex items-center gap-1.5 leading-none">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/60 opacity-75"></span>
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary/80"></span>
+            </span>
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/70 whitespace-nowrap">
+              Student Panel
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6">
+      <nav className="flex-1 px-4 py-6 overflow-y-auto">
         <ul className="space-y-2">
           {navItems.map((item) => {
             const isActive =
@@ -65,7 +75,7 @@ export function DesktopSidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-4 py-4 border-t border-border">
+      <div className="px-4 py-4 border-t border-border flex-shrink-0">
         <div className="px-4 py-3 bg-muted/50 rounded-xl">
           <p className="text-xs text-muted-foreground">Need help?</p>
           <Link

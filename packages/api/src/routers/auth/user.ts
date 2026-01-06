@@ -241,12 +241,22 @@ export const userRouter = createTRPCRouter({
         where: {
           id: existingSms.identifier.split("/")[0],
         },
+        include: {
+          user: true,
+        },
       });
 
       if (!student) {
         return {
           success: false,
           message: "Student not found",
+        };
+      }
+
+      if (student.user) {
+        return {
+          success: false,
+          message: "Student already has a user",
         };
       }
 

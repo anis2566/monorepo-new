@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import { BottomNav } from "../components/bottom-nav";
 import { DesktopSidebar } from "../components/desktop-sidebar";
+import { Navbar } from "../components/navbar";
+import { cn } from "@workspace/ui/lib/utils";
 
 interface ResponsiveLayoutProps {
   children: ReactNode;
@@ -16,9 +18,20 @@ export function ResponsiveLayout({
       {/* Desktop Sidebar */}
       {!hideNav && <DesktopSidebar />}
 
-      {/* Main Content */}
+      {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-h-screen">
-        <main className={!hideNav ? "pb-20 lg:pb-0" : ""}>{children}</main>
+        {/* Top Navbar */}
+        {!hideNav && <Navbar />}
+
+        {/* Main Content */}
+        <main
+          className={cn(
+            "flex-1",
+            !hideNav && "pb-20 lg:pb-0" // Space for bottom nav on mobile
+          )}
+        >
+          {children}
+        </main>
 
         {/* Mobile Bottom Nav */}
         {!hideNav && (
