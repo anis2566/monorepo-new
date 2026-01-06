@@ -106,7 +106,7 @@ export const SignUpView = () => {
 
       if (result.data?.user) {
         toast.success("Account created successfully!");
-        router.push("/");
+        router.push("/onboarding");
       }
     } catch (error) {
       console.error("Error signing up:", error);

@@ -1,3 +1,5 @@
+"use client";
+
 import { Card } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -17,26 +19,60 @@ import {
   GraduationCap,
   Calendar,
   Edit,
+  MapPin,
+  Users,
+  Loader2,
 } from "lucide-react";
 import { Separator } from "@workspace/ui/components/separator";
-import { mockExams, mockResults, mockStudent } from "@/data/mock";
+import { useTRPC } from "@/trpc/react";
+import { useQuery } from "@tanstack/react-query";
+import { authClient } from "@/auth/client";
+import { useRouter } from "next/navigation";
 
 export const ProfileView = () => {
-  const initials = mockStudent.name
+  const trpc = useTRPC();
+  const router = useRouter();
+
+  const { data, isLoading } = useQuery(trpc.student.profile.get.queryOptions());
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    router.push("/auth/sign-in");
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center space-y-4">
+          <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto" />
+          <p className="text-muted-foreground">Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Card className="p-8 text-center">
+          <User className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+          <p className="font-medium">Profile not found</p>
+        </Card>
+      </div>
+    );
+  }
+
+  const initials = data.name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase();
 
-  const averageScore = Math.round(
-    mockResults.reduce((acc, r) => acc + r.percentage, 0) / mockResults.length
-  );
-
   const menuItems = [
-    { icon: User, label: "Edit Profile", href: "#" },
-    { icon: Award, label: "Achievements", href: "#" },
-    { icon: BookOpen, label: "My Subjects", href: "#" },
-    { icon: Settings, label: "Settings", href: "#" },
+    { icon: User, label: "Edit Profile", href: "/profile/edit" },
+    { icon: Award, label: "Achievements", href: "/achievements" },
+    { icon: BookOpen, label: "My Subjects", href: "/subjects" },
+    { icon: Settings, label: "Settings", href: "/settings" },
   ];
 
   return (
@@ -55,28 +91,24 @@ export const ProfileView = () => {
             </Button>
 
             <Avatar className="w-28 h-28 mx-auto mb-4 border-4 border-primary/20">
-              <AvatarImage src={mockStudent.imageUrl} alt={mockStudent.name} />
+              <AvatarImage src={data.imageUrl || undefined} alt={data.name} />
               <AvatarFallback className="gradient-primary text-primary-foreground text-3xl font-bold">
                 {initials}
               </AvatarFallback>
             </Avatar>
 
-            <h2 className="text-2xl font-bold text-foreground">
-              {mockStudent.name}
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              {mockStudent.nameBangla}
-            </p>
+            <h2 className="text-2xl font-bold text-foreground">{data.name}</h2>
+            <p className="text-muted-foreground text-lg">{data.nameBangla}</p>
 
             <div className="flex items-center justify-center gap-2 mt-3 text-sm text-muted-foreground">
               <GraduationCap className="w-4 h-4" />
-              <span>{mockStudent.className}</span>
+              <span>{data.className}</span>
               <span>•</span>
-              <span>Roll: {mockStudent.roll}</span>
+              <span>Roll: {data.roll}</span>
             </div>
 
             <p className="text-sm text-primary mt-2 font-medium bg-primary/10 inline-block px-3 py-1 rounded-full">
-              ID: {mockStudent.studentId}
+              ID: {data.studentId}
             </p>
           </Card>
 
@@ -84,27 +116,57 @@ export const ProfileView = () => {
           <div className="grid grid-cols-3 gap-3">
             <Card className="p-4 text-center">
               <p className="text-2xl font-bold text-primary">
-                {mockExams.length}
+                {data.stats.totalExams}
               </p>
               <p className="text-xs text-muted-foreground">Exams</p>
             </Card>
             <Card className="p-4 text-center">
               <p className="text-2xl font-bold text-success">
-                {mockResults.length}
+                {data.stats.completedExams}
               </p>
               <p className="text-xs text-muted-foreground">Completed</p>
             </Card>
             <Card className="p-4 text-center">
-              <p className="text-2xl font-bold text-warning">{averageScore}%</p>
+              <p className="text-2xl font-bold text-warning">
+                {data.stats.averageScore}%
+              </p>
               <p className="text-xs text-muted-foreground">Avg Score</p>
             </Card>
           </div>
+
+          {/* Additional Info - Mobile/Desktop */}
+          <Card className="p-4">
+            <h3 className="font-semibold mb-3 text-sm">Academic Details</h3>
+            <div className="space-y-3 text-sm">
+              {data.section && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Section</span>
+                  <span className="font-medium">{data.section}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Shift</span>
+                <span className="font-medium">{data.shift}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Group</span>
+                <span className="font-medium">{data.group}</span>
+              </div>
+              {data.batch && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Batch</span>
+                  <span className="font-medium">{data.batch}</span>
+                </div>
+              )}
+            </div>
+          </Card>
 
           {/* Logout - Mobile */}
           <div className="lg:hidden">
             <Button
               variant="outline"
               className="w-full text-destructive hover:text-destructive"
+              onClick={handleSignOut}
             >
               <LogOut className="w-4 h-4 mr-2" />
               Log Out
@@ -114,38 +176,46 @@ export const ProfileView = () => {
 
         {/* Right Column - Details & Menu */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Info Cards - Desktop Grid */}
+          {/* Contact Info - Desktop Grid */}
           <div className="hidden lg:grid lg:grid-cols-2 gap-4">
-            <Card className="p-5">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Mail className="w-6 h-6 text-primary" />
+            {data.email && (
+              <Card className="p-5">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-muted-foreground">
+                      Email Address
+                    </p>
+                    <p className="font-medium truncate">{data.email}</p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm text-muted-foreground">Email Address</p>
-                  <p className="font-medium">ahmed.rahman@email.com</p>
+              </Card>
+            )}
+            {data.phone && (
+              <Card className="p-5">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Phone className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-muted-foreground">
+                      Phone Number
+                    </p>
+                    <p className="font-medium">{data.phone}</p>
+                  </div>
                 </div>
-              </div>
-            </Card>
-            <Card className="p-5">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Phone className="w-6 h-6 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-muted-foreground">Phone Number</p>
-                  <p className="font-medium">+880 1712-345678</p>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            )}
             <Card className="p-5">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                   <BookOpen className="w-6 h-6 text-primary" />
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm text-muted-foreground">Batch</p>
-                  <p className="font-medium">{mockStudent.batch}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-muted-foreground">Institute</p>
+                  <p className="font-medium truncate">{data.instituteName}</p>
                 </div>
               </div>
             </Card>
@@ -156,47 +226,111 @@ export const ProfileView = () => {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm text-muted-foreground">Session</p>
-                  <p className="font-medium">2024</p>
+                  <p className="font-medium">{data.session}</p>
                 </div>
               </div>
             </Card>
           </div>
 
-          {/* Mobile Info Card */}
+          {/* Mobile Contact Info Card */}
           <Card className="p-4 lg:hidden">
-            <h3 className="font-semibold mb-4">Account Information</h3>
+            <h3 className="font-semibold mb-4">Contact Information</h3>
             <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Mail className="w-5 h-5 text-primary" />
+              {data.email && (
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-muted-foreground">Email</p>
+                    <p className="text-sm font-medium truncate">{data.email}</p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-xs text-muted-foreground">Email</p>
-                  <p className="text-sm font-medium">ahmed.rahman@email.com</p>
+              )}
+              {data.phone && (
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Phone className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">Phone</p>
+                    <p className="text-sm font-medium">{data.phone}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Phone className="w-5 h-5 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-muted-foreground">Phone</p>
-                  <p className="text-sm font-medium">+880 1712-345678</p>
-                </div>
-              </div>
+              )}
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                   <BookOpen className="w-5 h-5 text-primary" />
                 </div>
-                <div className="flex-1">
-                  <p className="text-xs text-muted-foreground">Batch</p>
-                  <p className="text-sm font-medium">{mockStudent.batch}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-muted-foreground">Institute</p>
+                  <p className="text-sm font-medium truncate">
+                    {data.instituteName}
+                  </p>
                 </div>
               </div>
             </div>
           </Card>
 
-          {/* Menu */}
+          {/* Family Info Card */}
+          <Card className="p-4 lg:p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <Users className="w-5 h-5 text-primary" />
+              <h3 className="font-semibold">Family Information</h3>
+            </div>
+            <div className="grid lg:grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">
+                  Father&apos;s Name
+                </p>
+                <p className="font-medium">{data.fName}</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {data.fPhone}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">
+                  Mother&apos;s Name
+                </p>
+                <p className="font-medium">{data.mName}</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {data.mPhone}
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          {/* Address Card */}
+          <Card className="p-4 lg:p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <MapPin className="w-5 h-5 text-primary" />
+              <h3 className="font-semibold">Address</h3>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">
+                  Present Address
+                </p>
+                <p className="text-sm">
+                  {data.presentAddress.houseNo}, {data.presentAddress.moholla},{" "}
+                  {data.presentAddress.post}, {data.presentAddress.thana}
+                </p>
+              </div>
+              <Separator />
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">
+                  Permanent Address
+                </p>
+                <p className="text-sm">
+                  {data.permanentAddress.village}, {data.permanentAddress.post},{" "}
+                  {data.permanentAddress.thana},{" "}
+                  {data.permanentAddress.district}
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          {/* Quick Actions Menu */}
           <Card className="overflow-hidden">
             <div className="p-4 border-b border-border">
               <h3 className="font-semibold">Quick Actions</h3>
@@ -222,6 +356,7 @@ export const ProfileView = () => {
             <Button
               variant="outline"
               className="text-destructive hover:text-destructive"
+              onClick={handleSignOut}
             >
               <LogOut className="w-4 h-4 mr-2" />
               Log Out

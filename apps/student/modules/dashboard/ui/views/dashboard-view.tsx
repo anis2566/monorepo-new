@@ -11,7 +11,6 @@ import {
   Target,
   Zap,
   Calendar,
-  Clock,
   Flame,
   Award,
   BarChart3,
@@ -19,7 +18,6 @@ import {
   XCircle,
   MinusCircle,
 } from "lucide-react";
-import { QuickStats } from "../components/quick-stats";
 import Link from "next/link";
 import { ExamCard } from "@/components/exam-card";
 import { ResultCard } from "@/components/result-card";
@@ -30,9 +28,7 @@ import { cn } from "@workspace/ui/lib/utils";
 export const DashboardView = () => {
   const trpc = useTRPC();
 
-  const { data, isLoading } = useQuery(
-    trpc.student.dashboard.get.queryOptions()
-  );
+  const { data } = useQuery(trpc.student.dashboard.get.queryOptions());
 
   const {
     exams = [],
@@ -41,7 +37,6 @@ export const DashboardView = () => {
     completedExam = 0,
     recentResults = [],
     analytics,
-    weeklyActivity = [],
   } = data || {};
 
   const averageScore = recentResults.length

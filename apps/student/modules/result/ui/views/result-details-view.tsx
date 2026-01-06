@@ -67,7 +67,7 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
     );
   }
 
-  const { attempt, reviewQuestions, exam } = data;
+  const { attempt, reviewQuestions } = data;
 
   const getScoreColor = () => {
     if (attempt.percentage >= 80) return "text-success";

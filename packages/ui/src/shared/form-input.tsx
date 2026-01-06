@@ -34,7 +34,7 @@ export function FormInput<T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel className="text-white tracking-wider">{label}</FormLabel>
           <FormControl>
             <Input
               {...field}

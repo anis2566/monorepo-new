@@ -130,7 +130,7 @@ export const SignUpView = () => {
   };
 
   return (
-    <div className="relative flex-1 flex flex-col items-center justify-center px-4 py-8">
+    <div className="relative flex-1 flex flex-col items-center justify-center px-4 py-8 text-white">
       <motion.div
         variants={containerVariants}
         initial="hidden"
