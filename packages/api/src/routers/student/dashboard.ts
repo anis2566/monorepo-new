@@ -6,8 +6,11 @@ export const dashboardRouter = {
   get: studentProcedure.query(async ({ ctx }) => {
     const [
       student,
-      availableExam,
+      totalExam,
+      activeExam,
+      upcomingExamCount,
       completedExam,
+      ongoingExam,
       upcomingExams,
       recentResults,
       performanceStats,
@@ -22,10 +25,25 @@ export const dashboardRouter = {
         },
       }),
 
-      // Available exams count
+      // Total exams count
       ctx.db.exam.count({
         where: {
-          status: { in: [EXAM_STATUS.Upcoming, EXAM_STATUS.Ongoing] },
+          students: { some: { studentId: ctx.studentId } },
+        },
+      }),
+
+      // Active exams count
+      ctx.db.exam.count({
+        where: {
+          status: { in: [EXAM_STATUS.Ongoing] },
+          students: { some: { studentId: ctx.studentId } },
+        },
+      }),
+
+      // Upcoming exams count
+      ctx.db.exam.count({
+        where: {
+          status: { in: [EXAM_STATUS.Upcoming] },
           students: { some: { studentId: ctx.studentId } },
         },
       }),
@@ -38,10 +56,26 @@ export const dashboardRouter = {
         },
       }),
 
-      // Upcoming/Ongoing exams
+      // Ongoing exams count
       ctx.db.exam.findMany({
         where: {
-          status: { in: [EXAM_STATUS.Upcoming, EXAM_STATUS.Ongoing] },
+          status: { in: [EXAM_STATUS.Ongoing] },
+          students: { some: { studentId: ctx.studentId } },
+        },
+        include: {
+          subjects: {
+            select: { subject: { select: { name: true } } },
+          },
+          _count: { select: { mcqs: true } },
+        },
+        orderBy: { startDate: "asc" },
+        take: 5,
+      }),
+
+      // Upcoming exams
+      ctx.db.exam.findMany({
+        where: {
+          status: { in: [EXAM_STATUS.Upcoming] },
           students: { some: { studentId: ctx.studentId } },
         },
         include: {
@@ -177,8 +211,11 @@ export const dashboardRouter = {
     return {
       // Basic info
       student,
+      ongoingExam,
       exams: upcomingExams,
-      availableExam,
+      totalExam,
+      activeExam,
+      upcomingExamCount,
       completedExam,
       recentResults: transformedRecentResults,
 

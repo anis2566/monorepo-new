@@ -21,6 +21,7 @@ export function ExamWarningModal() {
   const { examId, totalQuestions, close } = useStartExam();
   const trpc = useTRPC();
   const router = useRouter();
+  console.log(examId, totalQuestions);
 
   const { mutate: startExam, isPending } = useMutation(
     trpc.student.exam.createAttempt.mutationOptions({

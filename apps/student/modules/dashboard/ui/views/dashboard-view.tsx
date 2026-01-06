@@ -53,62 +53,6 @@ export const DashboardView = () => {
         <WelcomeCard student={student || null} />
       </div>
 
-      {/* Desktop Header & Welcome */}
-      <div className="hidden lg:block">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-            <p className="text-muted-foreground mt-1">
-              Welcome back! Here&apos;s your exam overview.
-            </p>
-          </div>
-        </div>
-
-        {/* Desktop Welcome Card */}
-        <Card className="p-6 gradient-hero mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <div className="w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center">
-                <span className="text-3xl font-bold text-primary-foreground">
-                  {student?.name
-                    ?.split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </span>
-              </div>
-              <div>
-                <p className="text-muted-foreground text-sm">Welcome back 👋</p>
-                <h2 className="text-2xl font-bold text-foreground">
-                  {student?.name}
-                </h2>
-                <p className="text-muted-foreground text-sm">
-                  {student?.className.name} • {student?.batch?.name} • Roll:{" "}
-                  {student?.roll}
-                </p>
-              </div>
-            </div>
-
-            {/* Quick Action Buttons */}
-            <div className="flex gap-3">
-              <Link href="/exams">
-                <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer">
-                  <Calendar className="w-5 h-5 text-primary mb-2" />
-                  <p className="text-2xl font-bold">{availableExam}</p>
-                  <p className="text-xs text-muted-foreground">Available</p>
-                </Card>
-              </Link>
-              <Link href="/results">
-                <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer">
-                  <Trophy className="w-5 h-5 text-success mb-2" />
-                  <p className="text-2xl font-bold">{completedExam}</p>
-                  <p className="text-xs text-muted-foreground">Completed</p>
-                </Card>
-              </Link>
-            </div>
-          </div>
-        </Card>
-      </div>
-
       {/* Performance Overview Cards - Mobile First */}
       {analytics && (
         <>

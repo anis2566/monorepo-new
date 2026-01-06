@@ -106,7 +106,7 @@ export const SignUpView = () => {
 
       if (result.data?.user) {
         toast.success("Account created successfully!");
-        router.push("/onboarding");
+        router.push("/auth/callback");
       }
     } catch (error) {
       console.error("Error signing up:", error);
@@ -121,6 +121,7 @@ export const SignUpView = () => {
     try {
       await authClient.signIn.social({
         provider: "google",
+        callbackURL: "/auth/callback",
       });
     } catch (error) {
       console.error("Google login error:", error);
