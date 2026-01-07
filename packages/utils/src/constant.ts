@@ -70,6 +70,15 @@ export enum EXAM_STATUS {
   Completed = "Completed",
 }
 
+export enum EXAM_TYPE {
+  "Daily Exam" = "Daily Exam",
+  "Chapter Final" = "Chapter Final",
+  "Paper Final" = "Paper Final",
+  "Subject Final" = "Subject Final",
+  "Model Test" = "Model Test",
+  "Mega Exam" = "Mega Exam",
+}
+
 export const timeSlots = [
   "9:00 AM - 9:30 AM",
   "9:30 AM - 10:00 AM",

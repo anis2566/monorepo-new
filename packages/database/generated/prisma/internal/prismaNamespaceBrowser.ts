@@ -64,6 +64,7 @@ export const ModelName = {
   Mcq: 'Mcq',
   Batch: 'Batch',
   Exam: 'Exam',
+  ExamChapter: 'ExamChapter',
   ExamBatch: 'ExamBatch',
   ExamClassName: 'ExamClassName',
   ExamStudent: 'ExamStudent',
@@ -293,12 +294,24 @@ export const ExamScalarFieldEnum = {
   hasRandom: 'hasRandom',
   hasNegativeMark: 'hasNegativeMark',
   negativeMark: 'negativeMark',
+  type: 'type',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ExamScalarFieldEnum = (typeof ExamScalarFieldEnum)[keyof typeof ExamScalarFieldEnum]
+
+
+export const ExamChapterScalarFieldEnum = {
+  id: 'id',
+  examId: 'examId',
+  chapterId: 'chapterId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExamChapterScalarFieldEnum = (typeof ExamChapterScalarFieldEnum)[keyof typeof ExamChapterScalarFieldEnum]
 
 
 export const ExamBatchScalarFieldEnum = {

@@ -21,6 +21,7 @@ import Link from "next/link";
 import { cn } from "@workspace/ui/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { authClient } from "@/auth/client";
+import Image from "next/image";
 
 interface NavbarProps {
   className?: string;
@@ -54,13 +55,6 @@ export function Navbar({ className }: NavbarProps) {
       )}
     >
       <div className="flex h-14 lg:h-16 items-center justify-between px-4 lg:px-6 gap-4 lg:gap-6">
-        {/* Page Title - Desktop */}
-        <div className="hidden lg:block">
-          <h1 className="font-semibold text-foreground text-base capitalize">
-            {currentPage || "Dashboard"}
-          </h1>
-        </div>
-
         {/* Mobile: Page Title (full width) */}
         <div className="flex-1 flex items-center gap-2 lg:hidden">
           <Button
@@ -71,9 +65,15 @@ export function Navbar({ className }: NavbarProps) {
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="font-semibold text-foreground text-sm truncate capitalize">
-            {currentPage || "Dashboard"}
-          </h1>
+          <div className="flex items-center gap-x-2 md:hidden">
+            <Image src="/logo.jpg" alt="Logo" width={36} height={36} />
+            <div>
+              <p className="text-primary font-bold text-xl">Mr. Dr.</p>
+              <p className="text-xs text-muted-foreground -mt-1">
+                Academic & Admission
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center gap-2 justify-self-end">

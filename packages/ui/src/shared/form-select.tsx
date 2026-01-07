@@ -69,7 +69,7 @@ export function FormSelect<T extends FieldValues>({
               <FormControl>
                 <SelectTrigger
                   className={cn(
-                    "w-full rounded-xs shadow-none dark:bg-background dark:hover:bg-background",
+                    "w-full rounded-xs shadow-none",
                     triggerClassName
                   )}
                 >

@@ -124,7 +124,7 @@ export const ExamView = () => {
           <TabsList className="w-full grid grid-cols-4">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value={EXAM_STATUS.Ongoing}>Active</TabsTrigger>
-            <TabsTrigger value={EXAM_STATUS.Upcoming}>Soon</TabsTrigger>
+            <TabsTrigger value={EXAM_STATUS.Upcoming}>Upcoming</TabsTrigger>
             <TabsTrigger value={EXAM_STATUS.Completed}>Past</TabsTrigger>
           </TabsList>
         </Tabs>

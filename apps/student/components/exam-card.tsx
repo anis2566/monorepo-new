@@ -1,6 +1,13 @@
 "use client";
 
-import { Clock, BookOpen, Calendar, AlertTriangle, Play } from "lucide-react";
+import {
+  Clock,
+  BookOpen,
+  Calendar,
+  AlertTriangle,
+  Play,
+  ArrowRight,
+} from "lucide-react";
 import { Card } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
@@ -9,10 +16,16 @@ import { format, formatDistanceToNow, isAfter, isBefore } from "date-fns";
 import { useRouter } from "next/navigation";
 import { Exam } from "@workspace/db";
 import { useStartExam } from "@/hooks/use-exam";
+import { EXAM_STATUS } from "@workspace/utils/constant";
 
 interface ExamWithRelation extends Exam {
   subjects: {
     subject: {
+      name: string;
+    };
+  }[];
+  chapters: {
+    chapter: {
       name: string;
     };
   }[];
@@ -34,13 +47,20 @@ export function ExamCard({
   const router = useRouter();
 
   const now = new Date();
-  const isUpcoming = isBefore(now, exam.startDate);
-  const isActive = isAfter(now, exam.startDate) && isBefore(now, exam.endDate);
-  const isExpired = isAfter(now, exam.endDate);
+  const isUpcoming = exam.status === EXAM_STATUS.Upcoming;
+  const isActive =
+    isAfter(now, exam.startDate) &&
+    isBefore(now, exam.endDate) &&
+    exam.status === EXAM_STATUS.Ongoing;
+  const isExpired = exam.status === EXAM_STATUS.Completed;
 
   // ✅ CHANGED: Call setExamData to open modal
   const handleClick = () => {
     setExamData(exam.id, totalQuestions);
+  };
+
+  const handleResultPush = () => {
+    router.push(`/results/${exam.id}`);
   };
 
   const getStatusBadge = () => {
@@ -115,7 +135,10 @@ export function ExamCard({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">{getStatusBadge()}</div>
+          <div className="flex items-center gap-2 mb-1">
+            {getStatusBadge()}
+            <Badge variant="secondary">{exam.type}</Badge>
+          </div>
           <h3 className="font-semibold text-foreground text-lg line-clamp-2">
             {exam.title}
           </h3>
@@ -137,7 +160,10 @@ export function ExamCard({
         </div>
         <div className="flex items-center gap-1.5">
           <Calendar className="w-4 h-4" />
-          <span>{format(exam.startDate, "MMM d, h:mm a")}</span>
+          <span>{format(exam.startDate, "MMM d")}</span>
+          <ArrowRight className="w-4 h-4" />
+          <span>{format(exam.startDate, "h:mm a")}</span> -
+          <span>{format(exam.endDate, "h:mm a")}</span>
         </div>
       </div>
 
@@ -149,22 +175,36 @@ export function ExamCard({
       )}
 
       <div className="flex items-center justify-between gap-3 pt-2">
-        <div className="flex gap-2 flex-wrap">
-          {exam.subjects.map((subject) => (
-            <Badge
-              key={subject.subject.name}
-              variant="secondary"
-              className="text-xs"
-            >
-              {subject.subject.name}
-            </Badge>
-          ))}
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2 flex-wrap">
+            {exam.subjects.map((subject) => (
+              <Badge
+                key={subject.subject.name}
+                variant="secondary"
+                className="text-xs"
+              >
+                {subject.subject.name}
+              </Badge>
+            ))}
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            {exam.chapters.map((chapter) => (
+              <p
+                key={chapter.chapter.name}
+                className="text-xs w-full max-w-[140px] truncate text-muted-foreground"
+              >
+                {chapter.chapter.name}
+              </p>
+            ))}
+          </div>
         </div>
 
         <Button
           variant={isActive ? "default" : "outline"}
-          disabled={isExpired || isUpcoming}
-          onClick={handleClick}
+          disabled={isUpcoming}
+          onClick={
+            exam.status === EXAM_STATUS.Ongoing ? handleClick : handleResultPush
+          }
           className="flex-shrink-0"
         >
           {isActive

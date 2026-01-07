@@ -397,6 +397,7 @@ export const ModelName = {
   Mcq: 'Mcq',
   Batch: 'Batch',
   Exam: 'Exam',
+  ExamChapter: 'ExamChapter',
   ExamBatch: 'ExamBatch',
   ExamClassName: 'ExamClassName',
   ExamStudent: 'ExamStudent',
@@ -419,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "smsVerification" | "className" | "institute" | "student" | "subject" | "chapter" | "mcq" | "batch" | "exam" | "examBatch" | "examClassName" | "examStudent" | "examSubject" | "examMcq" | "examAttempt" | "answerHistory"
+    modelProps: "user" | "session" | "account" | "verification" | "smsVerification" | "className" | "institute" | "student" | "subject" | "chapter" | "mcq" | "batch" | "exam" | "examChapter" | "examBatch" | "examClassName" | "examStudent" | "examSubject" | "examMcq" | "examAttempt" | "answerHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1385,6 +1386,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ExamChapter: {
+      payload: Prisma.$ExamChapterPayload<ExtArgs>
+      fields: Prisma.ExamChapterFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExamChapterFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamChapterPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExamChapterFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamChapterPayload>
+        }
+        findFirst: {
+          args: Prisma.ExamChapterFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamChapterPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExamChapterFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamChapterPayload>
+        }
+        findMany: {
+          args: Prisma.ExamChapterFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamChapterPayload>[]
+        }
+        create: {
+          args: Prisma.ExamChapterCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamChapterPayload>
+        }
+        createMany: {
+          args: Prisma.ExamChapterCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExamChapterCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamChapterPayload>[]
+        }
+        delete: {
+          args: Prisma.ExamChapterDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamChapterPayload>
+        }
+        update: {
+          args: Prisma.ExamChapterUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamChapterPayload>
+        }
+        deleteMany: {
+          args: Prisma.ExamChapterDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExamChapterUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExamChapterUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamChapterPayload>[]
+        }
+        upsert: {
+          args: Prisma.ExamChapterUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamChapterPayload>
+        }
+        aggregate: {
+          args: Prisma.ExamChapterAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExamChapter>
+        }
+        groupBy: {
+          args: Prisma.ExamChapterGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExamChapterGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExamChapterCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExamChapterCountAggregateOutputType> | number
+        }
+      }
+    }
     ExamBatch: {
       payload: Prisma.$ExamBatchPayload<ExtArgs>
       fields: Prisma.ExamBatchFieldRefs
@@ -2146,12 +2221,24 @@ export const ExamScalarFieldEnum = {
   hasRandom: 'hasRandom',
   hasNegativeMark: 'hasNegativeMark',
   negativeMark: 'negativeMark',
+  type: 'type',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ExamScalarFieldEnum = (typeof ExamScalarFieldEnum)[keyof typeof ExamScalarFieldEnum]
+
+
+export const ExamChapterScalarFieldEnum = {
+  id: 'id',
+  examId: 'examId',
+  chapterId: 'chapterId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExamChapterScalarFieldEnum = (typeof ExamChapterScalarFieldEnum)[keyof typeof ExamChapterScalarFieldEnum]
 
 
 export const ExamBatchScalarFieldEnum = {
@@ -2480,6 +2567,7 @@ export type GlobalOmitConfig = {
   mcq?: Prisma.McqOmit
   batch?: Prisma.BatchOmit
   exam?: Prisma.ExamOmit
+  examChapter?: Prisma.ExamChapterOmit
   examBatch?: Prisma.ExamBatchOmit
   examClassName?: Prisma.ExamClassNameOmit
   examStudent?: Prisma.ExamStudentOmit

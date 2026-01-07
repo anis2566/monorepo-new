@@ -66,6 +66,9 @@ export const dashboardRouter = {
           subjects: {
             select: { subject: { select: { name: true } } },
           },
+          chapters: {
+            select: { chapter: { select: { name: true } } },
+          },
           _count: { select: { mcqs: true } },
         },
         orderBy: { startDate: "asc" },
@@ -81,6 +84,9 @@ export const dashboardRouter = {
         include: {
           subjects: {
             select: { subject: { select: { name: true } } },
+          },
+          chapters: {
+            select: { chapter: { select: { name: true } } },
           },
           _count: { select: { mcqs: true } },
         },
@@ -212,7 +218,7 @@ export const dashboardRouter = {
       // Basic info
       student,
       ongoingExam,
-      exams: upcomingExams,
+      upcomingExams,
       totalExam,
       activeExam,
       upcomingExamCount,

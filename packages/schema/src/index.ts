@@ -94,6 +94,7 @@ export const ExamSchema = z
     duration: requiredString,
     startDate: requiredString,
     endDate: requiredString,
+    type: requiredString,
     hasSuffle: z.boolean({ message: "required" }),
     hasRandom: z.boolean({ message: "required" }),
     hasNegativeMark: z.boolean({ message: "required" }),
@@ -101,6 +102,7 @@ export const ExamSchema = z
     classNameIds: z.array(z.string()).min(1, { message: "required" }),
     subjectIds: z.array(z.string()).min(1, { message: "required" }),
     batchIds: z.array(z.string()).min(1, { message: "required" }),
+    chapterIds: z.array(z.string()).optional(),
   })
   .superRefine((data, ctx) => {
     // Validate that at least one of cq or mcq is provided

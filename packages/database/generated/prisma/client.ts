@@ -105,6 +105,11 @@ export type Batch = Prisma.BatchModel
  */
 export type Exam = Prisma.ExamModel
 /**
+ * Model ExamChapter
+ * 
+ */
+export type ExamChapter = Prisma.ExamChapterModel
+/**
  * Model ExamBatch
  * 
  */

@@ -213,7 +213,8 @@ model Chapter {
   subjectId String
   subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 
-  mcqs Mcq[]
+  mcqs  Mcq[]
+  exams ExamChapter[]
 
   @@index([subjectId])
   @@index([name])
@@ -289,6 +290,7 @@ model Exam {
   hasRandom       Boolean  @default(false)
   hasNegativeMark Boolean  @default(false)
   negativeMark    Float    @default(0)
+  type            String
 
   status String @default("Pending")
 
@@ -298,6 +300,7 @@ model Exam {
   students   ExamStudent[]
   mcqs       ExamMcq[]
   attempts   ExamAttempt[]
+  chapters   ExamChapter[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -306,6 +309,22 @@ model Exam {
   @@index([status])
   @@index([createdAt])
   @@index([status, createdAt])
+}
+
+model ExamChapter {
+  id String @id @default(uuid())
+
+  examId String
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([examId])
+  @@index([chapterId])
 }
 
 model ExamBatch {

@@ -26,11 +26,19 @@ import { toast } from "sonner";
 import { Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FormSwitch } from "@workspace/ui/shared/form-switch";
+import { FormSelect } from "@workspace/ui/shared/form-select";
+import { EXAM_TYPE } from "@workspace/utils/constant";
+
+const EXAM_TYPES = Object.values(EXAM_TYPE).map((item) => ({
+  label: item,
+  value: item,
+}));
 
 export const NewExamForm = () => {
   const [enableCq, setEnableCq] = useState<boolean>(false);
   const [enableMcq, setEnableMcq] = useState<boolean>(false);
   const [classNameIds, setClassNameIds] = useState<string[]>([]);
+  const [subjectIds, setSubjectIds] = useState<string[]>([]);
 
   const trpc = useTRPC();
   const queryClient = useQueryClient();
@@ -41,6 +49,7 @@ export const NewExamForm = () => {
       trpc.admin.class.forSelect.queryOptions({ search: "" }),
       trpc.admin.batch.getByClassNameIds.queryOptions(classNameIds),
       trpc.admin.subject.forSelect.queryOptions({ search: "" }),
+      trpc.admin.chapter.getBySubjectIds.queryOptions(subjectIds),
     ],
   });
 
@@ -58,6 +67,12 @@ export const NewExamForm = () => {
 
   const SUBJECT_OPTIONS =
     results[2]?.data?.map((item) => ({
+      label: item.name,
+      value: item.id,
+    })) || [];
+
+  const CHAPTER_OPTIONS =
+    results[3]?.data?.map((item) => ({
       label: item.name,
       value: item.id,
     })) || [];
@@ -85,6 +100,7 @@ export const NewExamForm = () => {
     resolver: zodResolver(ExamSchema),
     defaultValues: {
       title: "",
+      type: "",
       duration: "",
       cq: "",
       mcq: "",
@@ -113,11 +129,63 @@ export const NewExamForm = () => {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormSelect
+              name="type"
+              label="Type"
+              placeholder="Select type"
+              options={EXAM_TYPES}
+            />
+
             <FormInput
               name="title"
               label="Title"
               type="text"
               disabled={isPending}
+            />
+
+            <FormMultiSelect
+              name="classNameIds"
+              label="Class"
+              placeholder="Select classes"
+              options={CLASS_OPTIONS}
+              disabled={isPending}
+              onClick={(value) => {
+                setClassNameIds(value);
+              }}
+            />
+
+            <FormMultiSelect
+              name="batchIds"
+              label="Batch"
+              placeholder="Select batches"
+              options={BATCH_OPTIONS}
+              disabled={isPending}
+            />
+
+            <FormMultiSelect
+              name="subjectIds"
+              label="Subject"
+              placeholder="Select subjects"
+              options={SUBJECT_OPTIONS}
+              disabled={isPending}
+              onClick={(value) => {
+                setSubjectIds(value);
+              }}
+            />
+
+            <FormMultiSelect
+              name="chapterIds"
+              label="Chapter"
+              placeholder="Select chapters"
+              options={CHAPTER_OPTIONS}
+              disabled={isPending}
+            />
+
+            <FormInput
+              name="duration"
+              label="Duration"
+              disabled={isPending}
+              type="number"
             />
 
             <FormCalendar
@@ -136,40 +204,6 @@ export const NewExamForm = () => {
               disabled={isPending}
               withTime
               disablePast
-            />
-
-            <FormMultiSelect
-              name="classNameIds"
-              label="Classes"
-              placeholder="Select classes"
-              options={CLASS_OPTIONS}
-              disabled={isPending}
-              onClick={(value) => {
-                setClassNameIds(value);
-              }}
-            />
-
-            <FormMultiSelect
-              name="batchIds"
-              label="Batches"
-              placeholder="Select batches"
-              options={BATCH_OPTIONS}
-              disabled={isPending}
-            />
-
-            <FormMultiSelect
-              name="subjectIds"
-              label="Subjects"
-              placeholder="Select subjects"
-              options={SUBJECT_OPTIONS}
-              disabled={isPending}
-            />
-
-            <FormInput
-              name="duration"
-              label="Duration"
-              disabled={isPending}
-              type="number"
             />
 
             <div className="space-y-2 p-4 border rounded-md">

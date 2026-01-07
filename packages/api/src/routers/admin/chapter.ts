@@ -219,6 +219,24 @@ export const chapterRouter = createTRPCRouter({
       return chapters;
     }),
 
+  getBySubjectIds: adminProcedure
+    .input(z.array(z.string()).optional())
+    .query(async ({ ctx, input }) => {
+      if (!input || !input.length) {
+        return [];
+      }
+
+      const chapterData = await ctx.db.chapter.findMany({
+        where: {
+          subjectId: {
+            in: input,
+          },
+        },
+      });
+
+      return chapterData;
+    }),
+
   getMany: adminProcedure
     .input(
       z.object({

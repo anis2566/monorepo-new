@@ -3,7 +3,7 @@ import z from "zod";
 import { TRPCError, type TRPCRouterRecord } from "@trpc/server";
 import { adminProcedure, protectedProcedure } from "../../trpc";
 import { ExamSchema } from "@workspace/schema";
-import { Prisma } from "@workspace/db";
+import { EXAM_STATUS } from "@workspace/utils/constant";
 
 export const examRouter = {
   createOne: adminProcedure
@@ -23,6 +23,8 @@ export const examRouter = {
         hasRandom,
         hasNegativeMark,
         negativeMark,
+        type,
+        chapterIds,
       } = input;
 
       try {
@@ -54,6 +56,11 @@ export const examRouter = {
 
         const students = batches.flatMap((batch) => batch.students);
 
+        const examStatus =
+          new Date() < new Date(startDate)
+            ? EXAM_STATUS.Upcoming
+            : EXAM_STATUS.Ongoing;
+
         const newExam = await ctx.db.exam.create({
           data: {
             title,
@@ -65,8 +72,10 @@ export const examRouter = {
             endDate: new Date(endDate),
             hasSuffle,
             hasRandom,
+            type,
             hasNegativeMark,
             ...(negativeMark && { negativeMark: parseFloat(negativeMark) }),
+            status: examStatus,
           },
           select: {
             id: true,
@@ -104,6 +113,14 @@ export const examRouter = {
                 data: {
                   examId: newExam.id,
                   studentId: student.id,
+                },
+              });
+            }
+            for (const chapter of chapterIds || []) {
+              await tx.examChapter.create({
+                data: {
+                  examId: newExam.id,
+                  chapterId: chapter,
                 },
               });
             }
@@ -214,6 +231,9 @@ export const examRouter = {
             await tx.examStudent.deleteMany({
               where: { examId: id },
             });
+            await tx.examChapter.deleteMany({
+              where: { examId: id },
+            });
 
             // Create new relations
             for (const batch of batches) {
@@ -245,6 +265,14 @@ export const examRouter = {
                 data: {
                   examId: id,
                   studentId: student.id,
+                },
+              });
+            }
+            for (const chapter of data.chapterIds || []) {
+              await tx.examChapter.create({
+                data: {
+                  examId: id,
+                  chapterId: chapter,
                 },
               });
             }

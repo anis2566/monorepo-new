@@ -55,6 +55,7 @@ export type ExamMinAggregateOutputType = {
   hasRandom: boolean | null
   hasNegativeMark: boolean | null
   negativeMark: number | null
+  type: string | null
   status: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -73,6 +74,7 @@ export type ExamMaxAggregateOutputType = {
   hasRandom: boolean | null
   hasNegativeMark: boolean | null
   negativeMark: number | null
+  type: string | null
   status: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -91,6 +93,7 @@ export type ExamCountAggregateOutputType = {
   hasRandom: number
   hasNegativeMark: number
   negativeMark: number
+  type: number
   status: number
   createdAt: number
   updatedAt: number
@@ -127,6 +130,7 @@ export type ExamMinAggregateInputType = {
   hasRandom?: true
   hasNegativeMark?: true
   negativeMark?: true
+  type?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -145,6 +149,7 @@ export type ExamMaxAggregateInputType = {
   hasRandom?: true
   hasNegativeMark?: true
   negativeMark?: true
+  type?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -163,6 +168,7 @@ export type ExamCountAggregateInputType = {
   hasRandom?: true
   hasNegativeMark?: true
   negativeMark?: true
+  type?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -268,6 +274,7 @@ export type ExamGroupByOutputType = {
   hasRandom: boolean
   hasNegativeMark: boolean
   negativeMark: number
+  type: string
   status: string
   createdAt: Date
   updatedAt: Date
@@ -309,6 +316,7 @@ export type ExamWhereInput = {
   hasRandom?: Prisma.BoolFilter<"Exam"> | boolean
   hasNegativeMark?: Prisma.BoolFilter<"Exam"> | boolean
   negativeMark?: Prisma.FloatFilter<"Exam"> | number
+  type?: Prisma.StringFilter<"Exam"> | string
   status?: Prisma.StringFilter<"Exam"> | string
   createdAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
@@ -318,6 +326,7 @@ export type ExamWhereInput = {
   students?: Prisma.ExamStudentListRelationFilter
   mcqs?: Prisma.ExamMcqListRelationFilter
   attempts?: Prisma.ExamAttemptListRelationFilter
+  chapters?: Prisma.ExamChapterListRelationFilter
 }
 
 export type ExamOrderByWithRelationInput = {
@@ -333,6 +342,7 @@ export type ExamOrderByWithRelationInput = {
   hasRandom?: Prisma.SortOrder
   hasNegativeMark?: Prisma.SortOrder
   negativeMark?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -342,6 +352,7 @@ export type ExamOrderByWithRelationInput = {
   students?: Prisma.ExamStudentOrderByRelationAggregateInput
   mcqs?: Prisma.ExamMcqOrderByRelationAggregateInput
   attempts?: Prisma.ExamAttemptOrderByRelationAggregateInput
+  chapters?: Prisma.ExamChapterOrderByRelationAggregateInput
 }
 
 export type ExamWhereUniqueInput = Prisma.AtLeast<{
@@ -360,6 +371,7 @@ export type ExamWhereUniqueInput = Prisma.AtLeast<{
   hasRandom?: Prisma.BoolFilter<"Exam"> | boolean
   hasNegativeMark?: Prisma.BoolFilter<"Exam"> | boolean
   negativeMark?: Prisma.FloatFilter<"Exam"> | number
+  type?: Prisma.StringFilter<"Exam"> | string
   status?: Prisma.StringFilter<"Exam"> | string
   createdAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
@@ -369,6 +381,7 @@ export type ExamWhereUniqueInput = Prisma.AtLeast<{
   students?: Prisma.ExamStudentListRelationFilter
   mcqs?: Prisma.ExamMcqListRelationFilter
   attempts?: Prisma.ExamAttemptListRelationFilter
+  chapters?: Prisma.ExamChapterListRelationFilter
 }, "id">
 
 export type ExamOrderByWithAggregationInput = {
@@ -384,6 +397,7 @@ export type ExamOrderByWithAggregationInput = {
   hasRandom?: Prisma.SortOrder
   hasNegativeMark?: Prisma.SortOrder
   negativeMark?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -410,6 +424,7 @@ export type ExamScalarWhereWithAggregatesInput = {
   hasRandom?: Prisma.BoolWithAggregatesFilter<"Exam"> | boolean
   hasNegativeMark?: Prisma.BoolWithAggregatesFilter<"Exam"> | boolean
   negativeMark?: Prisma.FloatWithAggregatesFilter<"Exam"> | number
+  type?: Prisma.StringWithAggregatesFilter<"Exam"> | string
   status?: Prisma.StringWithAggregatesFilter<"Exam"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Exam"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Exam"> | Date | string
@@ -428,6 +443,7 @@ export type ExamCreateInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -437,6 +453,7 @@ export type ExamCreateInput = {
   students?: Prisma.ExamStudentCreateNestedManyWithoutExamInput
   mcqs?: Prisma.ExamMcqCreateNestedManyWithoutExamInput
   attempts?: Prisma.ExamAttemptCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterCreateNestedManyWithoutExamInput
 }
 
 export type ExamUncheckedCreateInput = {
@@ -452,6 +469,7 @@ export type ExamUncheckedCreateInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -461,6 +479,7 @@ export type ExamUncheckedCreateInput = {
   students?: Prisma.ExamStudentUncheckedCreateNestedManyWithoutExamInput
   mcqs?: Prisma.ExamMcqUncheckedCreateNestedManyWithoutExamInput
   attempts?: Prisma.ExamAttemptUncheckedCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutExamInput
 }
 
 export type ExamUpdateInput = {
@@ -476,6 +495,7 @@ export type ExamUpdateInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -485,6 +505,7 @@ export type ExamUpdateInput = {
   students?: Prisma.ExamStudentUpdateManyWithoutExamNestedInput
   mcqs?: Prisma.ExamMcqUpdateManyWithoutExamNestedInput
   attempts?: Prisma.ExamAttemptUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUpdateManyWithoutExamNestedInput
 }
 
 export type ExamUncheckedUpdateInput = {
@@ -500,6 +521,7 @@ export type ExamUncheckedUpdateInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -509,6 +531,7 @@ export type ExamUncheckedUpdateInput = {
   students?: Prisma.ExamStudentUncheckedUpdateManyWithoutExamNestedInput
   mcqs?: Prisma.ExamMcqUncheckedUpdateManyWithoutExamNestedInput
   attempts?: Prisma.ExamAttemptUncheckedUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUncheckedUpdateManyWithoutExamNestedInput
 }
 
 export type ExamCreateManyInput = {
@@ -524,6 +547,7 @@ export type ExamCreateManyInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -542,6 +566,7 @@ export type ExamUpdateManyMutationInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -560,6 +585,7 @@ export type ExamUncheckedUpdateManyInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -578,6 +604,7 @@ export type ExamCountOrderByAggregateInput = {
   hasRandom?: Prisma.SortOrder
   hasNegativeMark?: Prisma.SortOrder
   negativeMark?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -604,6 +631,7 @@ export type ExamMaxOrderByAggregateInput = {
   hasRandom?: Prisma.SortOrder
   hasNegativeMark?: Prisma.SortOrder
   negativeMark?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -622,6 +650,7 @@ export type ExamMinOrderByAggregateInput = {
   hasRandom?: Prisma.SortOrder
   hasNegativeMark?: Prisma.SortOrder
   negativeMark?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -654,6 +683,20 @@ export type FloatFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type ExamCreateNestedOneWithoutChaptersInput = {
+  create?: Prisma.XOR<Prisma.ExamCreateWithoutChaptersInput, Prisma.ExamUncheckedCreateWithoutChaptersInput>
+  connectOrCreate?: Prisma.ExamCreateOrConnectWithoutChaptersInput
+  connect?: Prisma.ExamWhereUniqueInput
+}
+
+export type ExamUpdateOneRequiredWithoutChaptersNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamCreateWithoutChaptersInput, Prisma.ExamUncheckedCreateWithoutChaptersInput>
+  connectOrCreate?: Prisma.ExamCreateOrConnectWithoutChaptersInput
+  upsert?: Prisma.ExamUpsertWithoutChaptersInput
+  connect?: Prisma.ExamWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExamUpdateToOneWithWhereWithoutChaptersInput, Prisma.ExamUpdateWithoutChaptersInput>, Prisma.ExamUncheckedUpdateWithoutChaptersInput>
 }
 
 export type ExamCreateNestedOneWithoutBatchesInput = {
@@ -740,6 +783,122 @@ export type ExamUpdateOneRequiredWithoutAttemptsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ExamUpdateToOneWithWhereWithoutAttemptsInput, Prisma.ExamUpdateWithoutAttemptsInput>, Prisma.ExamUncheckedUpdateWithoutAttemptsInput>
 }
 
+export type ExamCreateWithoutChaptersInput = {
+  id?: string
+  title: string
+  total: number
+  duration: number
+  cq?: number | null
+  mcq?: number | null
+  startDate: Date | string
+  endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
+  type: string
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subjects?: Prisma.ExamSubjectCreateNestedManyWithoutExamInput
+  batches?: Prisma.ExamBatchCreateNestedManyWithoutExamInput
+  classNames?: Prisma.ExamClassNameCreateNestedManyWithoutExamInput
+  students?: Prisma.ExamStudentCreateNestedManyWithoutExamInput
+  mcqs?: Prisma.ExamMcqCreateNestedManyWithoutExamInput
+  attempts?: Prisma.ExamAttemptCreateNestedManyWithoutExamInput
+}
+
+export type ExamUncheckedCreateWithoutChaptersInput = {
+  id?: string
+  title: string
+  total: number
+  duration: number
+  cq?: number | null
+  mcq?: number | null
+  startDate: Date | string
+  endDate: Date | string
+  hasSuffle?: boolean
+  hasRandom?: boolean
+  hasNegativeMark?: boolean
+  negativeMark?: number
+  type: string
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subjects?: Prisma.ExamSubjectUncheckedCreateNestedManyWithoutExamInput
+  batches?: Prisma.ExamBatchUncheckedCreateNestedManyWithoutExamInput
+  classNames?: Prisma.ExamClassNameUncheckedCreateNestedManyWithoutExamInput
+  students?: Prisma.ExamStudentUncheckedCreateNestedManyWithoutExamInput
+  mcqs?: Prisma.ExamMcqUncheckedCreateNestedManyWithoutExamInput
+  attempts?: Prisma.ExamAttemptUncheckedCreateNestedManyWithoutExamInput
+}
+
+export type ExamCreateOrConnectWithoutChaptersInput = {
+  where: Prisma.ExamWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExamCreateWithoutChaptersInput, Prisma.ExamUncheckedCreateWithoutChaptersInput>
+}
+
+export type ExamUpsertWithoutChaptersInput = {
+  update: Prisma.XOR<Prisma.ExamUpdateWithoutChaptersInput, Prisma.ExamUncheckedUpdateWithoutChaptersInput>
+  create: Prisma.XOR<Prisma.ExamCreateWithoutChaptersInput, Prisma.ExamUncheckedCreateWithoutChaptersInput>
+  where?: Prisma.ExamWhereInput
+}
+
+export type ExamUpdateToOneWithWhereWithoutChaptersInput = {
+  where?: Prisma.ExamWhereInput
+  data: Prisma.XOR<Prisma.ExamUpdateWithoutChaptersInput, Prisma.ExamUncheckedUpdateWithoutChaptersInput>
+}
+
+export type ExamUpdateWithoutChaptersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  total?: Prisma.IntFieldUpdateOperationsInput | number
+  duration?: Prisma.IntFieldUpdateOperationsInput | number
+  cq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subjects?: Prisma.ExamSubjectUpdateManyWithoutExamNestedInput
+  batches?: Prisma.ExamBatchUpdateManyWithoutExamNestedInput
+  classNames?: Prisma.ExamClassNameUpdateManyWithoutExamNestedInput
+  students?: Prisma.ExamStudentUpdateManyWithoutExamNestedInput
+  mcqs?: Prisma.ExamMcqUpdateManyWithoutExamNestedInput
+  attempts?: Prisma.ExamAttemptUpdateManyWithoutExamNestedInput
+}
+
+export type ExamUncheckedUpdateWithoutChaptersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  total?: Prisma.IntFieldUpdateOperationsInput | number
+  duration?: Prisma.IntFieldUpdateOperationsInput | number
+  cq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mcq?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasSuffle?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subjects?: Prisma.ExamSubjectUncheckedUpdateManyWithoutExamNestedInput
+  batches?: Prisma.ExamBatchUncheckedUpdateManyWithoutExamNestedInput
+  classNames?: Prisma.ExamClassNameUncheckedUpdateManyWithoutExamNestedInput
+  students?: Prisma.ExamStudentUncheckedUpdateManyWithoutExamNestedInput
+  mcqs?: Prisma.ExamMcqUncheckedUpdateManyWithoutExamNestedInput
+  attempts?: Prisma.ExamAttemptUncheckedUpdateManyWithoutExamNestedInput
+}
+
 export type ExamCreateWithoutBatchesInput = {
   id?: string
   title: string
@@ -753,6 +912,7 @@ export type ExamCreateWithoutBatchesInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -761,6 +921,7 @@ export type ExamCreateWithoutBatchesInput = {
   students?: Prisma.ExamStudentCreateNestedManyWithoutExamInput
   mcqs?: Prisma.ExamMcqCreateNestedManyWithoutExamInput
   attempts?: Prisma.ExamAttemptCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterCreateNestedManyWithoutExamInput
 }
 
 export type ExamUncheckedCreateWithoutBatchesInput = {
@@ -776,6 +937,7 @@ export type ExamUncheckedCreateWithoutBatchesInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -784,6 +946,7 @@ export type ExamUncheckedCreateWithoutBatchesInput = {
   students?: Prisma.ExamStudentUncheckedCreateNestedManyWithoutExamInput
   mcqs?: Prisma.ExamMcqUncheckedCreateNestedManyWithoutExamInput
   attempts?: Prisma.ExamAttemptUncheckedCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutExamInput
 }
 
 export type ExamCreateOrConnectWithoutBatchesInput = {
@@ -815,6 +978,7 @@ export type ExamUpdateWithoutBatchesInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -823,6 +987,7 @@ export type ExamUpdateWithoutBatchesInput = {
   students?: Prisma.ExamStudentUpdateManyWithoutExamNestedInput
   mcqs?: Prisma.ExamMcqUpdateManyWithoutExamNestedInput
   attempts?: Prisma.ExamAttemptUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUpdateManyWithoutExamNestedInput
 }
 
 export type ExamUncheckedUpdateWithoutBatchesInput = {
@@ -838,6 +1003,7 @@ export type ExamUncheckedUpdateWithoutBatchesInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -846,6 +1012,7 @@ export type ExamUncheckedUpdateWithoutBatchesInput = {
   students?: Prisma.ExamStudentUncheckedUpdateManyWithoutExamNestedInput
   mcqs?: Prisma.ExamMcqUncheckedUpdateManyWithoutExamNestedInput
   attempts?: Prisma.ExamAttemptUncheckedUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUncheckedUpdateManyWithoutExamNestedInput
 }
 
 export type ExamCreateWithoutClassNamesInput = {
@@ -861,6 +1028,7 @@ export type ExamCreateWithoutClassNamesInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -869,6 +1037,7 @@ export type ExamCreateWithoutClassNamesInput = {
   students?: Prisma.ExamStudentCreateNestedManyWithoutExamInput
   mcqs?: Prisma.ExamMcqCreateNestedManyWithoutExamInput
   attempts?: Prisma.ExamAttemptCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterCreateNestedManyWithoutExamInput
 }
 
 export type ExamUncheckedCreateWithoutClassNamesInput = {
@@ -884,6 +1053,7 @@ export type ExamUncheckedCreateWithoutClassNamesInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -892,6 +1062,7 @@ export type ExamUncheckedCreateWithoutClassNamesInput = {
   students?: Prisma.ExamStudentUncheckedCreateNestedManyWithoutExamInput
   mcqs?: Prisma.ExamMcqUncheckedCreateNestedManyWithoutExamInput
   attempts?: Prisma.ExamAttemptUncheckedCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutExamInput
 }
 
 export type ExamCreateOrConnectWithoutClassNamesInput = {
@@ -923,6 +1094,7 @@ export type ExamUpdateWithoutClassNamesInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -931,6 +1103,7 @@ export type ExamUpdateWithoutClassNamesInput = {
   students?: Prisma.ExamStudentUpdateManyWithoutExamNestedInput
   mcqs?: Prisma.ExamMcqUpdateManyWithoutExamNestedInput
   attempts?: Prisma.ExamAttemptUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUpdateManyWithoutExamNestedInput
 }
 
 export type ExamUncheckedUpdateWithoutClassNamesInput = {
@@ -946,6 +1119,7 @@ export type ExamUncheckedUpdateWithoutClassNamesInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -954,6 +1128,7 @@ export type ExamUncheckedUpdateWithoutClassNamesInput = {
   students?: Prisma.ExamStudentUncheckedUpdateManyWithoutExamNestedInput
   mcqs?: Prisma.ExamMcqUncheckedUpdateManyWithoutExamNestedInput
   attempts?: Prisma.ExamAttemptUncheckedUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUncheckedUpdateManyWithoutExamNestedInput
 }
 
 export type ExamCreateWithoutStudentsInput = {
@@ -969,6 +1144,7 @@ export type ExamCreateWithoutStudentsInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -977,6 +1153,7 @@ export type ExamCreateWithoutStudentsInput = {
   classNames?: Prisma.ExamClassNameCreateNestedManyWithoutExamInput
   mcqs?: Prisma.ExamMcqCreateNestedManyWithoutExamInput
   attempts?: Prisma.ExamAttemptCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterCreateNestedManyWithoutExamInput
 }
 
 export type ExamUncheckedCreateWithoutStudentsInput = {
@@ -992,6 +1169,7 @@ export type ExamUncheckedCreateWithoutStudentsInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1000,6 +1178,7 @@ export type ExamUncheckedCreateWithoutStudentsInput = {
   classNames?: Prisma.ExamClassNameUncheckedCreateNestedManyWithoutExamInput
   mcqs?: Prisma.ExamMcqUncheckedCreateNestedManyWithoutExamInput
   attempts?: Prisma.ExamAttemptUncheckedCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutExamInput
 }
 
 export type ExamCreateOrConnectWithoutStudentsInput = {
@@ -1031,6 +1210,7 @@ export type ExamUpdateWithoutStudentsInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1039,6 +1219,7 @@ export type ExamUpdateWithoutStudentsInput = {
   classNames?: Prisma.ExamClassNameUpdateManyWithoutExamNestedInput
   mcqs?: Prisma.ExamMcqUpdateManyWithoutExamNestedInput
   attempts?: Prisma.ExamAttemptUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUpdateManyWithoutExamNestedInput
 }
 
 export type ExamUncheckedUpdateWithoutStudentsInput = {
@@ -1054,6 +1235,7 @@ export type ExamUncheckedUpdateWithoutStudentsInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1062,6 +1244,7 @@ export type ExamUncheckedUpdateWithoutStudentsInput = {
   classNames?: Prisma.ExamClassNameUncheckedUpdateManyWithoutExamNestedInput
   mcqs?: Prisma.ExamMcqUncheckedUpdateManyWithoutExamNestedInput
   attempts?: Prisma.ExamAttemptUncheckedUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUncheckedUpdateManyWithoutExamNestedInput
 }
 
 export type ExamCreateWithoutSubjectsInput = {
@@ -1077,6 +1260,7 @@ export type ExamCreateWithoutSubjectsInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1085,6 +1269,7 @@ export type ExamCreateWithoutSubjectsInput = {
   students?: Prisma.ExamStudentCreateNestedManyWithoutExamInput
   mcqs?: Prisma.ExamMcqCreateNestedManyWithoutExamInput
   attempts?: Prisma.ExamAttemptCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterCreateNestedManyWithoutExamInput
 }
 
 export type ExamUncheckedCreateWithoutSubjectsInput = {
@@ -1100,6 +1285,7 @@ export type ExamUncheckedCreateWithoutSubjectsInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1108,6 +1294,7 @@ export type ExamUncheckedCreateWithoutSubjectsInput = {
   students?: Prisma.ExamStudentUncheckedCreateNestedManyWithoutExamInput
   mcqs?: Prisma.ExamMcqUncheckedCreateNestedManyWithoutExamInput
   attempts?: Prisma.ExamAttemptUncheckedCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutExamInput
 }
 
 export type ExamCreateOrConnectWithoutSubjectsInput = {
@@ -1139,6 +1326,7 @@ export type ExamUpdateWithoutSubjectsInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1147,6 +1335,7 @@ export type ExamUpdateWithoutSubjectsInput = {
   students?: Prisma.ExamStudentUpdateManyWithoutExamNestedInput
   mcqs?: Prisma.ExamMcqUpdateManyWithoutExamNestedInput
   attempts?: Prisma.ExamAttemptUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUpdateManyWithoutExamNestedInput
 }
 
 export type ExamUncheckedUpdateWithoutSubjectsInput = {
@@ -1162,6 +1351,7 @@ export type ExamUncheckedUpdateWithoutSubjectsInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1170,6 +1360,7 @@ export type ExamUncheckedUpdateWithoutSubjectsInput = {
   students?: Prisma.ExamStudentUncheckedUpdateManyWithoutExamNestedInput
   mcqs?: Prisma.ExamMcqUncheckedUpdateManyWithoutExamNestedInput
   attempts?: Prisma.ExamAttemptUncheckedUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUncheckedUpdateManyWithoutExamNestedInput
 }
 
 export type ExamCreateWithoutMcqsInput = {
@@ -1185,6 +1376,7 @@ export type ExamCreateWithoutMcqsInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1193,6 +1385,7 @@ export type ExamCreateWithoutMcqsInput = {
   classNames?: Prisma.ExamClassNameCreateNestedManyWithoutExamInput
   students?: Prisma.ExamStudentCreateNestedManyWithoutExamInput
   attempts?: Prisma.ExamAttemptCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterCreateNestedManyWithoutExamInput
 }
 
 export type ExamUncheckedCreateWithoutMcqsInput = {
@@ -1208,6 +1401,7 @@ export type ExamUncheckedCreateWithoutMcqsInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1216,6 +1410,7 @@ export type ExamUncheckedCreateWithoutMcqsInput = {
   classNames?: Prisma.ExamClassNameUncheckedCreateNestedManyWithoutExamInput
   students?: Prisma.ExamStudentUncheckedCreateNestedManyWithoutExamInput
   attempts?: Prisma.ExamAttemptUncheckedCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutExamInput
 }
 
 export type ExamCreateOrConnectWithoutMcqsInput = {
@@ -1247,6 +1442,7 @@ export type ExamUpdateWithoutMcqsInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1255,6 +1451,7 @@ export type ExamUpdateWithoutMcqsInput = {
   classNames?: Prisma.ExamClassNameUpdateManyWithoutExamNestedInput
   students?: Prisma.ExamStudentUpdateManyWithoutExamNestedInput
   attempts?: Prisma.ExamAttemptUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUpdateManyWithoutExamNestedInput
 }
 
 export type ExamUncheckedUpdateWithoutMcqsInput = {
@@ -1270,6 +1467,7 @@ export type ExamUncheckedUpdateWithoutMcqsInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1278,6 +1476,7 @@ export type ExamUncheckedUpdateWithoutMcqsInput = {
   classNames?: Prisma.ExamClassNameUncheckedUpdateManyWithoutExamNestedInput
   students?: Prisma.ExamStudentUncheckedUpdateManyWithoutExamNestedInput
   attempts?: Prisma.ExamAttemptUncheckedUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUncheckedUpdateManyWithoutExamNestedInput
 }
 
 export type ExamCreateWithoutAttemptsInput = {
@@ -1293,6 +1492,7 @@ export type ExamCreateWithoutAttemptsInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1301,6 +1501,7 @@ export type ExamCreateWithoutAttemptsInput = {
   classNames?: Prisma.ExamClassNameCreateNestedManyWithoutExamInput
   students?: Prisma.ExamStudentCreateNestedManyWithoutExamInput
   mcqs?: Prisma.ExamMcqCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterCreateNestedManyWithoutExamInput
 }
 
 export type ExamUncheckedCreateWithoutAttemptsInput = {
@@ -1316,6 +1517,7 @@ export type ExamUncheckedCreateWithoutAttemptsInput = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: number
+  type: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1324,6 +1526,7 @@ export type ExamUncheckedCreateWithoutAttemptsInput = {
   classNames?: Prisma.ExamClassNameUncheckedCreateNestedManyWithoutExamInput
   students?: Prisma.ExamStudentUncheckedCreateNestedManyWithoutExamInput
   mcqs?: Prisma.ExamMcqUncheckedCreateNestedManyWithoutExamInput
+  chapters?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutExamInput
 }
 
 export type ExamCreateOrConnectWithoutAttemptsInput = {
@@ -1355,6 +1558,7 @@ export type ExamUpdateWithoutAttemptsInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1363,6 +1567,7 @@ export type ExamUpdateWithoutAttemptsInput = {
   classNames?: Prisma.ExamClassNameUpdateManyWithoutExamNestedInput
   students?: Prisma.ExamStudentUpdateManyWithoutExamNestedInput
   mcqs?: Prisma.ExamMcqUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUpdateManyWithoutExamNestedInput
 }
 
 export type ExamUncheckedUpdateWithoutAttemptsInput = {
@@ -1378,6 +1583,7 @@ export type ExamUncheckedUpdateWithoutAttemptsInput = {
   hasRandom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasNegativeMark?: Prisma.BoolFieldUpdateOperationsInput | boolean
   negativeMark?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1386,6 +1592,7 @@ export type ExamUncheckedUpdateWithoutAttemptsInput = {
   classNames?: Prisma.ExamClassNameUncheckedUpdateManyWithoutExamNestedInput
   students?: Prisma.ExamStudentUncheckedUpdateManyWithoutExamNestedInput
   mcqs?: Prisma.ExamMcqUncheckedUpdateManyWithoutExamNestedInput
+  chapters?: Prisma.ExamChapterUncheckedUpdateManyWithoutExamNestedInput
 }
 
 
@@ -1400,6 +1607,7 @@ export type ExamCountOutputType = {
   students: number
   mcqs: number
   attempts: number
+  chapters: number
 }
 
 export type ExamCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1409,6 +1617,7 @@ export type ExamCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   students?: boolean | ExamCountOutputTypeCountStudentsArgs
   mcqs?: boolean | ExamCountOutputTypeCountMcqsArgs
   attempts?: boolean | ExamCountOutputTypeCountAttemptsArgs
+  chapters?: boolean | ExamCountOutputTypeCountChaptersArgs
 }
 
 /**
@@ -1463,6 +1672,13 @@ export type ExamCountOutputTypeCountAttemptsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.ExamAttemptWhereInput
 }
 
+/**
+ * ExamCountOutputType without action
+ */
+export type ExamCountOutputTypeCountChaptersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExamChapterWhereInput
+}
+
 
 export type ExamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1477,6 +1693,7 @@ export type ExamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: boolean
+  type?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1486,6 +1703,7 @@ export type ExamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   students?: boolean | Prisma.Exam$studentsArgs<ExtArgs>
   mcqs?: boolean | Prisma.Exam$mcqsArgs<ExtArgs>
   attempts?: boolean | Prisma.Exam$attemptsArgs<ExtArgs>
+  chapters?: boolean | Prisma.Exam$chaptersArgs<ExtArgs>
   _count?: boolean | Prisma.ExamCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["exam"]>
 
@@ -1502,6 +1720,7 @@ export type ExamSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: boolean
+  type?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1520,6 +1739,7 @@ export type ExamSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: boolean
+  type?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1538,12 +1758,13 @@ export type ExamSelectScalar = {
   hasRandom?: boolean
   hasNegativeMark?: boolean
   negativeMark?: boolean
+  type?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ExamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "total" | "duration" | "cq" | "mcq" | "startDate" | "endDate" | "hasSuffle" | "hasRandom" | "hasNegativeMark" | "negativeMark" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["exam"]>
+export type ExamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "total" | "duration" | "cq" | "mcq" | "startDate" | "endDate" | "hasSuffle" | "hasRandom" | "hasNegativeMark" | "negativeMark" | "type" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["exam"]>
 export type ExamInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subjects?: boolean | Prisma.Exam$subjectsArgs<ExtArgs>
   batches?: boolean | Prisma.Exam$batchesArgs<ExtArgs>
@@ -1551,6 +1772,7 @@ export type ExamInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   students?: boolean | Prisma.Exam$studentsArgs<ExtArgs>
   mcqs?: boolean | Prisma.Exam$mcqsArgs<ExtArgs>
   attempts?: boolean | Prisma.Exam$attemptsArgs<ExtArgs>
+  chapters?: boolean | Prisma.Exam$chaptersArgs<ExtArgs>
   _count?: boolean | Prisma.ExamCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ExamIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1565,6 +1787,7 @@ export type $ExamPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     students: Prisma.$ExamStudentPayload<ExtArgs>[]
     mcqs: Prisma.$ExamMcqPayload<ExtArgs>[]
     attempts: Prisma.$ExamAttemptPayload<ExtArgs>[]
+    chapters: Prisma.$ExamChapterPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1579,6 +1802,7 @@ export type $ExamPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     hasRandom: boolean
     hasNegativeMark: boolean
     negativeMark: number
+    type: string
     status: string
     createdAt: Date
     updatedAt: Date
@@ -1982,6 +2206,7 @@ export interface Prisma__ExamClient<T, Null = never, ExtArgs extends runtime.Typ
   students<T extends Prisma.Exam$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Exam$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamStudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mcqs<T extends Prisma.Exam$mcqsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Exam$mcqsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamMcqPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attempts<T extends Prisma.Exam$attemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Exam$attemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  chapters<T extends Prisma.Exam$chaptersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Exam$chaptersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamChapterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2023,6 +2248,7 @@ export interface ExamFieldRefs {
   readonly hasRandom: Prisma.FieldRef<"Exam", 'Boolean'>
   readonly hasNegativeMark: Prisma.FieldRef<"Exam", 'Boolean'>
   readonly negativeMark: Prisma.FieldRef<"Exam", 'Float'>
+  readonly type: Prisma.FieldRef<"Exam", 'String'>
   readonly status: Prisma.FieldRef<"Exam", 'String'>
   readonly createdAt: Prisma.FieldRef<"Exam", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Exam", 'DateTime'>
@@ -2555,6 +2781,30 @@ export type Exam$attemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.ExamAttemptScalarFieldEnum | Prisma.ExamAttemptScalarFieldEnum[]
+}
+
+/**
+ * Exam.chapters
+ */
+export type Exam$chaptersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExamChapter
+   */
+  select?: Prisma.ExamChapterSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExamChapter
+   */
+  omit?: Prisma.ExamChapterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExamChapterInclude<ExtArgs> | null
+  where?: Prisma.ExamChapterWhereInput
+  orderBy?: Prisma.ExamChapterOrderByWithRelationInput | Prisma.ExamChapterOrderByWithRelationInput[]
+  cursor?: Prisma.ExamChapterWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExamChapterScalarFieldEnum | Prisma.ExamChapterScalarFieldEnum[]
 }
 
 /**
