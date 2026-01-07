@@ -514,6 +514,15 @@ export const examRouter = {
                   },
                 },
               },
+              chapters: {
+                select: {
+                  chapter: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
               students: {
                 where: {
                   studentId: ctx.studentId,
