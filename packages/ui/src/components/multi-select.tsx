@@ -126,6 +126,7 @@ export const MultiSelect = React.forwardRef<
                 className
               )}
               disabled={disabled}
+              variant="success"
             >
               <div className="flex flex-wrap items-center gap-1 flex-1">
                 {selected.length === 0 && (

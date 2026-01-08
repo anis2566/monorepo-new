@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightLeft, Edit, Eye, Trash2, UserRoundX } from "lucide-react";
+import { Edit, Eye, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { ListActions } from "@workspace/ui/shared/list-actions";
@@ -20,7 +20,6 @@ import {
   AvatarImage,
 } from "@workspace/ui/components/avatar";
 import { ListActionLink } from "@/components/list-action-link";
-import { Badge } from "@workspace/ui/components/badge";
 
 import { Student } from "@workspace/db";
 import { useDeleteStudent } from "@/hooks/use-student";

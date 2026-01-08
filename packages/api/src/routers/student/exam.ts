@@ -4,6 +4,64 @@ import { EXAM_STATUS } from "@workspace/utils/constant";
 import { z } from "zod";
 import { Prisma } from "@workspace/db";
 
+// ✅ Bangla to English conversion utilities
+const BANGLA_TO_ENGLISH_MAP: Record<string, string> = {
+  ক: "A",
+  খ: "B",
+  গ: "C",
+  ঘ: "D",
+  ঙ: "E",
+  চ: "F",
+  ছ: "G",
+  জ: "H",
+  ঝ: "I",
+  ঞ: "J",
+};
+
+const ENGLISH_TO_BANGLA_MAP: Record<string, string> = {
+  A: "ক",
+  B: "খ",
+  C: "গ",
+  D: "ঘ",
+  E: "ঙ",
+  F: "চ",
+  G: "ছ",
+  H: "জ",
+  I: "ঝ",
+  J: "ঞ",
+};
+
+/**
+ * Convert Bangla option label to English (for database storage)
+ */
+function banglaToEnglish(label: string): string {
+  return BANGLA_TO_ENGLISH_MAP[label] || label;
+}
+
+/**
+ * Convert English option label to Bangla (for frontend display)
+ */
+function englishToBangla(label: string): string {
+  return ENGLISH_TO_BANGLA_MAP[label.toUpperCase()] || label;
+}
+
+/**
+ * Normalize option label - handles both Bangla and English
+ * Always converts to English for database operations
+ */
+function normalizeOptionLabel(label: string): string {
+  // If it's Bangla, convert to English
+  if (BANGLA_TO_ENGLISH_MAP[label]) {
+    return BANGLA_TO_ENGLISH_MAP[label];
+  }
+  // If it's English, uppercase it
+  if (/^[A-Z]$/i.test(label)) {
+    return label.toUpperCase();
+  }
+  // Otherwise return as-is (could be text answer)
+  return label;
+}
+
 export const examRouter = {
   getForExam: studentProcedure
     .input(z.object({ id: z.string() }))
@@ -99,12 +157,12 @@ export const examRouter = {
         });
       }
 
-      // if (exam.attempts.length) {
-      //   throw new TRPCError({
-      //     code: "FORBIDDEN",
-      //     message: "You have already taken this exam",
-      //   });
-      // }
+      if (exam.attempts.length > 0) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Exam is already attempted",
+        });
+      }
 
       // Check for existing attempts
       const existingAttempt = await ctx.db.examAttempt.findFirst({
@@ -127,7 +185,7 @@ export const examRouter = {
         });
       }
 
-      // Create new attempt
+      // ✅ CREATE NEW ATTEMPT WITH NEGATIVE MARKING SNAPSHOT
       return ctx.db.examAttempt.create({
         data: {
           examId: input.examId,
@@ -142,6 +200,7 @@ export const examRouter = {
           startTime: new Date(),
           lastActivityAt: new Date(),
           answers: [],
+          type: exam.type,
         },
       });
     }),
@@ -159,7 +218,6 @@ export const examRouter = {
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log("submitAnswer", input);
       const attempt = await ctx.db.examAttempt.findUnique({
         where: { id: input.attemptId },
       });
@@ -189,7 +247,18 @@ export const examRouter = {
         });
       }
 
-      const isCorrect = input.selectedOption === input.correctAnswer;
+      // ✅ NORMALIZE LABELS: Convert Bangla to English for comparison
+      const normalizedSelected = normalizeOptionLabel(input.selectedOption);
+      const normalizedCorrect = normalizeOptionLabel(input.correctAnswer);
+
+      console.log("Answer Comparison:", {
+        selectedRaw: input.selectedOption,
+        selectedNormalized: normalizedSelected,
+        correctRaw: input.correctAnswer,
+        correctNormalized: normalizedCorrect,
+      });
+
+      const isCorrect = normalizedSelected === normalizedCorrect;
 
       // Calculate new metrics
       const newCorrect = isCorrect
@@ -205,15 +274,22 @@ export const examRouter = {
       const newStreak = isCorrect ? attempt.currentStreak + 1 : 0;
       const newBestStreak = Math.max(attempt.bestStreak, newStreak);
 
-      // Calculate score with negative marking
-      const newScore = attempt.hasNegativeMark
-        ? newCorrect - newWrong * attempt.negativeMark
-        : newCorrect;
+      // ✅ CALCULATE SCORE WITH NEGATIVE MARKING
+      let newScore: number;
 
-      // Create answer object
+      if (attempt.hasNegativeMark) {
+        const penalty = newWrong * attempt.negativeMark;
+        newScore = newCorrect - penalty;
+        newScore = Math.max(0, newScore);
+        newScore = Math.round(newScore);
+      } else {
+        newScore = newCorrect;
+      }
+
+      // ✅ Store normalized (English) labels in database
       const answerObj = {
         mcqId: input.mcqId,
-        selectedOption: input.selectedOption,
+        selectedOption: normalizedSelected, // Store as English
         isCorrect,
         answeredAt: new Date().toISOString(),
         timeSpent: input.timeSpent,
@@ -242,8 +318,8 @@ export const examRouter = {
             attemptId: input.attemptId,
             mcqId: input.mcqId,
             questionNumber: input.questionNumber,
-            selectedOption: input.selectedOption,
-            correctAnswer: input.correctAnswer,
+            selectedOption: normalizedSelected, // Store as English
+            correctAnswer: normalizedCorrect, // Store as English
             isCorrect,
             timeSpent: input.timeSpent,
             answeredAt: new Date(),
@@ -251,11 +327,14 @@ export const examRouter = {
         }),
       ]);
 
+      console.log("Is correct", isCorrect);
+
       return {
         attempt: updatedAttempt,
         isCorrect,
         newStreak,
         newBestStreak,
+        score: newScore,
       };
     }),
 
@@ -294,6 +373,17 @@ export const examRouter = {
           ? Math.floor((now.getTime() - attempt.startTime.getTime()) / 1000)
           : 0;
 
+        let finalScore: number;
+
+        if (attempt.hasNegativeMark) {
+          const penalty = attempt.wrongAnswers * attempt.negativeMark;
+          finalScore = attempt.correctAnswers - penalty;
+          finalScore = Math.max(0, finalScore);
+          finalScore = Math.round(finalScore);
+        } else {
+          finalScore = attempt.correctAnswers;
+        }
+
         return ctx.db.examAttempt.update({
           where: { id: input.attemptId },
           data: {
@@ -308,11 +398,11 @@ export const examRouter = {
             warnings: {
               push: warning,
             },
+            score: finalScore,
           },
         });
       }
 
-      // Just log if already submitted
       return ctx.db.examAttempt.update({
         where: { id: input.attemptId },
         data: {
@@ -371,6 +461,17 @@ export const examRouter = {
             }
           : undefined;
 
+      let finalScore: number;
+
+      if (attempt.hasNegativeMark) {
+        const penalty = attempt.wrongAnswers * attempt.negativeMark;
+        finalScore = attempt.correctAnswers - penalty;
+        finalScore = Math.max(0, finalScore);
+        finalScore = Math.round(finalScore);
+      } else {
+        finalScore = attempt.correctAnswers;
+      }
+
       return ctx.db.examAttempt.update({
         where: { id: input.attemptId },
         data: {
@@ -378,6 +479,7 @@ export const examRouter = {
           submissionType: input.submissionType,
           endTime: now,
           duration,
+          score: finalScore,
           ...(warning && {
             warnings: {
               push: warning,

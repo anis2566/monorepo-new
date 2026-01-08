@@ -10,7 +10,7 @@ import {
   FormControl,
   FormMessage,
 } from "@workspace/ui/components/form";
-import { MultiSelect } from "@workspace/ui/components/multi-select";
+import { MultiSelect } from "../components/multi-select";
 
 interface FormMultiSelectProps<T extends FieldValues> {
   name: Path<T>;
@@ -51,8 +51,7 @@ export function FormMultiSelect<T extends FieldValues>({
               }}
               defaultValue={field.value}
               placeholder={placeholder}
-              variant="inverted"
-              animation={2}
+              animation={0}
               maxCount={3}
               disabled={disabled}
             />

@@ -149,6 +149,12 @@ const navData: NavSection[] = [
           },
         ],
       },
+      {
+        label: "User",
+        url: "/user",
+        icon: UsersRound,
+        subItems: [],
+      },
     ],
   },
 ];

@@ -411,7 +411,8 @@ model ExamMcq {
 // IMPROVED EXAM ATTEMPT MODEL
 // ============================================
 model ExamAttempt {
-  id String @id @default(uuid())
+  id   String @id @default(uuid())
+  type String
 
   // Answer tracking - store detailed answer information as JSON
   // Format: [{mcqId, selectedOption, isCorrect, answeredAt, timeSpent}]

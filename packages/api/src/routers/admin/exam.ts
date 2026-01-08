@@ -79,6 +79,7 @@ export const examRouter = {
           },
           select: {
             id: true,
+            startDate: true,
           },
         });
 
@@ -131,7 +132,7 @@ export const examRouter = {
           }
         );
 
-        return { success: true, message: "Exam created" };
+        return { success: true, message: "Exam created", newExam };
       } catch (error) {
         console.error("Error creating exam:", error);
         throw new TRPCError({
@@ -410,6 +411,16 @@ export const examRouter = {
         subjects: {
           select: {
             subject: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+        chapters: {
+          select: {
+            chapter: {
               select: {
                 id: true,
                 name: true,

@@ -91,7 +91,7 @@ export const NewExamForm = () => {
         await queryClient.invalidateQueries({
           queryKey: trpc.admin.exam.getMany.queryKey(),
         });
-        // router.push(`/exam`);
+        router.push(`/exam`);
       },
     })
   );
@@ -194,7 +194,6 @@ export const NewExamForm = () => {
               placeholder="Select date"
               disabled={isPending}
               withTime
-              disablePast
             />
 
             <FormCalendar
@@ -203,7 +202,6 @@ export const NewExamForm = () => {
               placeholder="Select date"
               disabled={isPending}
               withTime
-              disablePast
             />
 
             <div className="space-y-2 p-4 border rounded-md">

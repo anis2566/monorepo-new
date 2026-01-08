@@ -42,6 +42,9 @@ export const userRouter = createTRPCRouter({
             studentId,
             OR: [{ fPhone: { equals: phone } }, { mPhone: { equals: phone } }],
           },
+          include: {
+            user: true,
+          },
         });
 
         if (!student) {
@@ -49,6 +52,13 @@ export const userRouter = createTRPCRouter({
           return {
             success: false,
             message: "Student not found",
+          };
+        }
+
+        if (student.user) {
+          return {
+            success: false,
+            message: "Student already has an account",
           };
         }
 

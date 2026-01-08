@@ -8,6 +8,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@workspace/ui/components/drawer";
+import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { cn } from "@workspace/ui/lib/utils";
 
 interface MobileQuickJumpProps {
@@ -52,48 +53,53 @@ export function MobileQuickJump({
         <DrawerHeader className="pb-2">
           <DrawerTitle>Jump to Question</DrawerTitle>
         </DrawerHeader>
-        <div className="px-4 pb-6">
-          {/* Legend */}
-          <div className="flex items-center justify-center gap-4 mb-4 text-xs">
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded bg-success/20 border-2 border-success" />
-              <span className="text-muted-foreground">{stats.score}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded bg-destructive/20 border-2 border-destructive" />
-              <span className="text-muted-foreground">{stats.wrong}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded bg-muted" />
-              <span className="text-muted-foreground">
-                {totalQuestions - answeredCount}
-              </span>
-            </div>
-          </div>
 
-          {/* Question Grid */}
-          <div className="grid grid-cols-6 gap-2">
-            {Array.from({ length: totalQuestions }).map((_, index) => {
-              const state = getAnswerState(index);
-              return (
-                <button
-                  key={index}
-                  onClick={() => handleJumpToQuestion(index)}
-                  className={cn(
-                    "aspect-square rounded-lg font-medium text-sm transition-all duration-200 active:scale-95",
-                    state === "unanswered" && "bg-muted text-muted-foreground",
-                    state === "correct" &&
-                      "bg-success/20 text-success border-2 border-success",
-                    state === "incorrect" &&
-                      "bg-destructive/20 text-destructive border-2 border-destructive"
-                  )}
-                >
-                  {index + 1}
-                </button>
-              );
-            })}
+        {/* ✅ Wrap content in ScrollArea */}
+        <ScrollArea className="h-[calc(80vh-80px)] px-4">
+          <div className="pb-6">
+            {/* Legend */}
+            <div className="flex items-center justify-center gap-4 mb-4 text-xs">
+              <div className="flex items-center gap-1.5">
+                <div className="w-3 h-3 rounded bg-success/20 border-2 border-success" />
+                <span className="text-muted-foreground">{stats.score}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-3 h-3 rounded bg-destructive/20 border-2 border-destructive" />
+                <span className="text-muted-foreground">{stats.wrong}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-3 h-3 rounded bg-muted" />
+                <span className="text-muted-foreground">
+                  {totalQuestions - answeredCount}
+                </span>
+              </div>
+            </div>
+
+            {/* Question Grid */}
+            <div className="grid grid-cols-6 gap-2">
+              {Array.from({ length: totalQuestions }).map((_, index) => {
+                const state = getAnswerState(index);
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleJumpToQuestion(index)}
+                    className={cn(
+                      "aspect-square rounded-lg font-medium text-sm transition-all duration-200 active:scale-95",
+                      state === "unanswered" &&
+                        "bg-muted text-muted-foreground",
+                      state === "correct" &&
+                        "bg-success/20 text-success border-2 border-success",
+                      state === "incorrect" &&
+                        "bg-destructive/20 text-destructive border-2 border-destructive"
+                    )}
+                  >
+                    {index + 1}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        </ScrollArea>
       </DrawerContent>
     </Drawer>
   );

@@ -1,3 +1,4 @@
+import { AuthGuard } from "@/modules/layout/ui/components/auth-guard";
 import { ResponsiveLayout } from "@/modules/layout/ui/views/dashboard-layout";
 import { ModalProvider } from "@/providers/modal-provider";
 
@@ -7,9 +8,11 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <ResponsiveLayout>
-      {children}
-      <ModalProvider />
-    </ResponsiveLayout>
+    <AuthGuard>
+      <ResponsiveLayout>
+        {children}
+        <ModalProvider />
+      </ResponsiveLayout>
+    </AuthGuard>
   );
 }

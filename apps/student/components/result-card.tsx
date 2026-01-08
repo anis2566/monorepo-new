@@ -10,6 +10,7 @@ import {
   Flame,
   TrendingUp,
   Award,
+  AlertTriangle,
 } from "lucide-react";
 import { Card } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
@@ -32,6 +33,10 @@ interface Result {
   completedAt: Date;
   status: string;
   submissionType: string | null;
+  subjects: string[];
+  // ✅ Negative marking fields
+  hasNegativeMark: boolean;
+  negativeMark: number;
 }
 
 interface ResultCardProps {
@@ -40,6 +45,13 @@ interface ResultCardProps {
 
 export function ResultCard({ result }: ResultCardProps) {
   const router = useRouter();
+
+  // ✅ Calculate penalty if negative marking is enabled
+  const penalty = result.hasNegativeMark
+    ? result.incorrect * result.negativeMark
+    : 0;
+  const scoreWithoutPenalty = result.correct;
+  const hasPenalty = penalty > 0;
 
   const getScoreColor = () => {
     if (result.percentage >= 80) return "text-success";
@@ -117,6 +129,15 @@ export function ResultCard({ result }: ResultCardProps) {
               </span>
               <span>•</span>
               <span>{format(new Date(result.completedAt), "MMM d, yyyy")}</span>
+              {/* ✅ Negative marking indicator */}
+              {result.hasNegativeMark && (
+                <>
+                  <span>•</span>
+                  <span className="text-destructive font-medium">
+                    -{result.negativeMark} penalty
+                  </span>
+                </>
+              )}
             </div>
           </div>
           <div className="flex-shrink-0">{getScoreIcon()}</div>
@@ -145,8 +166,32 @@ export function ResultCard({ result }: ResultCardProps) {
               {result.score.toFixed(1)}/{result.total}
             </p>
             <p className="text-xs text-muted-foreground">Points</p>
+            {/* ✅ Show penalty if applied */}
+            {hasPenalty && (
+              <p className="text-xs text-destructive mt-0.5">
+                (-{penalty.toFixed(2)} penalty)
+              </p>
+            )}
           </div>
         </div>
+
+        {/* ✅ Negative Marking Warning (if penalty applied) */}
+        {result.hasNegativeMark && hasPenalty && (
+          <div className="mb-4 p-2.5 bg-destructive/10 border border-destructive/20 rounded-lg">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 text-destructive flex-shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-destructive">
+                  Negative Marking Applied
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Score before penalty: {scoreWithoutPenalty} → After penalty:{" "}
+                  {result.score.toFixed(1)}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-3 gap-3 mb-4">
@@ -158,6 +203,12 @@ export function ResultCard({ result }: ResultCardProps) {
               </span>
             </div>
             <span className="text-xs text-muted-foreground">Correct</span>
+            {/* ✅ Show points if no negative marking */}
+            {!result.hasNegativeMark && (
+              <span className="text-xs text-success mt-0.5">
+                +{result.correct}
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col items-center p-2 rounded-lg bg-destructive/10 border border-destructive/20">
@@ -168,6 +219,12 @@ export function ResultCard({ result }: ResultCardProps) {
               </span>
             </div>
             <span className="text-xs text-muted-foreground">Wrong</span>
+            {/* ✅ Show penalty if negative marking */}
+            {result.hasNegativeMark && result.incorrect > 0 && (
+              <span className="text-xs text-destructive mt-0.5">
+                -{penalty.toFixed(2)}
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col items-center p-2 rounded-lg bg-muted border border-border">
@@ -178,7 +235,21 @@ export function ResultCard({ result }: ResultCardProps) {
               </span>
             </div>
             <span className="text-xs text-muted-foreground">Skipped</span>
+            <span className="text-xs text-muted-foreground mt-0.5">0</span>
           </div>
+        </div>
+
+        {/* Subjects */}
+        <div className="flex items-center gap-2 mb-4 flex-wrap">
+          {result?.subjects.map((subject, index) => (
+            <Badge
+              key={index}
+              variant="outline"
+              className={cn("text-xs border")}
+            >
+              {subject}
+            </Badge>
+          ))}
         </div>
 
         {/* Footer */}

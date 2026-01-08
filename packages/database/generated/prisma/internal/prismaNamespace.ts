@@ -2298,6 +2298,7 @@ export type ExamMcqScalarFieldEnum = (typeof ExamMcqScalarFieldEnum)[keyof typeo
 
 export const ExamAttemptScalarFieldEnum = {
   id: 'id',
+  type: 'type',
   answers: 'answers',
   score: 'score',
   correctAnswers: 'correctAnswers',

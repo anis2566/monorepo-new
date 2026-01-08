@@ -72,7 +72,19 @@ export const studentProcedure = t.procedure.use(async ({ ctx, next }) => {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  if (ctx.user.role !== ROLE.Student) {
+  const user = await ctx.db.user.findUnique({
+    where: { id: ctx.user.id },
+    select: { role: true },
+  });
+
+  if (!user) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "User not found",
+    });
+  }
+
+  if (user.role !== ROLE.Student) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 

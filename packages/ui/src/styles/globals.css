@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap");
+@import url("https://fonts.maateen.me/solaiman-lipi/font.css");
+@import url("https://fonts.maateen.me/kalpurush/font.css");
 @import "tailwindcss";
 @source "../../../apps/**/*.{ts,tsx}";
 @source "../../../components/**/*.{ts,tsx}";
@@ -322,6 +325,17 @@
       hsl(var(--primary-start)) 0%,
       hsl(var(--primary-end)) 100%
     );
+
+    /* Font family utilities */
+    .font-solaimanlipi {
+      font-family: "SolaimanLipi", sans-serif;
+    }
+    .font-kalpurush {
+      font-family: "Kalpurush", sans-serif;
+    }
+    .font-noto-bengali {
+      font-family: "Noto Sans Bengali", sans-serif;
+    }
   }
 
   /* Animation utility classes using the global keyframes */

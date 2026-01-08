@@ -48,7 +48,7 @@ export function FormCalendar<T extends FieldValues>({
       render={({ field, fieldState }) => {
         const dateValue = field.value ? new Date(field.value) : undefined;
         const timeValue = dateValue
-          ? `${String(dateValue.getUTCHours()).padStart(2, "0")}:${String(dateValue.getUTCMinutes()).padStart(2, "0")}`
+          ? `${String(dateValue.getHours()).padStart(2, "0")}:${String(dateValue.getMinutes()).padStart(2, "0")}`
           : "12:00";
 
         const handleTimeChange = (time: string) => {
@@ -60,7 +60,12 @@ export function FormCalendar<T extends FieldValues>({
           const localDay = dateValue.getDate();
 
           const newDate = new Date(
-            Date.UTC(localYear, localMonth, localDay, hours, minutes, 0)
+            localYear,
+            localMonth,
+            localDay,
+            hours,
+            minutes,
+            0
           );
 
           field.onChange(newDate.toISOString());
@@ -104,18 +109,16 @@ export function FormCalendar<T extends FieldValues>({
                       const localDay = date.getDate();
 
                       // Preserve time if it exists, otherwise default to 12:00
-                      const hours = dateValue?.getUTCHours() || 12;
-                      const minutes = dateValue?.getUTCMinutes() || 0;
+                      const hours = dateValue?.getHours() || 12;
+                      const minutes = dateValue?.getMinutes() || 0;
 
                       const fixedDate = new Date(
-                        Date.UTC(
-                          localYear,
-                          localMonth,
-                          localDay,
-                          hours,
-                          minutes,
-                          0
-                        )
+                        localYear,
+                        localMonth,
+                        localDay,
+                        hours,
+                        minutes,
+                        0
                       );
 
                       field.onChange(fixedDate.toISOString());

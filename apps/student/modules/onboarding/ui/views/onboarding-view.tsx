@@ -7,9 +7,7 @@ export const OnboardingView = () => {
   const router = useRouter();
 
   const handleComplete = () => {
-    // Navigate to dashboard after completion
     router.push("/");
-    // Or refresh to update user state
     router.refresh();
   };
 

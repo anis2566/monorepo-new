@@ -32,6 +32,8 @@ import { CheckCircle2, Send } from "lucide-react";
 import { MCQ_TYPE } from "@workspace/utils/constant";
 import { parseMathString } from "@/lib/katex";
 import { toast } from "sonner";
+import { cn } from "@workspace/ui/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface ExamWithRelation extends Exam {
   subjects: {
@@ -68,6 +70,7 @@ export const AssignQuestionView = ({ exam }: AssignQuestionViewProps) => {
   const [selectedMcqs, setSelectedMcqs] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const { data: mcqsBySubject, isLoading } = useQuery(
     trpc.admin.mcq.getManyBySubjects.queryOptions({
@@ -87,7 +90,7 @@ export const AssignQuestionView = ({ exam }: AssignQuestionViewProps) => {
         }
 
         toast.success(data.message);
-
+        router.push("/exam");
         // await queryClient.invalidateQueries({
         //   queryKey: trpc.admin.batch.getMany.queryKey(),
         // });
@@ -399,7 +402,10 @@ export const AssignQuestionView = ({ exam }: AssignQuestionViewProps) => {
                       {filteredMcqs.map((mcq, index) => (
                         <div
                           key={mcq.id}
-                          className="flex items-start gap-3 p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+                          className={cn(
+                            "flex items-start gap-3 p-4 border rounded-lg hover:bg-accent/50 transition-colors",
+                            selectedMcqs.has(mcq.id) ? "bg-accent/30" : ""
+                          )}
                         >
                           <Checkbox
                             checked={selectedMcqs.has(mcq.id)}

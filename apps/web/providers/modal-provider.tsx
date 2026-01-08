@@ -15,6 +15,7 @@ import { CreateBatchModal } from "@/modules/batch/ui/modal/create-batch-modal";
 import { EditBatchModal } from "@/modules/batch/ui/modal/edit-batch-modal";
 import { DeleteBatchModal } from "@/modules/batch/ui/modal/delete-batch-modal";
 import { DeleteExamModal } from "@/modules/exam/ui/modal/delete-exam-modal";
+import { DeleteUserModal } from "@/modules/user/ui/modal/delete-user-modal";
 
 export const ModalProvider = () => {
   return (
@@ -36,6 +37,7 @@ export const ModalProvider = () => {
       <EditBatchModal />
       <DeleteBatchModal />
       <DeleteExamModal />
+      <DeleteUserModal />
     </>
   );
 };

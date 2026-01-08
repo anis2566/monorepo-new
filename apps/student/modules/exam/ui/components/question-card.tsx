@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Card, CardContent } from "@workspace/ui/components/card";
-import { Badge } from "@workspace/ui/components/badge";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, NotebookPen, XCircle } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { parseMathString } from "@/lib/katex";
 
@@ -9,7 +8,7 @@ interface Mcq {
   id: string;
   question: string;
   options: string[];
-  answer: string;
+  answer: string; // ✅ English (A, B, C, D)
   type: string;
   subject?: {
     name: string;
@@ -26,17 +25,20 @@ interface Mcq {
 interface QuestionCardProps {
   mcq: Mcq;
   questionNumber: number;
-  selectedOption: string | null;
-  onSelectOption: (option: string) => void;
+  selectedOption: string | null; // ✅ English (A, B, C, D)
+  onSelectOption: (option: string) => void; // ✅ Sends English (A, B, C, D)
   disabled?: boolean;
   answerState?: "unanswered" | "correct" | "incorrect";
   onView?: () => void;
 }
 
+// ✅ Bangla labels for DISPLAY ONLY
+const BANGLA_LABELS = ["ক", "খ", "গ", "ঘ", "ঙ", "চ", "ছ", "জ", "ঝ", "ঞ"];
+
 export function QuestionCard({
   mcq,
   questionNumber,
-  selectedOption,
+  selectedOption, // English: A, B, C, D
   onSelectOption,
   disabled = false,
   answerState = "unanswered",
@@ -44,7 +46,6 @@ export function QuestionCard({
 }: QuestionCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Call onView when component is first rendered or comes into view
   useEffect(() => {
     if (onView && cardRef.current) {
       const observer = new IntersectionObserver(
@@ -84,9 +85,9 @@ export function QuestionCard({
           "border-destructive/50 bg-destructive/5"
       )}
     >
-      <CardContent className="p-6">
+      <CardContent className="p-4">
         {/* Question Header */}
-        <div className="flex items-start justify-between gap-4 mb-4">
+        <div className="flex items-start justify-between gap-4 mb-2">
           <div className="flex items-center gap-3">
             <div
               className={cn(
@@ -102,16 +103,6 @@ export function QuestionCard({
             >
               {questionNumber}
             </div>
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <Badge
-                  variant={mcq.type === "MCQ" ? "default" : "secondary"}
-                  className="text-xs"
-                >
-                  {mcq.type}
-                </Badge>
-              </div>
-            </div>
           </div>
 
           {/* Answer Status Badge */}
@@ -120,15 +111,13 @@ export function QuestionCard({
               {answerState === "correct" ? (
                 <>
                   <CheckCircle2 className="w-5 h-5 text-success" />
-                  <span className="text-sm font-medium text-success">
-                    Correct
-                  </span>
+                  <span className="text-sm font-medium text-success">সঠিক</span>
                 </>
               ) : (
                 <>
                   <XCircle className="w-5 h-5 text-destructive" />
                   <span className="text-sm font-medium text-destructive">
-                    Wrong
+                    ভুল
                   </span>
                 </>
               )}
@@ -138,56 +127,85 @@ export function QuestionCard({
 
         {/* Context (if available) */}
         {mcq.context && (
-          <div className="mb-4 p-4 bg-muted/50 rounded-lg border border-border">
+          <div className="mb-2 p-4 bg-muted/50 rounded-lg border border-border">
             <p className="text-sm text-muted-foreground font-medium mb-1">
-              Context:
+              উদ্দীপক:
             </p>
-            <p className="text-sm">
+            <p className="text-sm font-kalpurush">
               {mcq.isMath ? parseMathString(mcq.context) : mcq.context}
             </p>
           </div>
         )}
 
         {/* Question Text */}
-        <div className="mb-6">
-          <p className="text-base leading-relaxed font-medium">
+        <div className="mb-2 flex items-start gap-x-2">
+          <NotebookPen className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+          <p className="text-base leading-relaxed font-bold font-kalpurush text-primary">
             {mcq.isMath ? parseMathString(mcq.question) : mcq.question}
           </p>
         </div>
 
         {/* Statements (for statement-based questions) */}
         {mcq.statements && mcq.statements.length > 0 && (
-          <div className="mb-4 space-y-2">
-            {mcq.statements.map((statement, index) => (
-              <div
-                key={index}
-                className="p-3 bg-muted/30 rounded-md border border-border"
-              >
-                <p className="text-sm">
-                  <span className="font-semibold">Statement {index + 1}: </span>
-                  {mcq.isMath ? parseMathString(statement) : statement}
-                </p>
-              </div>
-            ))}
+          <div className="mb-4 space-y-2 p-4 bg-muted/50 rounded-lg border border-border">
+            {mcq.statements.map((statement, index) => {
+              const romanNumerals = [
+                "i",
+                "ii",
+                "iii",
+                "iv",
+                "v",
+                "vi",
+                "vii",
+                "viii",
+                "ix",
+                "x",
+              ];
+              const statementLabel =
+                romanNumerals[index] || (index + 1).toString();
+
+              return (
+                <div key={index} className="p-1.5 rounded-md">
+                  <p className="text-sm font-kalpurush">
+                    <span className="font-semibold">{statementLabel}. </span>
+                    {mcq.isMath ? parseMathString(statement) : statement}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         )}
 
+        {mcq.statements && mcq?.statements?.length > 0 && (
+          <p className="font-bold font-kalpurush mb-2">নিচের কোনটি সঠিক?</p>
+        )}
+
         {/* Options */}
-        <div className="space-y-3">
+        <div className="space-y-1.5">
           {mcq.options.map((option, index) => {
-            const optionLabel = String.fromCharCode(65 + index); // A, B, C, D
-            const isSelected = selectedOption === optionLabel;
-            const isCorrectAnswer = mcq.answer === optionLabel;
+            // ✅ Internal: English letter (A, B, C, D)
+            const optionLetterEnglish = String.fromCharCode(65 + index);
+
+            // ✅ Display: Bangla letter (ক, খ, গ, ঘ)
+            const optionLetterBangla =
+              BANGLA_LABELS[index] || optionLetterEnglish;
+
+            // ✅ Compare using English
+            const isSelected = selectedOption === optionLetterEnglish;
+            const isCorrectAnswer = mcq.answer === optionLetterEnglish;
 
             return (
               <button
                 key={index}
-                onClick={() =>
-                  !disabled && !isAnswered && onSelectOption(optionLabel)
-                }
+                onClick={() => {
+                  if (!disabled && !isAnswered) {
+                    // ✅ Send English to parent
+                    onSelectOption(optionLetterEnglish); // Sends "A", "B", "C", "D"
+                  }
+                }}
                 disabled={disabled || isAnswered}
                 className={cn(
-                  "w-full text-left p-4 rounded-lg border-2 transition-all duration-200",
+                  "w-full text-left p-2 rounded-lg border-2 transition-all duration-200",
                   "hover:shadow-md active:scale-[0.99]",
                   // Default state
                   !isAnswered &&
@@ -195,7 +213,7 @@ export function QuestionCard({
                     "border-border bg-card hover:border-primary/50",
                   // Selected but not answered yet
                   !isAnswered && isSelected && "border-primary bg-primary/5",
-                  // Answered - show correct/incorrect
+                  // Answered - show correct/incorrect for selected option only
                   isAnswered &&
                     isSelected &&
                     answerState === "correct" &&
@@ -204,21 +222,19 @@ export function QuestionCard({
                     isSelected &&
                     answerState === "incorrect" &&
                     "border-destructive bg-destructive/10",
-                  isAnswered && !isSelected && "border-border bg-muted/30",
-                  // Show correct answer when wrong answer selected
+                  // ✅ CHANGE: Don't highlight correct answer, just show as disabled
                   isAnswered &&
-                    answerState === "incorrect" &&
-                    isCorrectAnswer &&
-                    "border-success/50 bg-success/5",
+                    !isSelected &&
+                    "border-border bg-muted/30 opacity-60",
                   // Disabled state
                   (disabled || isAnswered) && "cursor-not-allowed"
                 )}
               >
                 <div className="flex items-center gap-3">
-                  {/* Option Circle */}
+                  {/* Option Circle - Display Bangla */}
                   <div
                     className={cn(
-                      "flex items-center justify-center w-8 h-8 rounded-full border-2 font-semibold text-sm flex-shrink-0",
+                      "flex items-center justify-center w-8 h-8 rounded-full border-2 font-semibold text-sm flex-shrink-0 font-kalpurush",
                       !isAnswered &&
                         !isSelected &&
                         "border-border bg-background",
@@ -233,37 +249,28 @@ export function QuestionCard({
                         isSelected &&
                         answerState === "incorrect" &&
                         "border-destructive bg-destructive text-destructive-foreground",
+                      // ✅ CHANGE: Unselected options just look disabled
                       isAnswered &&
                         !isSelected &&
-                        isCorrectAnswer &&
-                        "border-success bg-success/20 text-success",
-                      isAnswered &&
-                        !isSelected &&
-                        !isCorrectAnswer &&
-                        "border-border bg-muted"
+                        "border-border bg-muted text-muted-foreground"
                     )}
                   >
-                    {optionLabel}
+                    {optionLetterBangla} {/* ✅ Display Bangla: ক, খ, গ, ঘ */}
                   </div>
 
                   {/* Option Text */}
                   <span
                     className={cn(
-                      "text-sm flex-1",
-                      isAnswered &&
-                        isSelected &&
-                        answerState === "correct" &&
-                        "font-medium",
-                      isAnswered &&
-                        isSelected &&
-                        answerState === "incorrect" &&
-                        "font-medium"
+                      "text-sm flex-1 font-kalpurush",
+                      isAnswered && isSelected && "font-medium",
+                      // ✅ CHANGE: Unselected options are muted
+                      isAnswered && !isSelected && "text-muted-foreground"
                     )}
                   >
                     {mcq.isMath ? parseMathString(option) : option}
                   </span>
 
-                  {/* Status Icon */}
+                  {/* Status Icon - Only on selected option */}
                   {isAnswered && isSelected && (
                     <>
                       {answerState === "correct" ? (
@@ -274,12 +281,7 @@ export function QuestionCard({
                     </>
                   )}
 
-                  {/* Show correct answer indicator */}
-                  {isAnswered &&
-                    answerState === "incorrect" &&
-                    isCorrectAnswer && (
-                      <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />
-                    )}
+                  {/* ✅ REMOVED: No checkmark on correct answer when user was wrong */}
                 </div>
               </button>
             );
@@ -289,10 +291,10 @@ export function QuestionCard({
         {/* Explanation (shown after answering if available) */}
         {isAnswered && mcq.explanation && (
           <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
-            <p className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">
-              Explanation:
+            <p className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2 font-kalpurush">
+              ব্যাখ্যা:
             </p>
-            <p className="text-sm text-blue-800 dark:text-blue-200">
+            <p className="text-sm text-blue-800 dark:text-blue-200 font-kalpurush">
               {mcq.explanation}
             </p>
           </div>

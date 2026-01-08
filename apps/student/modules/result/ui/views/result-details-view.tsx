@@ -12,14 +12,16 @@ import {
   Download,
   Share2,
   Loader2,
+  AlertTriangle,
 } from "lucide-react";
-import { format } from "date-fns";
+import { format, intervalToDuration } from "date-fns";
 import { cn } from "@workspace/ui/lib/utils";
 import { useRouter } from "next/navigation";
-import { McqQuestion } from "../components/mcq-question";
 import { useTRPC } from "@/trpc/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Badge } from "@workspace/ui/components/badge";
+import { ReviewAnswersSection } from "../components/review-answers";
 
 interface ResultDetailProps {
   attemptId: string;
@@ -69,6 +71,13 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
 
   const { attempt, reviewQuestions } = data;
 
+  // ✅ Calculate negative marking penalty
+  const penalty = attempt.hasNegativeMark
+    ? attempt.wrongAnswers * attempt.negativeMark
+    : 0;
+  const scoreWithoutPenalty = attempt.correctAnswers;
+  const hasPenalty = penalty > 0;
+
   const getScoreColor = () => {
     if (attempt.percentage >= 80) return "text-success";
     if (attempt.percentage >= 60) return "text-warning";
@@ -117,6 +126,7 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
               <h2 className="text-base lg:text-lg font-medium text-foreground mb-1 line-clamp-2">
                 {attempt.examTitle}
               </h2>
+              <Badge className="mb-4">{attempt.type}</Badge>
               <p className="text-sm text-muted-foreground mb-6">
                 {format(new Date(attempt.completedAt), "MMMM d, yyyy • h:mm a")}
               </p>
@@ -134,6 +144,12 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                     {attempt.score.toFixed(1)}
                   </p>
                   <p className="text-muted-foreground">Score</p>
+                  {/* ✅ Show penalty if applied */}
+                  {hasPenalty && (
+                    <p className="text-xs text-destructive mt-1">
+                      (-{penalty.toFixed(2)})
+                    </p>
+                  )}
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-foreground">
@@ -143,11 +159,54 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-foreground">
-                    {attempt.timeTakenMinutes}
+                    {(() => {
+                      const duration = intervalToDuration({
+                        start: new Date(attempt.startTime || new Date()),
+                        end: new Date(attempt.completedAt || new Date()),
+                      });
+                      const value =
+                        duration.hours ||
+                        duration.minutes ||
+                        duration.seconds ||
+                        0;
+                      return value;
+                    })()}
                   </p>
-                  <p className="text-muted-foreground">Minutes</p>
+                  <p className="text-muted-foreground">
+                    {(() => {
+                      const duration = intervalToDuration({
+                        start: new Date(attempt.startTime || new Date()),
+                        end: new Date(attempt.completedAt || new Date()),
+                      });
+                      if (duration.hours) return "Hours";
+                      if (duration.minutes) return "Minutes";
+                      return "Seconds";
+                    })()}
+                  </p>
                 </div>
               </div>
+
+              {/* ✅ Negative Marking Warning */}
+              {hasPenalty && (
+                <div className="mt-6 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                  <div className="flex items-start gap-2 text-left">
+                    <AlertTriangle className="w-4 h-4 text-destructive flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-xs font-medium text-destructive">
+                        Negative Marking Applied
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Before penalty: {scoreWithoutPenalty} → After penalty:{" "}
+                        {attempt.score.toFixed(1)}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {attempt.wrongAnswers} wrong × {attempt.negativeMark} =
+                        -{penalty.toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Submission Type Badge */}
               {attempt.submissionType && (
@@ -170,7 +229,7 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
               )}
             </Card>
 
-            {/* Stats Grid */}
+            {/* ✅ Stats Grid with Negative Marking Info */}
             <div className="grid grid-cols-3 gap-3">
               <Card className="p-4 text-center bg-success/10 border-success/20">
                 <CheckCircle2 className="w-6 h-6 mx-auto mb-2 text-success" />
@@ -178,6 +237,12 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                   {attempt.correctAnswers}
                 </p>
                 <p className="text-xs text-muted-foreground">Correct</p>
+                {/* ✅ Show points if no negative marking */}
+                {!attempt.hasNegativeMark && (
+                  <p className="text-xs text-success mt-1">
+                    +{attempt.correctAnswers}
+                  </p>
+                )}
               </Card>
               <Card className="p-4 text-center bg-destructive/10 border-destructive/20">
                 <XCircle className="w-6 h-6 mx-auto mb-2 text-destructive" />
@@ -185,6 +250,12 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                   {attempt.wrongAnswers}
                 </p>
                 <p className="text-xs text-muted-foreground">Wrong</p>
+                {/* ✅ Show penalty if negative marking */}
+                {hasPenalty && (
+                  <p className="text-xs text-destructive mt-1">
+                    -{penalty.toFixed(2)}
+                  </p>
+                )}
               </Card>
               <Card className="p-4 text-center bg-muted">
                 <MinusCircle className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
@@ -192,12 +263,20 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                   {attempt.skippedQuestions}
                 </p>
                 <p className="text-xs text-muted-foreground">Skipped</p>
+                <p className="text-xs text-muted-foreground mt-1">0</p>
               </Card>
             </div>
 
-            {/* Performance Bar */}
+            {/* ✅ Performance Bar with Negative Marking Context */}
             <Card className="p-5">
-              <h3 className="font-semibold mb-4">Performance Breakdown</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold">Performance Breakdown</h3>
+                {attempt.hasNegativeMark && (
+                  <Badge variant="outline" className="text-xs">
+                    -{attempt.negativeMark} per wrong
+                  </Badge>
+                )}
+              </div>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-muted-foreground w-20">
@@ -209,8 +288,13 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                     }
                     className="flex-1 h-2.5 [&>div]:bg-success"
                   />
-                  <span className="text-sm font-medium w-12 text-right">
+                  <span className="text-sm font-medium w-16 text-right">
                     {attempt.correctAnswers}
+                    {!attempt.hasNegativeMark && (
+                      <span className="text-xs text-success ml-1">
+                        (+{attempt.correctAnswers})
+                      </span>
+                    )}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
@@ -223,8 +307,13 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                     }
                     className="flex-1 h-2.5 [&>div]:bg-destructive"
                   />
-                  <span className="text-sm font-medium w-12 text-right">
+                  <span className="text-sm font-medium w-16 text-right">
                     {attempt.wrongAnswers}
+                    {hasPenalty && (
+                      <span className="text-xs text-destructive ml-1">
+                        (-{penalty.toFixed(2)})
+                      </span>
+                    )}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
@@ -237,11 +326,33 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                     }
                     className="flex-1 h-2.5"
                   />
-                  <span className="text-sm font-medium w-12 text-right">
+                  <span className="text-sm font-medium w-16 text-right">
                     {attempt.skippedQuestions}
                   </span>
                 </div>
               </div>
+
+              {/* ✅ Score Calculation Summary */}
+              {attempt.hasNegativeMark && (
+                <div className="mt-4 pt-4 border-t border-border space-y-1.5 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Base score:</span>
+                    <span className="font-medium">+{scoreWithoutPenalty}</span>
+                  </div>
+                  {hasPenalty && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Penalty:</span>
+                      <span className="font-medium text-destructive">
+                        -{penalty.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex justify-between border-t border-border pt-1.5 font-semibold">
+                    <span>Final Score:</span>
+                    <span>{attempt.score.toFixed(1)}</span>
+                  </div>
+                </div>
+              )}
             </Card>
 
             {/* Best Streak Card */}
@@ -263,36 +374,12 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
           </div>
 
           {/* Right Column - Review Questions */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-lg">Review Answers</h3>
-              <p className="text-sm text-muted-foreground">
-                {reviewQuestions.length} questions
-              </p>
-            </div>
-            <div className="space-y-6">
-              {reviewQuestions.map((reviewQuestion) => (
-                <Card key={reviewQuestion.id} className="p-5 lg:p-6">
-                  <McqQuestion
-                    mcq={reviewQuestion.mcq}
-                    questionNumber={reviewQuestion.questionNumber}
-                    selectedOption={reviewQuestion.selectedOption}
-                    onSelectOption={() => {}}
-                    showResult
-                    disabled
-                  />
-
-                  {/* Time Spent Badge */}
-                  {reviewQuestion?.timeSpent &&
-                    reviewQuestion.timeSpent > 0 && (
-                      <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-                        <span>⏱️ Time spent: {reviewQuestion.timeSpent}s</span>
-                      </div>
-                    )}
-                </Card>
-              ))}
-            </div>
-          </div>
+          <ReviewAnswersSection
+            reviewQuestions={reviewQuestions}
+            correctCount={attempt.correctAnswers}
+            wrongCount={attempt.wrongAnswers}
+            skippedCount={attempt.skippedQuestions}
+          />
         </div>
       </div>
     </>

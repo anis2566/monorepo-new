@@ -31,6 +31,13 @@ import { toast } from "sonner";
 import { Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FormSwitch } from "@workspace/ui/shared/form-switch";
+import { FormSelect } from "@workspace/ui/shared/form-select";
+import { EXAM_TYPE } from "@workspace/utils/constant";
+
+const EXAM_TYPES = Object.values(EXAM_TYPE).map((item) => ({
+  label: item,
+  value: item,
+}));
 
 interface EditExamFormProps {
   examId: string;
@@ -40,6 +47,7 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
   const [enableCq, setEnableCq] = useState<boolean>(false);
   const [enableMcq, setEnableMcq] = useState<boolean>(false);
   const [classNameIds, setClassNameIds] = useState<string[]>([]);
+  const [subjectIds, setSubjectIds] = useState<string[]>([]);
 
   const trpc = useTRPC();
   const queryClient = useQueryClient();
@@ -65,6 +73,8 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
       classNameIds: [],
       subjectIds: [],
       batchIds: [],
+      chapterIds: [],
+      type: "",
     },
   });
 
@@ -103,6 +113,8 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
         hasRandom: examData?.hasRandom,
         hasNegativeMark: examData?.hasNegativeMark,
         negativeMark: examData?.negativeMark?.toString() || "",
+        chapterIds: examData?.chapters?.map((item) => item.chapter.id) || [],
+        type: examData?.type || "",
       });
     }
   }, [examData, form]);
@@ -112,6 +124,7 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
       trpc.admin.class.forSelect.queryOptions({ search: "" }),
       trpc.admin.batch.getByClassNameIds.queryOptions(classNameIds),
       trpc.admin.subject.forSelect.queryOptions({ search: "" }),
+      trpc.admin.chapter.getBySubjectIds.queryOptions(subjectIds),
     ],
   });
 
@@ -129,6 +142,12 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
 
   const SUBJECT_OPTIONS =
     results[2]?.data?.map((item) => ({
+      label: item.name,
+      value: item.id,
+    })) || [];
+
+  const CHAPTER_OPTIONS =
+    results[3]?.data?.map((item) => ({
       label: item.name,
       value: item.id,
     })) || [];
@@ -151,6 +170,8 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
       },
     })
   );
+
+  console.log(form.formState.errors);
 
   const onSubmit = (data: ExamSchemaType) => {
     updateExam({ id: examId, data });
@@ -183,6 +204,13 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormSelect
+              name="type"
+              label="Type"
+              placeholder="Select type"
+              options={EXAM_TYPES}
+            />
+
             <FormInput
               name="title"
               label="Title"
@@ -190,45 +218,41 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
               disabled={isPending}
             />
 
-            <FormCalendar
-              name="startDate"
-              label="Start Time"
-              placeholder="Select date"
-              disabled={isPending}
-              withTime
-              disablePast
-            />
-
-            <FormCalendar
-              name="endDate"
-              label="End Time"
-              placeholder="Select date"
-              disabled={isPending}
-              withTime
-              disablePast
-            />
-
             <FormMultiSelect
               name="classNameIds"
-              label="Classes"
+              label="Class"
               placeholder="Select classes"
               options={CLASS_OPTIONS}
               disabled={isPending}
+              onClick={(value) => {
+                setClassNameIds(value);
+              }}
             />
 
             <FormMultiSelect
               name="batchIds"
-              label="Batches"
+              label="Batch"
               placeholder="Select batches"
               options={BATCH_OPTIONS}
-              disabled={isPending || BATCH_OPTIONS.length === 0}
+              disabled={isPending}
             />
 
             <FormMultiSelect
               name="subjectIds"
-              label="Subjects"
+              label="Subject"
               placeholder="Select subjects"
               options={SUBJECT_OPTIONS}
+              disabled={isPending}
+              onClick={(value) => {
+                setSubjectIds(value);
+              }}
+            />
+
+            <FormMultiSelect
+              name="chapterIds"
+              label="Chapter"
+              placeholder="Select chapters"
+              options={CHAPTER_OPTIONS}
               disabled={isPending}
             />
 
@@ -237,6 +261,22 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
               label="Duration"
               disabled={isPending}
               type="number"
+            />
+
+            <FormCalendar
+              name="startDate"
+              label="Start Time"
+              placeholder="Select date"
+              disabled={isPending}
+              withTime
+            />
+
+            <FormCalendar
+              name="endDate"
+              label="End Time"
+              placeholder="Select date"
+              disabled={isPending}
+              withTime
             />
 
             <div className="space-y-2 p-4 border rounded-md">
@@ -333,7 +373,7 @@ export const EditExamForm = ({ examId }: EditExamFormProps) => {
 
             <Button
               type="submit"
-              disabled={isPending || !form.formState.isValid}
+              disabled={isPending}
               className="w-full md:w-auto h-12 text-base font-medium bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50"
             >
               {isPending ? (

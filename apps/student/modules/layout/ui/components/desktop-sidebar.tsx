@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, BookOpen, Trophy, User, Medal, Award } from "lucide-react";
+import { Home, BookOpen, Trophy, User, Medal } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@workspace/ui/lib/utils";
@@ -32,7 +32,9 @@ export function DesktopSidebar() {
           />
         </div>
         <div>
-          <h1 className="font-bold text-foreground">Mr. Dr.</h1>
+          <h1 className="font-bold text-foreground text-xl text-red-600 tracking-widest">
+            Mr. Dr.
+          </h1>
           <div className="flex items-center gap-1.5 leading-none">
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/60 opacity-75"></span>

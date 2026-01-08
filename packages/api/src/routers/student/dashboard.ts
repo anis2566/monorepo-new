@@ -102,7 +102,20 @@ export const dashboardRouter = {
         },
         include: {
           exam: {
-            select: { id: true, title: true, total: true },
+            select: {
+              id: true,
+              title: true,
+              total: true,
+              subjects: {
+                select: {
+                  subject: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
           },
         },
         orderBy: { createdAt: "desc" },
@@ -176,6 +189,7 @@ export const dashboardRouter = {
         completedAt: attempt.endTime || attempt.updatedAt,
         status: attempt.status,
         submissionType: attempt.submissionType,
+        subjects: attempt.exam.subjects.map((subject) => subject.subject.name),
       };
     });
 

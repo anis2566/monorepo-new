@@ -1,5 +1,5 @@
 {
   "extends": "@workspace/typescript-config/nextjs.json",
-  "include": ["src", "src/trpc"],
+  "include": ["src", "src/trpc", "src/workers", "src/lib", "src/services"],
   "exclude": ["node_modules"]
 }

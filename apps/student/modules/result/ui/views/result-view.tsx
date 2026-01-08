@@ -13,16 +13,27 @@ import {
   Calendar,
   BarChart3,
   Filter,
+  FileText,
 } from "lucide-react";
 import { useTRPC } from "@/trpc/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
 import { cn } from "@workspace/ui/lib/utils";
 
+export enum EXAM_TYPE {
+  "Daily Exam" = "Daily Exam",
+  "Chapter Final" = "Chapter Final",
+  "Paper Final" = "Paper Final",
+  "Subject Final" = "Subject Final",
+  "Model Test" = "Model Test",
+  "Mega Exam" = "Mega Exam",
+}
+
 export const ResultView = () => {
   const trpc = useTRPC();
   const [timeFilter, setTimeFilter] = useState<"all" | "month" | "week">("all");
   const [sortBy, setSortBy] = useState<"recent" | "score">("recent");
+  const [typeFilter, setTypeFilter] = useState<EXAM_TYPE | "all">("all");
 
   // Fetch results
   const { data: results, isLoading } = useSuspenseQuery(
@@ -49,6 +60,11 @@ export const ResultView = () => {
       filtered = filtered.filter((r) => new Date(r.completedAt) >= cutoffDate);
     }
 
+    // Type filter
+    if (typeFilter !== "all") {
+      filtered = filtered.filter((r) => r.type === typeFilter);
+    }
+
     // Sort
     if (sortBy === "score") {
       filtered.sort((a, b) => b.percentage - a.percentage);
@@ -60,7 +76,7 @@ export const ResultView = () => {
     }
 
     return filtered;
-  }, [results, timeFilter, sortBy]);
+  }, [results, timeFilter, sortBy, typeFilter]);
 
   // Calculate statistics
   const stats = useMemo(() => {
@@ -207,7 +223,7 @@ export const ResultView = () => {
 
       {/* Filters */}
       <Card className="p-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <BarChart3 className="w-4 h-4" />
             <span className="font-medium">
@@ -215,7 +231,7 @@ export const ResultView = () => {
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3">
             {/* Time Filter */}
             <div className="flex items-center gap-1 text-sm">
               <Calendar className="w-4 h-4 text-muted-foreground" />
@@ -254,8 +270,33 @@ export const ResultView = () => {
               </button>
             </div>
 
+            {/* Exam Type Filter */}
+            <div className="flex items-center gap-1 text-sm border-l sm:pl-2">
+              <FileText className="w-4 h-4 text-muted-foreground" />
+              <select
+                value={typeFilter}
+                onChange={(e) =>
+                  setTypeFilter(e.target.value as EXAM_TYPE | "all")
+                }
+                className={cn(
+                  "px-3 py-1.5 rounded-md transition-colors border-0 bg-transparent cursor-pointer",
+                  "focus:outline-none focus:ring-2 focus:ring-primary",
+                  typeFilter !== "all"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted"
+                )}
+              >
+                <option value="all">All Types</option>
+                {Object.values(EXAM_TYPE).map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Sort */}
-            <div className="flex items-center gap-1 text-sm border-l pl-2">
+            <div className="flex items-center gap-1 text-sm border-l sm:pl-2">
               <Filter className="w-4 h-4 text-muted-foreground" />
               <button
                 onClick={() => setSortBy("recent")}

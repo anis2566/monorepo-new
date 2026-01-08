@@ -130,7 +130,7 @@ export const SignUpView = () => {
   };
 
   return (
-    <div className="relative flex-1 flex flex-col items-center justify-center px-4 py-8 text-white">
+    <div className="relative flex-1 flex flex-col items-center justify-center px-4 py-8">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -144,12 +144,10 @@ export const SignUpView = () => {
         >
           {/* Logo / Brand */}
           <div className="text-center space-y-2">
-            <h2 className="text-2xl font-bold tracking-tight text-primary">
+            <h2 className="text-2xl font-bold tracking-tight text-rose-600">
               Mr. Dr.
             </h2>
-            <h1 className="text-xl font-semibold text-white">
-              Create your account
-            </h1>
+            <h1 className="text-xl font-semibold">Create your account</h1>
             <p className="text-muted-foreground text-sm">
               Get started with your free account today
             </p>
@@ -175,7 +173,7 @@ export const SignUpView = () => {
                 label="Full name"
                 type="text"
                 placeholder="Enter your full name"
-                className="h-12 text-white"
+                className="h-12 "
                 disabled={isPending}
               />
 
@@ -184,7 +182,7 @@ export const SignUpView = () => {
                 label="Email address"
                 type="email"
                 placeholder="Enter your email"
-                className="h-12 text-white"
+                className="h-12 "
                 disabled={isPending}
               />
 
@@ -192,14 +190,14 @@ export const SignUpView = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">Password</FormLabel>
+                    <FormLabel className="">Password</FormLabel>
                     <div className="relative">
                       <FormControl>
                         <Input
                           {...field}
                           type={showPassword ? "text" : "password"}
                           placeholder="Enter your password"
-                          className="h-12 text-white"
+                          className="h-12 "
                           disabled={isPending}
                         />
                       </FormControl>

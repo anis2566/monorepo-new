@@ -76,11 +76,12 @@ export const resultRouter = {
 
       // Get grade
       const getGrade = (percentage: number) => {
-        if (percentage >= 90) return "A+";
-        if (percentage >= 80) return "A";
-        if (percentage >= 70) return "B";
-        if (percentage >= 60) return "C";
-        if (percentage >= 50) return "D";
+        if (percentage >= 80) return "A+";
+        if (percentage >= 70) return "A";
+        if (percentage >= 60) return "A-";
+        if (percentage >= 50) return "B+";
+        if (percentage >= 40) return "B";
+        if (percentage >= 33) return "C";
         return "F";
       };
 
@@ -105,6 +106,7 @@ export const resultRouter = {
           isMath: answer.mcq.isMath,
           context: answer.mcq.context,
           statements: answer.mcq.statements,
+          timeSpent: answer.timeSpent,
         },
         selectedOption: answer.selectedOption,
         correctAnswer: answer.correctAnswer,
@@ -123,6 +125,7 @@ export const resultRouter = {
           endTime: attempt.endTime,
           duration: attempt.duration,
           timeTakenMinutes,
+          type: attempt.type,
 
           // Scores
           score: attempt.score,
@@ -182,6 +185,15 @@ export const resultRouter = {
             id: true,
             title: true,
             total: true,
+            subjects: {
+              select: {
+                subject: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -224,6 +236,8 @@ export const resultRouter = {
         completedAt: attempt.endTime || attempt.updatedAt,
         status: attempt.status,
         submissionType: attempt.submissionType,
+        subjects: attempt.exam.subjects.map((s) => s.subject.name),
+        type: attempt.type,
       };
     });
   }),

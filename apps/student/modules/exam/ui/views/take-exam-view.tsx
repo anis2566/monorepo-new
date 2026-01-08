@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { AlertTriangle, Send } from "lucide-react";
 import {
@@ -30,9 +30,31 @@ import { toast } from "sonner";
 interface TakeExamProps {
   examId: string;
   attemptId: string;
+  studentId: string;
 }
 
-export default function TakeExam({ examId, attemptId }: TakeExamProps) {
+// Inline shuffle function
+function shuffleArray<T>(array: T[], seed: string): T[] {
+  const shuffled = [...array];
+  let currentSeed = seed.split("").reduce((a, b) => a + b.charCodeAt(0), 0);
+
+  const random = () => {
+    const x = Math.sin(currentSeed++) * 10000;
+    return x - Math.floor(x);
+  };
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j]!, shuffled[i]!];
+  }
+  return shuffled;
+}
+
+export default function TakeExam({
+  examId,
+  attemptId,
+  studentId,
+}: TakeExamProps) {
   const router = useRouter();
   const { fireStreakConfetti, fireBestStreakConfetti } = useConfetti();
   const { playCorrectSound, playIncorrectSound } = useAudioFeedback();
@@ -44,7 +66,47 @@ export default function TakeExam({ examId, attemptId }: TakeExamProps) {
   );
 
   const exam = data.exam;
-  const questions = data.questions;
+  const rawQuestions = data.questions;
+
+  // ✅ CLEAN: Shuffle options, everything in ENGLISH (A, B, C, D)
+  const questions = useMemo(() => {
+    return rawQuestions.map((question) => {
+      if (!exam.hasSuffle) {
+        return {
+          ...question,
+          displayOptions: question.options,
+          correctAnswerLetter: question.answer, // English: A, B, C, D
+        };
+      }
+
+      const seed = `${studentId}-${question.id}`;
+      const shuffledOptions = shuffleArray(question.options, seed);
+
+      let correctAnswerEnglish: string;
+
+      if (question.answer.length === 1 && /^[A-D]$/i.test(question.answer)) {
+        const answerIndex = question.answer.toUpperCase().charCodeAt(0) - 65;
+        const correctText = question.options[answerIndex];
+        const newIndex = shuffledOptions.findIndex(
+          (opt) => opt === correctText
+        );
+        correctAnswerEnglish = String.fromCharCode(65 + newIndex);
+      } else {
+        const newIndex = shuffledOptions.findIndex(
+          (opt) => opt.trim() === question.answer.trim()
+        );
+        correctAnswerEnglish = String.fromCharCode(
+          65 + (newIndex >= 0 ? newIndex : 0)
+        );
+      }
+
+      return {
+        ...question,
+        displayOptions: shuffledOptions,
+        correctAnswerLetter: correctAnswerEnglish, // English: A, B, C, D
+      };
+    });
+  }, [rawQuestions, exam.hasSuffle, studentId]);
 
   const {
     stats,
@@ -92,6 +154,7 @@ export default function TakeExam({ examId, attemptId }: TakeExamProps) {
     },
   });
 
+  // ✅ CLEAN: QuestionCard sends English, we just pass it through
   const handleSelectOption = async (questionIndex: number, option: string) => {
     const question = questions[questionIndex];
 
@@ -103,54 +166,25 @@ export default function TakeExam({ examId, attemptId }: TakeExamProps) {
       return;
     }
 
-    // ✅ FIXED: Convert answer to correct format
-    // Check if question.answer is a letter or actual text
-    let correctOptionLetter: string;
+    // ✅ option is already English (A, B, C, D) from QuestionCard
+    const selectedEnglish = option;
+    const correctEnglish = question.correctAnswerLetter;
 
-    if (question.answer.length === 1 && /^[A-D]$/i.test(question.answer)) {
-      // answer is already a letter like "A", "B", "C", "D"
-      correctOptionLetter = question.answer.toUpperCase();
-    } else {
-      // answer is the actual option text, need to find which letter it is
-      const correctOptionIndex = question.options.findIndex(
-        (opt: string) => opt === question.answer
-      );
+    const isCorrect = selectedEnglish === correctEnglish;
 
-      if (correctOptionIndex === -1) {
-        console.error("❌ Could not find correct answer in options!", {
-          answer: question.answer,
-          options: question.options,
-        });
-        toast.error("Error: Could not verify answer");
-        return;
-      }
-
-      // Convert index to letter: 0="A", 1="B", 2="C", 3="D"
-      correctOptionLetter = String.fromCharCode(65 + correctOptionIndex);
-    }
-
-    console.log("✅ Answer Comparison:", {
-      selectedOption: option,
-      correctOptionLetter: correctOptionLetter,
-      questionAnswer: question.answer,
-      isCorrect: option === correctOptionLetter,
-    });
-
-    const isCorrect = option === correctOptionLetter;
-
-    // Play audio feedback immediately
+    // Play audio feedback
     if (isCorrect) {
       playCorrectSound();
     } else {
       playIncorrectSound();
     }
 
-    // Submit the answer with BOTH as letters
+    // ✅ Submit with English labels
     await submitAnswer(
       questionIndex,
       question.id,
-      option, // Selected: "A", "B", "C", "D"
-      correctOptionLetter // Correct: "A", "B", "C", "D"
+      selectedEnglish, // "A", "B", "C", "D"
+      correctEnglish // "A", "B", "C", "D"
     );
 
     triggerConfettiEffects();
@@ -165,37 +199,15 @@ export default function TakeExam({ examId, attemptId }: TakeExamProps) {
     submitExam("Manual");
   };
 
-  const handleExit = () => {
-    setShowExitDialog(true);
-  };
-
   const confirmExit = () => {
     router.push("/exams");
   };
 
-  // Get answer state for quick jump buttons
+  // ✅ CLEAN: Everything uses English
   const getQuickJumpState = (index: number) => {
     const question = questions[index];
-
-    if (!question) {
-      return "unanswered";
-    }
-
-    // Convert answer to letter for comparison
-    let correctOptionLetter: string;
-    if (question.answer.length === 1 && /^[A-D]$/i.test(question.answer)) {
-      correctOptionLetter = question.answer.toUpperCase();
-    } else {
-      const correctOptionIndex = question.options.findIndex(
-        (opt: string) => opt === question.answer
-      );
-      correctOptionLetter =
-        correctOptionIndex !== -1
-          ? String.fromCharCode(65 + correctOptionIndex)
-          : "A"; // fallback
-    }
-
-    return getAnswerState(question.id, correctOptionLetter);
+    if (!question) return "unanswered";
+    return getAnswerState(question.id, question.correctAnswerLetter); // English
   };
 
   if (!exam) {
@@ -213,11 +225,11 @@ export default function TakeExam({ examId, attemptId }: TakeExamProps) {
         <div className="flex-1 flex flex-col min-h-screen">
           <ExamHeader
             title={exam.title}
-            type={exam.type}
             totalQuestions={questions.length}
             answeredCount={stats.answered}
             duration={exam.duration}
             onTimeUp={handleTimeUp}
+            type={exam.type}
           />
 
           <div className="flex-1 overflow-y-auto">
@@ -225,38 +237,24 @@ export default function TakeExam({ examId, attemptId }: TakeExamProps) {
               <div className="max-w-3xl mx-auto lg:mr-0 lg:max-w-none lg:pr-80">
                 <div className="space-y-6">
                   {questions.map((question, index) => {
-                    const selectedOption = getSelectedOption(question.id);
-
-                    // Convert answer for display
-                    let correctOptionLetter: string;
-                    if (
-                      question.answer.length === 1 &&
-                      /^[A-D]$/i.test(question.answer)
-                    ) {
-                      correctOptionLetter = question.answer.toUpperCase();
-                    } else {
-                      const correctOptionIndex = question.options.findIndex(
-                        (opt: string) => opt === question.answer
-                      );
-                      correctOptionLetter =
-                        correctOptionIndex !== -1
-                          ? String.fromCharCode(65 + correctOptionIndex)
-                          : "A";
-                    }
-
+                    const selectedOption = getSelectedOption(question.id); // English
                     const answerState = getAnswerState(
                       question.id,
-                      correctOptionLetter
+                      question.correctAnswerLetter // English
                     );
 
                     return (
                       <QuestionCard
                         key={question.id}
-                        mcq={question}
+                        mcq={{
+                          ...question,
+                          options: question.displayOptions,
+                          answer: question.correctAnswerLetter, // ✅ Pass English
+                        }}
                         questionNumber={index + 1}
-                        selectedOption={selectedOption}
-                        onSelectOption={(option) =>
-                          handleSelectOption(index, option)
+                        selectedOption={selectedOption} // ✅ English
+                        onSelectOption={
+                          (option) => handleSelectOption(index, option) // ✅ Receives English
                         }
                         disabled={isAnswered(question.id) || isAnswering}
                         answerState={answerState}

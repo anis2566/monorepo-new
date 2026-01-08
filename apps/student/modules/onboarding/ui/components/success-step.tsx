@@ -1,7 +1,7 @@
 "use client";
 
 import { useTRPC } from "@/trpc/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import { CheckCircle2, PartyPopper, Rocket } from "lucide-react";
 import { toast } from "sonner";
@@ -12,7 +12,6 @@ interface SuccessStepProps {
 
 export const SuccessStep = ({ onComplete }: SuccessStepProps) => {
   const trpc = useTRPC();
-  const queryClient = useQueryClient();
 
   const { mutate: completeOnboarding, isPending } = useMutation(
     trpc.user.completeOnboarding.mutationOptions({
@@ -24,9 +23,6 @@ export const SuccessStep = ({ onComplete }: SuccessStepProps) => {
           toast.error(data.message);
           return;
         }
-        await queryClient.invalidateQueries({
-          queryKey: trpc.user.getVerifiedUser.queryKey(),
-        });
         onComplete();
       },
     })
