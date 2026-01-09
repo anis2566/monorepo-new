@@ -238,6 +238,9 @@ export const resultRouter = {
         submissionType: attempt.submissionType,
         subjects: attempt.exam.subjects.map((s) => s.subject.name),
         type: attempt.type,
+        // ✅ ADD THESE MISSING FIELDS
+        hasNegativeMark: attempt.hasNegativeMark,
+        negativeMark: attempt.negativeMark,
       };
     });
   }),

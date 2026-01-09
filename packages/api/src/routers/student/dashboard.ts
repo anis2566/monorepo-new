@@ -174,6 +174,10 @@ export const dashboardRouter = {
         return "F";
       };
 
+      const timeTakenMinutes = attempt.duration
+        ? Math.round(attempt.duration / 60)
+        : 0;
+
       return {
         id: attempt.id,
         examId: attempt.examId,
@@ -185,11 +189,15 @@ export const dashboardRouter = {
         skipped: attempt.skippedQuestions,
         percentage,
         grade: getGrade(percentage),
-        timeTaken: attempt.duration ? Math.round(attempt.duration / 60) : 0,
+        timeTaken: timeTakenMinutes,
         completedAt: attempt.endTime || attempt.updatedAt,
         status: attempt.status,
         submissionType: attempt.submissionType,
-        subjects: attempt.exam.subjects.map((subject) => subject.subject.name),
+        subjects: attempt.exam.subjects.map((s) => s.subject.name),
+        type: attempt.type,
+        // ✅ ADD THESE MISSING FIELDS
+        hasNegativeMark: attempt.hasNegativeMark,
+        negativeMark: attempt.negativeMark,
       };
     });
 
