@@ -10,9 +10,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* * Tailwind v4 @theme inline block
- * Maps CSS variable names to internal Tailwind theme names.
- */
+/* * Tailwind v4 @theme inline block */
 @theme inline {
   /* Global Colors */
   --color-background: var(--background);
@@ -83,8 +81,11 @@
   --muted-foreground: oklch(0.536 0.015 250);
   --accent: oklch(0.58 0.16 168);
   --accent-foreground: oklch(1 0 0);
+
+  /* FIXED: Success is now defined properly here only */
   --success: oklch(0.61 0.16 142);
   --success-foreground: oklch(1 0 0);
+
   --warning: oklch(0.66 0.12 68);
   --warning-foreground: oklch(1 0 0);
   --destructive: oklch(0.605 0.17 25);
@@ -106,12 +107,13 @@
   --sidebar-ring: oklch(0.67 0.14 270);
 
   /* Custom tokens */
+  /* Note: These raw HSL values are strictly for use inside hsl() wrappers */
   --celebration-start: 243 75% 59%;
   --celebration-end: 280 70% 55%;
-  --success: 152 69% 45%;
-  --success-foreground: 0 0% 100%;
   --step-inactive: 240 5% 85%;
   --step-active: 243 75% 59%;
+
+  /* REMOVED DUPLICATE RAW HSL --success HERE */
 
   /* Radius */
   --radius: 0.75rem;
@@ -147,10 +149,8 @@
     0 4px 6px -4px hsl(222 47% 11% / 0.05);
   --shadow-card: 0 4px 20px -4px hsl(231 48% 48% / 0.12);
 
-  /* --- UPDATED: Primary Gradient Stop Variables (for .gradient-celebration) --- */
-  /* Primary HSL: 231 48% 48% (Start) */
+  /* --- Primary Gradient Stop Variables --- */
   --primary-start: 231 48% 48%;
-  /* Slightly adjusted primary for the end of the gradient. Original gradient primary uses 250 60% 58% as end stop. */
   --primary-end: 250 60% 58%;
 }
 
@@ -170,16 +170,21 @@
   --muted-foreground: oklch(0.7 0.01 240);
   --accent: oklch(0.65 0.16 168);
   --accent-foreground: oklch(1 0 0);
+
+  /* FIXED: Success is now defined properly here only */
   --success: oklch(0.65 0.16 142);
   --success-foreground: oklch(1 0 0);
+
   --warning: oklch(0.7 0.12 68);
   --warning-foreground: oklch(1 0 0);
   --destructive: oklch(0.35 0.11 25);
   --destructive-foreground: var(--foreground);
+
   --celebration-start: 243 75% 65%;
   --celebration-end: 280 70% 60%;
-  --success: 152 69% 50%;
-  --success-foreground: 0 0% 100%;
+
+  /* REMOVED DUPLICATE RAW HSL --success HERE */
+
   --step-inactive: 230 15% 25%;
   --step-active: 243 75% 65%;
   --border: var(--secondary);
@@ -194,10 +199,8 @@
   --sidebar-border: var(--sidebar-accent);
   --sidebar-ring: var(--sidebar-ring);
 
-  /* --- UPDATED: Dark Mode Primary Gradient Stop Variables --- */
-  /* Primary HSL (approx): 231 60% 60% (Start) */
+  /* --- Dark Mode Primary Gradient Stop Variables --- */
   --primary-start: 231 60% 60%;
-  /* Using a slightly darker/different hue for the end stop */
   --primary-end: 250 70% 70%;
 }
 
@@ -270,15 +273,12 @@
   .gradient-primary {
     background: var(--gradient-primary);
   }
-
   .gradient-accent {
     background: var(--gradient-accent);
   }
-
   .gradient-card {
     background: var(--gradient-card);
   }
-
   .gradient-hero {
     background: var(--gradient-hero);
   }
@@ -319,42 +319,37 @@
 
   /* --- UPDATED: Custom Utilities --- */
   .gradient-celebration {
-    /* Now uses the newly defined primary color gradient stops */
     background: linear-gradient(
       135deg,
       hsl(var(--primary-start)) 0%,
       hsl(var(--primary-end)) 100%
     );
-
-    /* Font family utilities */
-    .font-solaimanlipi {
-      font-family: "SolaimanLipi", sans-serif;
-    }
-    .font-kalpurush {
-      font-family: "Kalpurush", sans-serif;
-    }
-    .font-noto-bengali {
-      font-family: "Noto Sans Bengali", sans-serif;
-    }
   }
 
-  /* Animation utility classes using the global keyframes */
+  /* Font Utilities (Moved out of nesting so they work globally) */
+  .font-solaimanlipi {
+    font-family: "SolaimanLipi", sans-serif;
+  }
+  .font-kalpurush {
+    font-family: "Kalpurush", sans-serif;
+  }
+  .font-noto-bengali {
+    font-family: "Noto Sans Bengali", sans-serif;
+  }
+
+  /* Animation utility classes */
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
-
   .animate-confetti {
     animation: confetti 1s ease-out forwards;
   }
-
   .animate-pulse-soft {
     animation: pulse-soft 2s ease-in-out infinite;
   }
-
   .animate-slide-up {
     animation: slide-up 0.4s ease-out forwards;
   }
-
   .animate-fade-in {
     animation: fade-in 0.3s ease-out forwards;
   }

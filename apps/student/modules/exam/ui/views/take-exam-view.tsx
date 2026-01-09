@@ -145,6 +145,15 @@ export default function TakeExam({
     fireBestStreakConfetti,
   ]);
 
+  useTabVisibility({
+    enabled: status === "In Progress",
+    onVisibilityChange: (isVisible) => {
+      if (!isVisible) {
+        handleTabSwitch();
+      }
+    },
+  });
+
   // ✅ CLEAN: QuestionCard sends English, we just pass it through
   const handleSelectOption = async (questionIndex: number, option: string) => {
     const question = questions[questionIndex];

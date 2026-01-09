@@ -40,8 +40,8 @@ export function DesktopSidebar() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/60 opacity-75"></span>
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary/80"></span>
             </span>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/70 whitespace-nowrap">
-              Student Panel
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/70 whitespace-nowrap italic">
+              Academic & Admission Care
             </p>
           </div>
         </div>
