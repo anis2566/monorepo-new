@@ -108,16 +108,16 @@ export const OnboardingFlow = ({
         return (
           <ClassPhoneIdStep onNext={handleClassPhoneNext} onBack={handleBack} />
         );
-      // case 3:
-      //   return (
-      //     <OTPVerificationStep
-      //       phone={data.verificationPhone}
-      //       onNext={handleOTPNext}
-      //       onBack={handleBack}
-      //       onResend={handleResendOTP}
-      //     />
-      //   );
       case 3:
+        return (
+          <OTPVerificationStep
+            phone={data.verificationPhone}
+            onNext={handleOTPNext}
+            onBack={handleBack}
+            onResend={handleResendOTP}
+          />
+        );
+      case 4:
         return (
           <AccountPhoneStep
             verifiedPhone={data.verificationPhone}
@@ -125,7 +125,7 @@ export const OnboardingFlow = ({
             onBack={handleBack}
           />
         );
-      case 4:
+      case 5:
         return <SuccessStep onComplete={handleComplete} />;
       default:
         return null;
