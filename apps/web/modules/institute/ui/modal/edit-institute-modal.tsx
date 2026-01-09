@@ -20,14 +20,6 @@ import { FormTextArea } from "@workspace/ui/shared/form-text-area";
 import { useEditInstitute } from "@/hooks/use-institute";
 import { InstituteSchema, InstituteSchemaType } from "@workspace/schema";
 import { Button } from "@workspace/ui/components/button";
-import { FormSelect } from "@workspace/ui/shared/form-select";
-
-import { sessions } from "@workspace/utils";
-
-const SESSION_OPTIONS = sessions.map((session) => ({
-  label: session,
-  value: session,
-}));
 
 export const EditInstituteModal = () => {
   const { isOpen, onClose, instituteId, session, name } = useEditInstitute();
@@ -38,7 +30,6 @@ export const EditInstituteModal = () => {
     resolver: zodResolver(InstituteSchema),
     defaultValues: {
       name: "",
-      session: "",
     },
   });
 
@@ -46,10 +37,9 @@ export const EditInstituteModal = () => {
     if (isOpen) {
       form.reset({
         name,
-        session,
       });
     }
-  }, [isOpen, name, session, form]);
+  }, [isOpen, name, form]);
 
   const { mutate: updateInstitute, isPending } = useMutation(
     trpc.admin.institute.updateOne.mutationOptions({
@@ -104,13 +94,6 @@ export const EditInstituteModal = () => {
             className="space-y-4"
           >
             <FormInput name="name" label="Name" type="text" />
-
-            <FormSelect
-              name="session"
-              label="Session"
-              placeholder="Select session"
-              options={SESSION_OPTIONS}
-            />
 
             <FormTextArea name="description" label="Description" />
 

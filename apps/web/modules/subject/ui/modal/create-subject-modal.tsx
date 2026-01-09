@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Send } from "lucide-react";
 
-import { InstituteSchema, InstituteSchemaType } from "@workspace/schema";
 import { useTRPC } from "@/trpc/react";
 
 import {
@@ -20,17 +19,17 @@ import { Button } from "@workspace/ui/components/button";
 import { FormSelect } from "@workspace/ui/shared/form-select";
 
 import { useCreateSubject } from "@/hooks/use-subject";
-import { groups } from "@workspace/utils/constant";
+import { LEVEL } from "@workspace/utils/constant";
 import { SubjectSchema, SubjectSchemaType } from "@workspace/schema";
 
 const DEFAULT_VALUES: SubjectSchemaType = {
   name: "",
-  group: "",
+  level: "",
 };
 
-const GROUP_OPTIONS = groups.map((group) => ({
-  label: group,
-  value: group,
+const LEVEL_OPTIONS = Object.values(LEVEL).map((level) => ({
+  label: level,
+  value: level,
 }));
 
 export const CreateSubjectModal = () => {
@@ -92,14 +91,14 @@ export const CreateSubjectModal = () => {
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-4"
           >
-            <FormInput name="name" label="Name" type="text" />
-
             <FormSelect
-              name="group"
-              label="Group"
-              placeholder="Select group"
-              options={GROUP_OPTIONS}
+              name="level"
+              label="Level"
+              placeholder="Select level"
+              options={LEVEL_OPTIONS}
             />
+
+            <FormInput name="name" label="Name" type="text" />
 
             <Button
               type="submit"

@@ -21,15 +21,15 @@ import { SubjectSchema, SubjectSchemaType } from "@workspace/schema";
 import { Button } from "@workspace/ui/components/button";
 import { FormSelect } from "@workspace/ui/shared/form-select";
 
-import { groups } from "@workspace/utils/constant";
+import { LEVEL } from "@workspace/utils/constant";
 
-const GROUP_OPTIONS = groups.map((group) => ({
-  label: group,
-  value: group,
+const LEVEL_OPTIONS = Object.values(LEVEL).map((level) => ({
+  label: level,
+  value: level,
 }));
 
 export const EditSubjectModal = () => {
-  const { isOpen, onClose, subjectId, group, name } = useEditSubject();
+  const { isOpen, onClose, subjectId, name, level } = useEditSubject();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
@@ -37,7 +37,7 @@ export const EditSubjectModal = () => {
     resolver: zodResolver(SubjectSchema),
     defaultValues: {
       name: "",
-      group: "",
+      level: "",
     },
   });
 
@@ -45,10 +45,10 @@ export const EditSubjectModal = () => {
     if (isOpen) {
       form.reset({
         name,
-        group,
+        level,
       });
     }
-  }, [isOpen, name, group, form]);
+  }, [isOpen, name, form, level]);
 
   const { mutate: updateSubject, isPending } = useMutation(
     trpc.admin.subject.updateOne.mutationOptions({
@@ -93,8 +93,7 @@ export const EditSubjectModal = () => {
         <DialogHeader>
           <DialogTitle>Edit Subject</DialogTitle>
           <DialogDescription>
-            Make changes to your subject details. Click save when you are
-            done.
+            Make changes to your subject details. Click save when you are done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -102,14 +101,14 @@ export const EditSubjectModal = () => {
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-4"
           >
-            <FormInput name="name" label="Name" type="text" />
-
             <FormSelect
-              name="group"
-              label="Group"
-              placeholder="Select group"
-              options={GROUP_OPTIONS}
+              name="level"
+              label="Level"
+              placeholder="Select level"
+              options={LEVEL_OPTIONS}
             />
+
+            <FormInput name="name" label="Name" type="text" />
 
             <Button
               type="submit"

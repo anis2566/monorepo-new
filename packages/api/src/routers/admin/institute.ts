@@ -9,11 +9,11 @@ export const instituteRouter = {
   createOne: adminProcedure
     .input(InstituteSchema)
     .mutation(async ({ ctx, input }) => {
-      const { name, session } = input;
+      const { name } = input;
 
       // Check for duplicate name
       const existingInstitute = await ctx.db.institute.findUnique({
-        where: { session_name: { session, name } },
+        where: { name },
         select: { id: true },
       });
 
@@ -27,7 +27,6 @@ export const instituteRouter = {
       const newClass = await ctx.db.institute.create({
         data: {
           name,
-          session,
         },
       });
 
@@ -45,7 +44,7 @@ export const instituteRouter = {
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { instituteId, name, session } = input;
+      const { instituteId, name } = input;
 
       const existingInstitute = await ctx.db.institute.findUnique({
         where: { id: instituteId },
@@ -78,7 +77,6 @@ export const instituteRouter = {
         where: { id: instituteId },
         data: {
           name,
-          session,
         },
       });
 

@@ -8,10 +8,14 @@
     },
     "./trpc": {
       "default": "./src/trpc/index.ts"
+    },
+    "./lib/exam-status-updater": {
+      "default": "./src/lib/exam-status-updater.ts"
     }
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/node-cron": "^3.0.11",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "eslint": "^9.39.2",
@@ -25,6 +29,7 @@
     "@workspace/utils": "workspace:*",
     "bullmq": "^5.66.4",
     "ioredis": "^5.9.1",
+    "node-cron": "^4.2.1",
     "superjson": "^2.2.2",
     "zod": "^3.24.2"
   }

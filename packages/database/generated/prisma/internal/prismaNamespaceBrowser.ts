@@ -59,6 +59,7 @@ export const ModelName = {
   ClassName: 'ClassName',
   Institute: 'Institute',
   Student: 'Student',
+  StudentStatus: 'StudentStatus',
   Subject: 'Subject',
   Chapter: 'Chapter',
   Mcq: 'Mcq',
@@ -177,7 +178,6 @@ export type ClassNameScalarFieldEnum = (typeof ClassNameScalarFieldEnum)[keyof t
 
 export const InstituteScalarFieldEnum = {
   id: 'id',
-  session: 'session',
   name: 'name',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -223,10 +223,23 @@ export const StudentScalarFieldEnum = {
 export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
 
 
+export const StudentStatusScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  absentReason: 'absentReason',
+  absentDate: 'absentDate',
+  studentId: 'studentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentStatusScalarFieldEnum = (typeof StudentStatusScalarFieldEnum)[keyof typeof StudentStatusScalarFieldEnum]
+
+
 export const SubjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  group: 'group',
+  level: 'level',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

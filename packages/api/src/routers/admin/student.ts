@@ -4,6 +4,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { StudentSchema } from "@workspace/schema";
 import { Prisma } from "@workspace/db";
 import { adminProcedure } from "../../trpc";
+import { STUDENT_STATUS } from "@workspace/utils/constant";
 
 // Shared error handler
 const handleError = (error: unknown, operation: string) => {
@@ -44,6 +45,11 @@ export const studentRouter = {
             dob: new Date(input.dob),
             shift: input.shift || "",
             batchId: input.batchId || null,
+            studentStatus: {
+              create: {
+                status: STUDENT_STATUS.Present,
+              },
+            },
           },
         });
 

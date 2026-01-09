@@ -20,11 +20,15 @@ export const batchRouter = {
     .mutation(async ({ ctx, input }) => {
       const { name, classNameId } = input;
 
+      console.log(classNameId);
+
       try {
         const existingBatch = await ctx.db.batch.findFirst({
           where: { classNameId, name },
           select: { id: true },
         });
+
+        console.log(existingBatch);
 
         if (existingBatch) {
           throw new TRPCError({

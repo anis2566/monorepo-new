@@ -58,6 +58,11 @@ export type Institute = Prisma.InstituteModel
  */
 export type Student = Prisma.StudentModel
 /**
+ * Model StudentStatus
+ * 
+ */
+export type StudentStatus = Prisma.StudentStatusModel
+/**
  * Model Subject
  * 
  */

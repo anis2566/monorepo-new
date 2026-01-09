@@ -200,17 +200,18 @@ export type BatchOrderByWithRelationInput = {
 
 export type BatchWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  name?: string
+  classNameId_name?: Prisma.BatchClassNameIdNameCompoundUniqueInput
   AND?: Prisma.BatchWhereInput | Prisma.BatchWhereInput[]
   OR?: Prisma.BatchWhereInput[]
   NOT?: Prisma.BatchWhereInput | Prisma.BatchWhereInput[]
+  name?: Prisma.StringFilter<"Batch"> | string
   createdAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
   classNameId?: Prisma.StringFilter<"Batch"> | string
   className?: Prisma.XOR<Prisma.ClassNameScalarRelationFilter, Prisma.ClassNameWhereInput>
   students?: Prisma.StudentListRelationFilter
   exams?: Prisma.ExamBatchListRelationFilter
-}, "id" | "name">
+}, "id" | "classNameId_name">
 
 export type BatchOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -310,6 +311,11 @@ export type BatchOrderByRelationAggregateInput = {
 export type BatchNullableScalarRelationFilter = {
   is?: Prisma.BatchWhereInput | null
   isNot?: Prisma.BatchWhereInput | null
+}
+
+export type BatchClassNameIdNameCompoundUniqueInput = {
+  classNameId: string
+  name: string
 }
 
 export type BatchCountOrderByAggregateInput = {

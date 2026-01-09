@@ -35,7 +35,7 @@ export const SubjectList = ({ subjects }: SubjectListProps) => {
       <TableHeader>
         <TableRow className="bg-background/60">
           <TableHead>Name</TableHead>
-          <TableHead>Group</TableHead>
+          <TableHead>Level</TableHead>
           <TableHead>Chapters</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
@@ -44,7 +44,7 @@ export const SubjectList = ({ subjects }: SubjectListProps) => {
         {subjects.map((subjectItem) => (
           <TableRow key={subjectItem.id} className="even:bg-muted">
             <TableCell>{subjectItem.name}</TableCell>
-            <TableCell>{subjectItem.group}</TableCell>
+            <TableCell>{subjectItem.level}</TableCell>
             <TableCell>{subjectItem._count.chapters}</TableCell>
             <TableCell>
               <ListActions>
@@ -52,11 +52,7 @@ export const SubjectList = ({ subjects }: SubjectListProps) => {
                   title="Edit"
                   icon={Edit}
                   onClick={() =>
-                    onEdit(
-                      subjectItem.id,
-                      subjectItem.name,
-                      subjectItem.group
-                    )
+                    onEdit(subjectItem.id, subjectItem.name, subjectItem.level)
                   }
                 />
                 <ListActionButton

@@ -10,6 +10,9 @@ const nextConfig = {
   ],
   serverExternalPackages: [],
   output: "standalone",
+  experimental: {
+    instrumentationHook: true,
+  },
 };
 
 export default nextConfig;

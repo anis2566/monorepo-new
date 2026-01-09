@@ -17,20 +17,12 @@ import {
 import { Form, useForm, zodResolver } from "@workspace/ui/components/form";
 import { FormInput } from "@workspace/ui/shared/form-input";
 import { Button } from "@workspace/ui/components/button";
-import { FormSelect } from "@workspace/ui/shared/form-select";
 
 import { useCreateInstitute } from "@/hooks/use-institute";
-import { sessions } from "@workspace/utils";
 
 const DEFAULT_VALUES: InstituteSchemaType = {
   name: "",
-  session: "",
 };
-
-const SESSION_OPTIONS = sessions.map((session) => ({
-  label: session,
-  value: session,
-}));
 
 export const CreateInstituteModal = () => {
   const { isOpen, onClose } = useCreateInstitute();
@@ -92,13 +84,6 @@ export const CreateInstituteModal = () => {
             className="space-y-4"
           >
             <FormInput name="name" label="Name" type="text" />
-
-            <FormSelect
-              name="session"
-              label="Session"
-              placeholder="Select session"
-              options={SESSION_OPTIONS}
-            />
 
             <Button
               type="submit"

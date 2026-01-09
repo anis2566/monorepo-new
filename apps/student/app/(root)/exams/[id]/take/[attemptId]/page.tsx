@@ -18,7 +18,7 @@ const Exam = async ({ params }: Props) => {
 
   return (
     <HydrateClient>
-      <TakeExam examId={id} attemptId={attemptId} />
+      <TakeExam examId={id} attemptId={attemptId} studentId={""} />
     </HydrateClient>
   );
 };

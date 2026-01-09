@@ -26,7 +26,6 @@ export type AggregateInstitute = {
 
 export type InstituteMinAggregateOutputType = {
   id: string | null
-  session: string | null
   name: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -34,7 +33,6 @@ export type InstituteMinAggregateOutputType = {
 
 export type InstituteMaxAggregateOutputType = {
   id: string | null
-  session: string | null
   name: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -42,7 +40,6 @@ export type InstituteMaxAggregateOutputType = {
 
 export type InstituteCountAggregateOutputType = {
   id: number
-  session: number
   name: number
   createdAt: number
   updatedAt: number
@@ -52,7 +49,6 @@ export type InstituteCountAggregateOutputType = {
 
 export type InstituteMinAggregateInputType = {
   id?: true
-  session?: true
   name?: true
   createdAt?: true
   updatedAt?: true
@@ -60,7 +56,6 @@ export type InstituteMinAggregateInputType = {
 
 export type InstituteMaxAggregateInputType = {
   id?: true
-  session?: true
   name?: true
   createdAt?: true
   updatedAt?: true
@@ -68,7 +63,6 @@ export type InstituteMaxAggregateInputType = {
 
 export type InstituteCountAggregateInputType = {
   id?: true
-  session?: true
   name?: true
   createdAt?: true
   updatedAt?: true
@@ -149,7 +143,6 @@ export type InstituteGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type InstituteGroupByOutputType = {
   id: string
-  session: string
   name: string
   createdAt: Date
   updatedAt: Date
@@ -178,7 +171,6 @@ export type InstituteWhereInput = {
   OR?: Prisma.InstituteWhereInput[]
   NOT?: Prisma.InstituteWhereInput | Prisma.InstituteWhereInput[]
   id?: Prisma.StringFilter<"Institute"> | string
-  session?: Prisma.StringFilter<"Institute"> | string
   name?: Prisma.StringFilter<"Institute"> | string
   createdAt?: Prisma.DateTimeFilter<"Institute"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Institute"> | Date | string
@@ -187,7 +179,6 @@ export type InstituteWhereInput = {
 
 export type InstituteOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  session?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -196,20 +187,17 @@ export type InstituteOrderByWithRelationInput = {
 
 export type InstituteWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  session_name?: Prisma.InstituteSessionNameCompoundUniqueInput
+  name?: string
   AND?: Prisma.InstituteWhereInput | Prisma.InstituteWhereInput[]
   OR?: Prisma.InstituteWhereInput[]
   NOT?: Prisma.InstituteWhereInput | Prisma.InstituteWhereInput[]
-  session?: Prisma.StringFilter<"Institute"> | string
-  name?: Prisma.StringFilter<"Institute"> | string
   createdAt?: Prisma.DateTimeFilter<"Institute"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Institute"> | Date | string
   students?: Prisma.StudentListRelationFilter
-}, "id" | "session_name">
+}, "id" | "name">
 
 export type InstituteOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  session?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -223,7 +211,6 @@ export type InstituteScalarWhereWithAggregatesInput = {
   OR?: Prisma.InstituteScalarWhereWithAggregatesInput[]
   NOT?: Prisma.InstituteScalarWhereWithAggregatesInput | Prisma.InstituteScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Institute"> | string
-  session?: Prisma.StringWithAggregatesFilter<"Institute"> | string
   name?: Prisma.StringWithAggregatesFilter<"Institute"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Institute"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Institute"> | Date | string
@@ -231,7 +218,6 @@ export type InstituteScalarWhereWithAggregatesInput = {
 
 export type InstituteCreateInput = {
   id?: string
-  session: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -240,7 +226,6 @@ export type InstituteCreateInput = {
 
 export type InstituteUncheckedCreateInput = {
   id?: string
-  session: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -249,7 +234,6 @@ export type InstituteUncheckedCreateInput = {
 
 export type InstituteUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  session?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -258,7 +242,6 @@ export type InstituteUpdateInput = {
 
 export type InstituteUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  session?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -267,7 +250,6 @@ export type InstituteUncheckedUpdateInput = {
 
 export type InstituteCreateManyInput = {
   id?: string
-  session: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -275,7 +257,6 @@ export type InstituteCreateManyInput = {
 
 export type InstituteUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  session?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -283,20 +264,13 @@ export type InstituteUpdateManyMutationInput = {
 
 export type InstituteUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  session?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type InstituteSessionNameCompoundUniqueInput = {
-  session: string
-  name: string
-}
-
 export type InstituteCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  session?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -304,7 +278,6 @@ export type InstituteCountOrderByAggregateInput = {
 
 export type InstituteMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  session?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -312,7 +285,6 @@ export type InstituteMaxOrderByAggregateInput = {
 
 export type InstituteMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  session?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -339,7 +311,6 @@ export type InstituteUpdateOneRequiredWithoutStudentsNestedInput = {
 
 export type InstituteCreateWithoutStudentsInput = {
   id?: string
-  session: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -347,7 +318,6 @@ export type InstituteCreateWithoutStudentsInput = {
 
 export type InstituteUncheckedCreateWithoutStudentsInput = {
   id?: string
-  session: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -371,7 +341,6 @@ export type InstituteUpdateToOneWithWhereWithoutStudentsInput = {
 
 export type InstituteUpdateWithoutStudentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  session?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -379,7 +348,6 @@ export type InstituteUpdateWithoutStudentsInput = {
 
 export type InstituteUncheckedUpdateWithoutStudentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  session?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -418,7 +386,6 @@ export type InstituteCountOutputTypeCountStudentsArgs<ExtArgs extends runtime.Ty
 
 export type InstituteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  session?: boolean
   name?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -428,7 +395,6 @@ export type InstituteSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type InstituteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  session?: boolean
   name?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -436,7 +402,6 @@ export type InstituteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
 
 export type InstituteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  session?: boolean
   name?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -444,13 +409,12 @@ export type InstituteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 
 export type InstituteSelectScalar = {
   id?: boolean
-  session?: boolean
   name?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type InstituteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "session" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["institute"]>
+export type InstituteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["institute"]>
 export type InstituteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   students?: boolean | Prisma.Institute$studentsArgs<ExtArgs>
   _count?: boolean | Prisma.InstituteCountOutputTypeDefaultArgs<ExtArgs>
@@ -465,7 +429,6 @@ export type $InstitutePayload<ExtArgs extends runtime.Types.Extensions.InternalA
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    session: string
     name: string
     createdAt: Date
     updatedAt: Date
@@ -894,7 +857,6 @@ export interface Prisma__InstituteClient<T, Null = never, ExtArgs extends runtim
  */
 export interface InstituteFieldRefs {
   readonly id: Prisma.FieldRef<"Institute", 'String'>
-  readonly session: Prisma.FieldRef<"Institute", 'String'>
   readonly name: Prisma.FieldRef<"Institute", 'String'>
   readonly createdAt: Prisma.FieldRef<"Institute", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Institute", 'DateTime'>

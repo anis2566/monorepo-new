@@ -11,7 +11,6 @@ export type ClassNameSchemaType = z.infer<typeof ClassNameSchema>;
 
 export const InstituteSchema = z.object({
   name: requiredString,
-  session: requiredString,
 });
 
 export type InstituteSchemaType = z.infer<typeof InstituteSchema>;
@@ -50,7 +49,7 @@ export type StudentSchemaType = z.infer<typeof StudentSchema>;
 
 export const SubjectSchema = z.object({
   name: requiredString,
-  group: requiredString,
+  level: requiredString,
 });
 
 export type SubjectSchemaType = z.infer<typeof SubjectSchema>;

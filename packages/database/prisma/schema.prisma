@@ -118,17 +118,15 @@ model ClassName {
 }
 
 model Institute {
-  id      String @id @default(uuid())
-  session String
-  name    String
+  id   String @id @default(uuid())
+  name String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   students Student[]
 
-  @@unique([session, name])
-  @@index([session])
+  @@unique([name])
 }
 
 model Student {
@@ -161,6 +159,8 @@ model Student {
   permanentThana    String
   permanentDistrict String
 
+  studentStatus StudentStatus?
+
   userId String? @unique
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
@@ -186,10 +186,26 @@ model Student {
   @@index([roll])
 }
 
+model StudentStatus {
+  id           String    @id @default(uuid())
+  status       String    @default("Present")
+  absentReason String?
+  absentDate   DateTime?
+
+  studentId String  @unique
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([absentDate])
+}
+
 model Subject {
   id    String @id @default(uuid())
   name  String
-  group String
+  level String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -199,7 +215,7 @@ model Subject {
   exams    ExamSubject[]
 
   @@index([name])
-  @@index([group])
+  @@index([level])
 }
 
 model Chapter {
@@ -211,7 +227,7 @@ model Chapter {
   updatedAt DateTime @updatedAt
 
   subjectId String
-  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
 
   mcqs  Mcq[]
   exams ExamChapter[]
@@ -238,10 +254,10 @@ model Mcq {
   contextUrl  String?
 
   subjectId String
-  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
 
   chapterId String
-  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Restrict)
 
   exams ExamMcq[]
 
@@ -273,7 +289,7 @@ model Batch {
   students Student[]
   exams    ExamBatch[]
 
-  @@unique([name])
+  @@unique([classNameId, name])
   @@index([classNameId])
 }
 

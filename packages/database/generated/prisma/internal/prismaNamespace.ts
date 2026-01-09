@@ -392,6 +392,7 @@ export const ModelName = {
   ClassName: 'ClassName',
   Institute: 'Institute',
   Student: 'Student',
+  StudentStatus: 'StudentStatus',
   Subject: 'Subject',
   Chapter: 'Chapter',
   Mcq: 'Mcq',
@@ -420,7 +421,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "smsVerification" | "className" | "institute" | "student" | "subject" | "chapter" | "mcq" | "batch" | "exam" | "examChapter" | "examBatch" | "examClassName" | "examStudent" | "examSubject" | "examMcq" | "examAttempt" | "answerHistory"
+    modelProps: "user" | "session" | "account" | "verification" | "smsVerification" | "className" | "institute" | "student" | "studentStatus" | "subject" | "chapter" | "mcq" | "batch" | "exam" | "examChapter" | "examBatch" | "examClassName" | "examStudent" | "examSubject" | "examMcq" | "examAttempt" | "answerHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1013,6 +1014,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.StudentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.StudentCountAggregateOutputType> | number
+        }
+      }
+    }
+    StudentStatus: {
+      payload: Prisma.$StudentStatusPayload<ExtArgs>
+      fields: Prisma.StudentStatusFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StudentStatusFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentStatusPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StudentStatusFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentStatusPayload>
+        }
+        findFirst: {
+          args: Prisma.StudentStatusFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentStatusPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StudentStatusFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentStatusPayload>
+        }
+        findMany: {
+          args: Prisma.StudentStatusFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentStatusPayload>[]
+        }
+        create: {
+          args: Prisma.StudentStatusCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentStatusPayload>
+        }
+        createMany: {
+          args: Prisma.StudentStatusCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StudentStatusCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentStatusPayload>[]
+        }
+        delete: {
+          args: Prisma.StudentStatusDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentStatusPayload>
+        }
+        update: {
+          args: Prisma.StudentStatusUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentStatusPayload>
+        }
+        deleteMany: {
+          args: Prisma.StudentStatusDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StudentStatusUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StudentStatusUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentStatusPayload>[]
+        }
+        upsert: {
+          args: Prisma.StudentStatusUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentStatusPayload>
+        }
+        aggregate: {
+          args: Prisma.StudentStatusAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStudentStatus>
+        }
+        groupBy: {
+          args: Prisma.StudentStatusGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudentStatusGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StudentStatusCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudentStatusCountAggregateOutputType> | number
         }
       }
     }
@@ -2104,7 +2179,6 @@ export type ClassNameScalarFieldEnum = (typeof ClassNameScalarFieldEnum)[keyof t
 
 export const InstituteScalarFieldEnum = {
   id: 'id',
-  session: 'session',
   name: 'name',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -2150,10 +2224,23 @@ export const StudentScalarFieldEnum = {
 export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
 
 
+export const StudentStatusScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  absentReason: 'absentReason',
+  absentDate: 'absentDate',
+  studentId: 'studentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentStatusScalarFieldEnum = (typeof StudentStatusScalarFieldEnum)[keyof typeof StudentStatusScalarFieldEnum]
+
+
 export const SubjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  group: 'group',
+  level: 'level',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2563,6 +2650,7 @@ export type GlobalOmitConfig = {
   className?: Prisma.ClassNameOmit
   institute?: Prisma.InstituteOmit
   student?: Prisma.StudentOmit
+  studentStatus?: Prisma.StudentStatusOmit
   subject?: Prisma.SubjectOmit
   chapter?: Prisma.ChapterOmit
   mcq?: Prisma.McqOmit

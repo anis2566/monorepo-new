@@ -16,8 +16,7 @@ interface EditInstituteState {
   isOpen: boolean;
   instituteId: string;
   name: string;
-  session: string;
-  onOpen: (instituteId: string, name: string, session: string) => void;
+  onOpen: (instituteId: string, name: string) => void;
   onClose: () => void;
 }
 
@@ -25,15 +24,12 @@ export const useEditInstitute = create<EditInstituteState>((set) => ({
   isOpen: false,
   instituteId: "",
   name: "",
-  session: "",
-  onOpen: (instituteId, name, session) =>
-    set({ isOpen: true, instituteId, name, session }),
+  onOpen: (instituteId, name) => set({ isOpen: true, instituteId, name }),
   onClose: () =>
     set({
       isOpen: false,
       instituteId: "",
       name: "",
-      session: "",
     }),
 }));
 

@@ -109,3 +109,13 @@ export const timeSlots = [
 export function sortTimeSlots(input: string[]): string[] {
   return input.sort((a, b) => timeSlots.indexOf(a) - timeSlots.indexOf(b));
 }
+
+export enum STUDENT_STATUS {
+  Present = "Present",
+  Absent = "Absent",
+}
+
+export enum LEVEL {
+  SSC = "SSC",
+  HSC = "HSC",
+}

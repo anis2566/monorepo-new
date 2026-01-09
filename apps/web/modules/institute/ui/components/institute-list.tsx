@@ -36,7 +36,6 @@ export const InstituteList = ({ institutes }: InstituteListProps) => {
       <TableHeader>
         <TableRow className="bg-background/60">
           <TableHead>Name</TableHead>
-          <TableHead>Session</TableHead>
           <TableHead>Students</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
@@ -45,20 +44,13 @@ export const InstituteList = ({ institutes }: InstituteListProps) => {
         {institutes.map((instituteItem) => (
           <TableRow key={instituteItem.id} className="even:bg-muted">
             <TableCell>{instituteItem.name}</TableCell>
-            <TableCell>{instituteItem.session}</TableCell>
             <TableCell>{0}</TableCell>
             <TableCell>
               <ListActions>
                 <ListActionButton
                   title="Edit"
                   icon={Edit}
-                  onClick={() =>
-                    onEdit(
-                      instituteItem.id,
-                      instituteItem.name,
-                      instituteItem.session
-                    )
-                  }
+                  onClick={() => onEdit(instituteItem.id, instituteItem.name)}
                 />
                 <ListActionButton
                   title="Delete"

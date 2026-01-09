@@ -81,7 +81,7 @@ export const Filter = () => {
       <div className="flex-1 flex items-center gap-2">
         <FilterInput
           type="search"
-          placeholder="name..."
+          placeholder="Name..."
           value={filter.search}
           onChange={handleSearchChange}
           showInMobile
@@ -89,7 +89,7 @@ export const Filter = () => {
         />
         <FilterInput
           type="search"
-          placeholder="id..."
+          placeholder="Id..."
           value={filter.id}
           onChange={handleIdChange}
           showInMobile={false}
