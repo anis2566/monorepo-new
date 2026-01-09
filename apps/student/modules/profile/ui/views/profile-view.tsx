@@ -29,6 +29,8 @@ import { useQuery } from "@tanstack/react-query";
 import { authClient } from "@/auth/client";
 import { useRouter } from "next/navigation";
 
+// Test
+
 export const ProfileView = () => {
   const trpc = useTRPC();
   const router = useRouter();
@@ -45,7 +47,7 @@ export const ProfileView = () => {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4">
           <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto" />
-          <p className="text-muted-foreground">Loading profile...</p>
+          <p className="text-muted-foreground">Loading profile......</p>
         </div>
       </div>
     );
