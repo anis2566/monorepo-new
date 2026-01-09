@@ -26,7 +26,6 @@ export const profileRouter = {
         institute: {
           select: {
             name: true,
-            session: true,
           },
         },
       },
@@ -106,7 +105,6 @@ export const profileRouter = {
 
       // Institute info
       instituteName: student.institute.name,
-      session: student.institute.session,
 
       // Contact info
       email: student.user?.email || null,
