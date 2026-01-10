@@ -1,29 +1,29 @@
 import { Metadata } from "next";
 
 import { SearchParams } from "nuqs";
-import { getClasses } from "@/modules/class/filters/get-classes";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
-import { UsersView } from "@/modules/user/ui/views/users-view";
+import { getClasses } from "@/modules/classes/filters/get-classes";
+import { ClassesView } from "@/modules/classes/ui/views/classes-view";
 
 export const metadata: Metadata = {
-  title: "Users",
-  description: "Users",
+  title: "Classes",
+  description: "Classes",
 };
 
 interface Props {
   searchParams: Promise<SearchParams>;
 }
 
-const Users = async ({ searchParams }: Props) => {
+const Classes = async ({ searchParams }: Props) => {
   const params = await getClasses(searchParams);
 
-  prefetch(trpc.admin.user.getMany.queryOptions(params));
+  prefetch(trpc.admin.class.getMany.queryOptions(params));
 
   return (
     <HydrateClient>
-      <UsersView />
+      <ClassesView />
     </HydrateClient>
   );
 };
 
-export default Users;
+export default Classes;

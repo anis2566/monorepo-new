@@ -12,6 +12,36 @@ const handleError = (error: unknown, operation: string) => {
 };
 
 export const userRouter = createTRPCRouter({
+  changeRole: protectedProcedure
+    .input(
+      z.object({
+        role: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { role } = input;
+      try {
+        await ctx.db.user.update({
+          where: {
+            id: ctx.session.user.id,
+          },
+          data: {
+            role,
+          },
+        });
+
+        return {
+          success: true,
+          message: "User role changed successfully",
+        };
+      } catch (error) {
+        return {
+          success: false,
+          message: "Failed to change user role",
+        };
+      }
+    }),
+
   sendVerificationSms: protectedProcedure
     .input(
       z.object({

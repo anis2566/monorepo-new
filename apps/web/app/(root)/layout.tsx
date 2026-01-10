@@ -1,12 +1,12 @@
-import { DashboardLayout } from "@/modules/layout/ui/views/dashboard-layout";
+import { AdminLayout } from "@/modules/layout/ui/views/admin-layout";
 import { ModalProvider } from "@/providers/modal-provider";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <DashboardLayout>
+    <AdminLayout>
       {children}
       <ModalProvider />
-    </DashboardLayout>
+    </AdminLayout>
   );
 };
 

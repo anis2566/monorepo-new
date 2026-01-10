@@ -22,7 +22,7 @@ import { InstituteSchema, InstituteSchemaType } from "@workspace/schema";
 import { Button } from "@workspace/ui/components/button";
 
 export const EditInstituteModal = () => {
-  const { isOpen, onClose, instituteId, session, name } = useEditInstitute();
+  const { isOpen, onClose, instituteId, name } = useEditInstitute();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 

@@ -1,13 +1,11 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Trash2, AlertTriangle, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/react";
 
 import {
   AlertDialog,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -15,71 +13,147 @@ import {
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog";
 import { Button } from "@workspace/ui/components/button";
+import { cn } from "@workspace/ui/lib/utils";
+import { DeleteEntityType, useDeleteModal } from "@/hooks/use-delete-modal";
 
-import { useDeleteUser } from "@/hooks/use-user";
+const entityLabels: Record<
+  DeleteEntityType,
+  { singular: string; icon: string }
+> = {
+  user: { singular: "User", icon: "👤" },
+  student: { singular: "Student", icon: "🎓" },
+  exam: { singular: "Exam", icon: "📝" },
+  mcq: { singular: "Question", icon: "❓" },
+  institute: { singular: "Institute", icon: "🏫" },
+  subject: { singular: "Subject", icon: "📚" },
+  chapter: { singular: "Chapter", icon: "📖" },
+  batch: { singular: "Batch", icon: "👥" },
+  class: { singular: "Class", icon: "🏷️" },
+};
 
-export const DeleteUserModal = () => {
-  const { isOpen, userId, onClose } = useDeleteUser();
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+export function DeleteConfirmModal() {
+  const {
+    isOpen,
+    entityId,
+    entityType,
+    entityName,
+    onConfirmCallback,
+    closeDeleteModal,
+  } = useDeleteModal();
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const { mutate: deleteUser, isPending } = useMutation(
-    trpc.admin.user.deleteOne.mutationOptions({
-      onError: (err) => {
-        toast.error(err.message);
-      },
-      onSuccess: async (data) => {
-        if (!data.success) {
-          toast.error(data.message);
-          return;
-        }
+  const entityInfo = entityType
+    ? entityLabels[entityType]
+    : { singular: "Item", icon: "📦" };
 
-        toast.success(data.message);
+  const handleDelete = async () => {
+    if (!entityId) return;
 
-        await queryClient.invalidateQueries({
-          queryKey: trpc.admin.user.getMany.queryKey(),
-        });
+    setIsDeleting(true);
 
-        setTimeout(() => {
-          onClose();
-        }, 500);
-      },
-    })
-  );
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
-  const handleDelete = () => {
-    deleteUser(userId);
+    try {
+      if (onConfirmCallback) {
+        onConfirmCallback(entityId);
+      }
+
+      toast.success(`${entityInfo.singular} deleted successfully`, {
+        description: entityName
+          ? `"${entityName}" has been permanently removed.`
+          : undefined,
+      });
+
+      setTimeout(() => {
+        closeDeleteModal();
+      }, 300);
+    } catch {
+      toast.error("Failed to delete", {
+        description: "Something went wrong. Please try again.",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      onClose();
+    if (!open && !isDeleting) {
+      closeDeleteModal();
     }
   };
 
   return (
-    <AlertDialog open={isOpen && !!userId} onOpenChange={handleOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your user
-            and remove your data from our servers.
+    <AlertDialog open={isOpen && !!entityId} onOpenChange={handleOpenChange}>
+      <AlertDialogContent className="max-w-md">
+        <AlertDialogHeader className="space-y-4">
+          {/* Icon Header */}
+          <div className="mx-auto w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-destructive/20 flex items-center justify-center">
+              <AlertTriangle className="w-6 h-6 text-destructive" />
+            </div>
+          </div>
+
+          <AlertDialogTitle className="text-center text-xl">
+            Delete {entityInfo.singular}?
+          </AlertDialogTitle>
+
+          <AlertDialogDescription className="text-center space-y-2">
+            {entityName ? (
+              <>
+                <p>You are about to delete:</p>
+                <div className="flex items-center justify-center gap-2 py-2 px-4 bg-muted rounded-lg">
+                  <span className="text-lg">{entityInfo.icon}</span>
+                  <span className="font-medium text-foreground truncate max-w-[200px]">
+                    {entityName}
+                  </span>
+                </div>
+              </>
+            ) : (
+              <span>
+                You are about to delete this {entityInfo.singular.toLowerCase()}
+                .
+              </span>
+            )}
+            <p className="text-destructive/80 text-sm font-medium pt-2">
+              This action cannot be undone.
+            </p>
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+
+        <AlertDialogFooter className="flex flex-col sm:flex-row gap-2 mt-4">
+          <Button
+            variant="outline"
+            onClick={() => closeDeleteModal()}
+            disabled={isDeleting}
+            className="w-full order-2 sm:order-1"
+          >
+            <X className="w-4 h-4 mr-2" />
+            Cancel
+          </Button>
           <Button
             onClick={handleDelete}
-            className="w-full md:w-auto"
             variant="destructive"
-            disabled={isPending}
+            disabled={isDeleting}
+            className={cn(
+              "w-full order-1 sm:order-2 gap-2",
+              isDeleting && "opacity-80"
+            )}
           >
-            <Trash2 className="mr-2 h-4 w-4" />
-            Delete
+            {isDeleting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Deleting...
+              </>
+            ) : (
+              <>
+                <Trash2 className="w-4 h-4" />
+                Delete {entityInfo.singular}
+              </>
+            )}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );
-};
+}

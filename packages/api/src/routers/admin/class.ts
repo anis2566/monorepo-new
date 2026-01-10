@@ -192,6 +192,14 @@ export const classRouter = {
           orderBy: {
             createdAt: sort === "asc" ? "asc" : "desc",
           },
+          include: {
+            _count: {
+              select: {
+                students: true,
+                batches: true,
+              },
+            },
+          },
           take: limit,
           skip: (page - 1) * limit,
         }),

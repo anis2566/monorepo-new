@@ -1,6 +1,7 @@
 export enum ROLE {
   User = "User",
   Student = "Student",
+  Moderator = "Moderator",
   Admin = "Admin",
 }
 
@@ -118,4 +119,9 @@ export enum STUDENT_STATUS {
 export enum LEVEL {
   SSC = "SSC",
   HSC = "HSC",
+}
+
+export enum USER_STATUS {
+  Verified = "Verified",
+  Unverified = "Unverified",
 }

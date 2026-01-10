@@ -257,7 +257,7 @@ export const chapterRouter = createTRPCRouter({
             mode: "insensitive",
           },
         }),
-        ...(subjectId && { subjectId }),
+        ...(subjectId && subjectId !== "All" && { subjectId }),
       };
 
       const [chapters, totalCount] = await Promise.all([
@@ -267,6 +267,7 @@ export const chapterRouter = createTRPCRouter({
             subject: {
               select: {
                 name: true,
+                id: true,
               },
             },
             _count: {

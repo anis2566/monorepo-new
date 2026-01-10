@@ -180,6 +180,13 @@ export const instituteRouter = {
           orderBy: {
             createdAt: sort === "asc" ? "asc" : "desc",
           },
+          include: {
+            _count: {
+              select: {
+                students: true,
+              },
+            },
+          },
           take: limit,
           skip: (page - 1) * limit,
         }),

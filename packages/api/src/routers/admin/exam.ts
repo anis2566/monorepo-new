@@ -495,7 +495,14 @@ export const examRouter = {
         )
       );
 
-      const [exams, totalCount] = await Promise.all([
+      const [
+        exams,
+        totalCount,
+        totalExam,
+        activeExam,
+        upcomingExam,
+        completedExam,
+      ] = await Promise.all([
         ctx.db.exam.findMany({
           where: {
             ...(classNameId && {
@@ -590,11 +597,31 @@ export const examRouter = {
             ...(status && { status }),
           },
         }),
+        ctx.db.exam.count(),
+        ctx.db.exam.count({
+          where: {
+            status: EXAM_STATUS.Ongoing,
+          },
+        }),
+        ctx.db.exam.count({
+          where: {
+            status: EXAM_STATUS.Upcoming,
+          },
+        }),
+        ctx.db.exam.count({
+          where: {
+            status: EXAM_STATUS.Completed,
+          },
+        }),
       ]);
 
       return {
         exams,
         totalCount,
+        totalExam,
+        activeExam,
+        upcomingExam,
+        completedExam,
       };
     }),
 } satisfies TRPCRouterRecord;

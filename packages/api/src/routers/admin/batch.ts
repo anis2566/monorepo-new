@@ -241,7 +241,8 @@ export const batchRouter = {
             mode: "insensitive",
           },
         }),
-        ...(classNameId && { classNameId: { equals: classNameId } }),
+        ...(classNameId &&
+          classNameId !== "All" && { classNameId: { equals: classNameId } }),
       };
 
       const [batches, totalCount] = await Promise.all([
@@ -254,7 +255,7 @@ export const batchRouter = {
               },
             },
             _count: {
-              select: { students: true },
+              select: { students: true, exams: true },
             },
           },
           orderBy: {

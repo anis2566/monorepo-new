@@ -44,11 +44,14 @@ export const userRouter = {
         sort: z.string().nullish(),
         search: z.string().nullish(),
         email: z.string().nullish(),
-        phone: z.string().nullish(),
+        role: z.string().nullish(),
+        status: z.string().nullish(),
+        classNameId: z.string().nullish(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const { page, limit, sort, search, email, phone } = input;
+      const { page, limit, sort, search, role, status, email, classNameId } =
+        input;
 
       const where: Prisma.UserWhereInput = {
         ...(search && {
@@ -60,9 +63,20 @@ export const userRouter = {
         ...(email && {
           email,
         }),
-        ...(phone && {
-          phone,
-        }),
+        ...(role &&
+          role !== "All" && {
+            role,
+          }),
+        ...(status &&
+          status !== "All" && {
+            isVerifiedStudent: status === "Verified",
+          }),
+        ...(classNameId &&
+          classNameId !== "All" && {
+            student: {
+              classNameId,
+            },
+          }),
       };
 
       const [users, totalCount] = await Promise.all([

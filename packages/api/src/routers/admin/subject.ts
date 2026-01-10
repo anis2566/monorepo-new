@@ -188,11 +188,11 @@ export const subjectRouter = createTRPCRouter({
         limit: z.number().min(1).max(100).default(10),
         sort: z.string().optional(),
         search: z.string().optional(),
-        group: z.string().optional(),
+        level: z.string().optional(),
       })
     )
     .query(async ({ input, ctx }) => {
-      const { page, limit, sort, search, group } = input;
+      const { page, limit, sort, search, level } = input;
 
       const where: Prisma.SubjectWhereInput = {
         ...(search && {
@@ -201,7 +201,7 @@ export const subjectRouter = createTRPCRouter({
             mode: "insensitive",
           },
         }),
-        ...(group && { group }),
+        ...(level && level !== "All" && { level }),
       };
 
       // Execute all queries in parallel
@@ -213,6 +213,7 @@ export const subjectRouter = createTRPCRouter({
             _count: {
               select: {
                 chapters: true,
+                mcqs: true,
               },
             },
           },
