@@ -27,6 +27,7 @@ import { authClient } from "@/auth/client";
 
 import { GoogleButton } from "../components/google-button";
 import { Divider } from "../components/divider";
+import Image from "next/image";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -114,7 +115,7 @@ export const SignInView = () => {
   };
 
   return (
-    <div className="relative flex-1 flex flex-col items-center justify-center px-4 py-8">
+    <div className="relative flex-1 flex flex-col items-center justify-center px-4 py-8 min-w-[400px]">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -127,14 +128,16 @@ export const SignInView = () => {
           className="glass-card rounded-2xl p-8 space-y-6 border border-white/10 shadow-2xl shadow-black/20"
         >
           {/* Logo / Brand */}
-          <div className="text-center space-y-2">
-            <h2 className="text-2xl font-bold tracking-tight text-primary">
-              Mr. Dr.
-            </h2>
-            <h1 className="text-xl font-semibold text-white">Welcome back</h1>
-            <p className="text-muted-foreground text-sm">
-              Sign in to continue to your account
-            </p>
+          <div className="flex items-center justify-center">
+            <Image src="/logo.jpg" alt="Logo" width={60} height={60} />
+            <div className="flex flex-col justify-start">
+              <h2 className="text-3xl font-extrabold font-bold tracking-tight text-red-600">
+                Mr. Dr.
+              </h2>
+              <p className="text-xs text-muted-foreground italic">
+                Academic & Admission Care
+              </p>
+            </div>
           </div>
 
           {/* Google Button */}
@@ -154,7 +157,7 @@ export const SignInView = () => {
             >
               <FormInput
                 name="email"
-                label="Email address"
+                label="Email"
                 type="email"
                 placeholder="Enter your email"
                 className="h-12 text-white"
