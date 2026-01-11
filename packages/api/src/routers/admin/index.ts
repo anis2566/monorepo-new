@@ -8,6 +8,8 @@ import { mcqRouter } from "./mcq";
 import { batchRouter } from "./batch";
 import { examRouter } from "./exam";
 import { userRouter } from "./user";
+import { resultRouter } from "./result";
+import { dashboardRouter } from "./dashboard";
 
 export const adminRouter = createTRPCRouter({
   class: classRouter,
@@ -19,4 +21,6 @@ export const adminRouter = createTRPCRouter({
   batch: batchRouter,
   exam: examRouter,
   user: userRouter,
+  result: resultRouter,
+  dashboard: dashboardRouter,
 });

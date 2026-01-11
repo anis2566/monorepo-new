@@ -3,6 +3,7 @@ import { adminProcedure, createTRPCRouter } from "../../trpc";
 import { SubjectSchema } from "@workspace/schema";
 import { TRPCError } from "@trpc/server";
 import { Prisma } from "@workspace/db";
+import { LEVEL } from "@workspace/utils/constant";
 
 export const subjectRouter = createTRPCRouter({
   createOne: adminProcedure
@@ -176,6 +177,30 @@ export const subjectRouter = createTRPCRouter({
             },
           }),
         },
+      });
+
+      return subjects;
+    }),
+
+  getByClassNameId: adminProcedure
+    .input(z.string().optional())
+    .query(async ({ ctx, input }) => {
+      if (!input) {
+        return [];
+      }
+
+      const className = await ctx.db.className.findUnique({
+        where: { id: input },
+      });
+
+      if (!className) {
+        return [];
+      }
+
+      const level = className.name.startsWith("H") ? LEVEL.HSC : LEVEL.SSC;
+
+      const subjects = await ctx.db.subject.findMany({
+        where: { level },
       });
 
       return subjects;

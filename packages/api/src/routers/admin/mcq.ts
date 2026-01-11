@@ -244,15 +244,25 @@ export const mcqRouter = createTRPCRouter({
         limit: z.number().min(1).max(100),
         sort: z.string().nullish(),
         search: z.string().nullish(),
+        classNameId: z.string().nullish(),
         subjectId: z.string().nullish(),
         chapterId: z.string().nullish(),
         type: z.string().nullish(),
-        isMath: z.boolean().nullish(),
+        reference: z.string().nullish(),
       })
     )
     .query(async ({ input, ctx }) => {
-      const { page, limit, sort, search, subjectId, chapterId, type, isMath } =
-        input;
+      const {
+        page,
+        limit,
+        sort,
+        search,
+        classNameId,
+        subjectId,
+        chapterId,
+        type,
+        reference,
+      } = input;
 
       const where: Prisma.McqWhereInput = {
         ...(search && {
@@ -261,18 +271,28 @@ export const mcqRouter = createTRPCRouter({
             mode: "insensitive",
           },
         }),
-        ...(subjectId && {
-          subjectId,
-        }),
-        ...(chapterId && {
-          chapterId,
-        }),
-        ...(type && {
-          type,
-        }),
-        ...(isMath && {
-          isMath,
-        }),
+        ...(subjectId &&
+          subjectId !== "All" && {
+            subject: {
+              id: subjectId,
+            },
+          }),
+        ...(chapterId &&
+          chapterId !== "All" && {
+            chapter: {
+              id: chapterId,
+            },
+          }),
+        ...(type &&
+          type !== "All" && {
+            type,
+          }),
+        ...(reference &&
+          reference !== "All" && {
+            reference: {
+              hasSome: [reference],
+            },
+          }),
       };
 
       const [

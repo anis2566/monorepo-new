@@ -33,12 +33,19 @@ export const trpc = createTRPCOptionsProxy<AppRouter>({
   queryClient: getQueryClient,
 });
 
-export function HydrateClient(props: { children: React.ReactNode }) {
+interface HydrateClientProps {
+  children: React.ReactNode;
+  suspenseUi?: React.ReactNode;
+}
+
+export function HydrateClient({ children, suspenseUi }: HydrateClientProps) {
   const queryClient = getQueryClient();
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <ErrorBoundary fallback={<div>Something went wrong</div>}>
-        <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
+        <Suspense fallback={suspenseUi || <div>Loading...</div>}>
+          {children}
+        </Suspense>
       </ErrorBoundary>
     </HydrationBoundary>
   );

@@ -125,3 +125,21 @@ export enum USER_STATUS {
   Verified = "Verified",
   Unverified = "Unverified",
 }
+
+export enum SHIFT {
+  Morning = "Morning",
+  Day = "Day",
+  Evening = "Evening",
+}
+
+export enum RESULT_STATUS {
+  "In Progress" = "In Progress",
+  "Submitted" = "Submitted",
+}
+
+export enum MCQ_REF_TYPE {
+  MBBS = "MBBS",
+  BDS = "BDS",
+  UNIVERSITY = "University",
+  BOARD = "Board",
+}

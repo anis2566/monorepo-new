@@ -89,7 +89,7 @@ export function FormCalendar<T extends FieldValues>({
                     variant="outline"
                     disabled={disabled}
                     className={cn(
-                      "w-full rounded-xs shadow-none dark:bg-background dark:hover:bg-background pl-3 text-left font-normal",
+                      "w-full rounded-md shadow-none bg-background pl-3 text-left font-normal border border-input",
                       !field.value && "text-muted-foreground"
                     )}
                   >

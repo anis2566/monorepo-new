@@ -207,6 +207,7 @@ export const examRouter = {
                 total,
                 cq: numberCq,
                 mcq: numberMcq,
+                type: data.type,
                 duration: parseInt(data.duration),
                 startDate: new Date(data.startDate),
                 endDate: new Date(data.endDate),
@@ -438,7 +439,23 @@ export const examRouter = {
       });
     }
 
-    return examData;
+    // Transform the data to match the form schema
+    const transformedData = {
+      ...examData,
+      classNameIds: examData.classNames.map((cn) => cn.className.id),
+      batchIds: examData.batches.map((b) => b.batch.id),
+      subjectIds: examData.subjects.map((s) => s.subject.id),
+      chapterIds: examData.chapters.map((c) => c.chapter.id),
+      // Convert dates and numbers to strings for form compatibility
+      startDate: examData.startDate.toISOString(),
+      endDate: examData.endDate.toISOString(),
+      duration: examData.duration.toString(),
+      cq: examData.cq?.toString() || "",
+      mcq: examData.mcq?.toString() || "",
+      negativeMark: examData.negativeMark?.toString() || "",
+    };
+
+    return { success: true, data: transformedData };
   }),
 
   getMany: adminProcedure
@@ -447,8 +464,7 @@ export const examRouter = {
         page: z.number(),
         limit: z.number().min(1).max(100),
         sort: z.string().nullish(),
-        startDate: z.string().nullish(),
-        endDate: z.string().nullish(),
+        search: z.string().nullish(),
         classNameId: z.string().nullish(),
         batchId: z.string().nullish(),
         subjectId: z.string().nullish(),
@@ -460,40 +476,12 @@ export const examRouter = {
         page,
         limit,
         sort,
-        startDate,
-        endDate,
+        search,
         classNameId,
         batchId,
         subjectId,
         status,
       } = input;
-
-      const targatStartDate = startDate ? new Date(startDate) : new Date();
-      const startDateObj = targatStartDate;
-
-      const startDateOfDay = new Date(
-        Date.UTC(
-          startDateObj.getUTCFullYear(),
-          startDateObj.getUTCMonth(),
-          startDateObj.getUTCDate(),
-          0,
-          0,
-          0,
-          0
-        )
-      );
-
-      const endDateOfDay = new Date(
-        Date.UTC(
-          startDateObj.getUTCFullYear(),
-          startDateObj.getUTCMonth(),
-          startDateObj.getUTCDate(),
-          23,
-          59,
-          59,
-          999
-        )
-      );
 
       const [
         exams,
@@ -505,28 +493,37 @@ export const examRouter = {
       ] = await Promise.all([
         ctx.db.exam.findMany({
           where: {
-            ...(classNameId && {
-              classNames: {
-                some: {
-                  classNameId,
-                },
+            ...(search && {
+              title: {
+                contains: search,
+                mode: "insensitive",
               },
             }),
-            ...(batchId && {
-              batches: {
-                some: {
-                  batchId,
+            ...(classNameId &&
+              classNameId !== "All" && {
+                classNames: {
+                  some: {
+                    classNameId,
+                  },
                 },
-              },
-            }),
-            ...(subjectId && {
-              subjects: {
-                some: {
-                  subjectId,
+              }),
+            ...(batchId &&
+              batchId !== "All" && {
+                batches: {
+                  some: {
+                    batchId,
+                  },
                 },
-              },
-            }),
-            ...(status && { status }),
+              }),
+            ...(subjectId &&
+              subjectId !== "All" && {
+                subjects: {
+                  some: {
+                    subjectId,
+                  },
+                },
+              }),
+            ...(status && status !== "All" && { status }),
           },
           include: {
             classNames: {
@@ -562,6 +559,10 @@ export const examRouter = {
             _count: {
               select: {
                 students: true,
+                attempts: true,
+                batches: true,
+                classNames: true,
+                subjects: true,
               },
             },
           },
@@ -573,28 +574,37 @@ export const examRouter = {
         }),
         ctx.db.exam.count({
           where: {
-            ...(classNameId && {
-              classNames: {
-                some: {
-                  classNameId,
-                },
+            ...(search && {
+              title: {
+                contains: search,
+                mode: "insensitive",
               },
             }),
-            ...(batchId && {
-              batches: {
-                some: {
-                  batchId,
+            ...(classNameId &&
+              classNameId !== "All" && {
+                classNames: {
+                  some: {
+                    classNameId,
+                  },
                 },
-              },
-            }),
-            ...(subjectId && {
-              subjects: {
-                some: {
-                  subjectId,
+              }),
+            ...(batchId &&
+              batchId !== "All" && {
+                batches: {
+                  some: {
+                    batchId,
+                  },
                 },
-              },
-            }),
-            ...(status && { status }),
+              }),
+            ...(subjectId &&
+              subjectId !== "All" && {
+                subjects: {
+                  some: {
+                    subjectId,
+                  },
+                },
+              }),
+            ...(status && status !== "All" && { status }),
           },
         }),
         ctx.db.exam.count(),

@@ -1,0 +1,192 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Search } from "lucide-react";
+import { useTRPC } from "@/trpc/react";
+import { useQueries } from "@tanstack/react-query";
+
+import { Card, CardContent } from "@workspace/ui/components/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
+import { Input } from "@workspace/ui/components/input";
+import { useDebounce } from "@workspace/ui/hooks/use-debounce";
+import { MCQ_REF_TYPE, MCQ_TYPE } from "@workspace/utils/constant";
+
+import { useGetMcqs } from "../../filters/use-get-mcqs";
+
+const MCQ_TYPE_OPTIONS = ["All", ...Object.values(MCQ_TYPE)].map((type) => ({
+  value: type,
+  label: type,
+}));
+
+const MCQ_REF_TYPE_OPTIONS = ["All", ...Object.values(MCQ_REF_TYPE)].map(
+  (type) => ({
+    value: type,
+    label: type,
+  })
+);
+
+export const Filter = () => {
+  const [searchName, setSearchName] = useState("");
+  const [selectedSubjectId, setSelectedSubjectId] = useState("");
+
+  const [filters, setFilters] = useGetMcqs();
+  const trpc = useTRPC();
+
+  const results = useQueries({
+    queries: [
+      trpc.admin.subject.forSelect.queryOptions({ search: "" }),
+      trpc.admin.chapter.getBySubject.queryOptions({
+        subjectId: selectedSubjectId,
+      }),
+    ],
+  });
+
+  const subjectData = results[0]?.data;
+  const chapterData = results[1]?.data;
+
+  const SUBJECT_OPTIONS = [
+    {
+      value: "All",
+      label: "All",
+    },
+    ...(subjectData?.map((subjectItem) => ({
+      value: subjectItem.id,
+      label: subjectItem.name,
+    })) || []),
+  ];
+
+  const CHAPTER_OPTIONS = [
+    {
+      value: "All",
+      label: "All",
+    },
+    ...(chapterData?.map((chapterItem) => ({
+      value: chapterItem.id,
+      label: chapterItem.name,
+    })) || []),
+  ];
+
+  const debounceSearchValue = useDebounce(searchName, 500);
+
+  useEffect(() => {
+    setFilters({
+      ...filters,
+      search: debounceSearchValue,
+    });
+  }, [debounceSearchValue, setFilters, filters]);
+
+  const handleSubjectChange = (value: string) => {
+    setSelectedSubjectId(value);
+    setSearchName("");
+    setFilters({
+      ...filters,
+      subjectId: value,
+      chapterId: "",
+    });
+  };
+
+  const handleChapterChange = (value: string) => {
+    setSearchName("");
+    setFilters({
+      ...filters,
+      chapterId: value,
+    });
+  };
+
+  const handleTypeChange = (value: string) => {
+    setFilters({
+      ...filters,
+      type: value,
+    });
+  };
+
+  const handleRefTypeChange = (value: string) => {
+    setFilters({
+      ...filters,
+      reference: value,
+    });
+  };
+
+  return (
+    <Card className="shadow-card">
+      <CardContent className="p-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search name..."
+              className="pl-9"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+            />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <Select
+              onValueChange={handleSubjectChange}
+              value={filters.subjectId}
+            >
+              <SelectTrigger className="w-full sm:w-[150px]">
+                <SelectValue placeholder="Subject" />
+              </SelectTrigger>
+              <SelectContent>
+                {SUBJECT_OPTIONS.map((subjectItem) => (
+                  <SelectItem key={subjectItem.value} value={subjectItem.value}>
+                    {subjectItem.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              onValueChange={handleChapterChange}
+              value={filters.chapterId}
+            >
+              <SelectTrigger className="w-full sm:w-[150px]">
+                <SelectValue placeholder="Chapter" />
+              </SelectTrigger>
+              <SelectContent>
+                {CHAPTER_OPTIONS.map((chapterItem) => (
+                  <SelectItem key={chapterItem.value} value={chapterItem.value}>
+                    {chapterItem.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select onValueChange={handleTypeChange} value={filters.type}>
+              <SelectTrigger className="w-full sm:w-[150px]">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                {MCQ_TYPE_OPTIONS.map((type) => (
+                  <SelectItem key={type.value} value={type.value}>
+                    {type.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              onValueChange={handleRefTypeChange}
+              value={filters.reference}
+            >
+              <SelectTrigger className="w-full sm:w-[150px]">
+                <SelectValue placeholder="Reference" />
+              </SelectTrigger>
+              <SelectContent>
+                {MCQ_REF_TYPE_OPTIONS.map((type) => (
+                  <SelectItem key={type.value} value={type.value}>
+                    {type.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};

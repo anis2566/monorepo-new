@@ -133,6 +133,26 @@ export const studentRouter = {
   getOne: adminProcedure.input(z.string()).query(async ({ input, ctx }) => {
     const student = await ctx.db.student.findUnique({
       where: { id: input },
+      include: {
+        className: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+        institute: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+        batch: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+      },
     });
 
     if (!student) {
@@ -142,6 +162,60 @@ export const studentRouter = {
     return student;
   }),
 
+  // Add this to your student router
+  getPendingVerifications: adminProcedure
+    .input(
+      z
+        .object({
+          limit: z.number().min(1).max(20).default(3),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input?.limit || 3;
+
+      const pendingStudents = await ctx.db.user.findMany({
+        where: {
+          isVerifiedStudent: false,
+        },
+        take: limit,
+        orderBy: {
+          createdAt: "asc",
+        },
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          createdAt: true,
+          student: {
+            select: {
+              studentId: true,
+              className: {
+                select: {
+                  name: true,
+                },
+              },
+              institute: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return pendingStudents.map((user) => ({
+        id: user.id,
+        name: user.name || "Unknown",
+        imageUrl: user.image || undefined,
+        studentId: user.student?.studentId || "",
+        className: user.student?.className.name || "",
+        institute: user.student?.institute.name || "",
+        submittedAt: user.createdAt,
+      }));
+    }),
+
   getMany: adminProcedure
     .input(
       z.object({
@@ -149,16 +223,19 @@ export const studentRouter = {
         limit: z.number().min(1).max(100).default(10),
         sort: z.string().nullish(),
         search: z.string().nullish(),
-        className: z.string().nullish(),
+        classNameId: z.string().nullish(),
+        batchId: z.string().nullish(),
         id: z.string().nullish(),
       })
     )
     .query(async ({ input, ctx }) => {
-      const { page, limit, sort, search, className, id } = input;
+      const { page, limit, sort, search, classNameId, batchId, id } = input;
 
       const where: Prisma.StudentWhereInput = {
         ...(search && { name: { contains: search } }),
-        ...(className && { classNameId: { equals: className } }),
+        ...(classNameId &&
+          classNameId !== "All" && { classNameId: { equals: classNameId } }),
+        ...(batchId && batchId !== "All" && { batchId: { equals: batchId } }),
         ...(id && { id: { equals: id } }),
       };
 

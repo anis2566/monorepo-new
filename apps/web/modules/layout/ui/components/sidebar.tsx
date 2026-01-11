@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
@@ -9,11 +11,9 @@ import {
   FileText,
   ClipboardList,
   BarChart3,
-  Settings,
   ChevronLeft,
   LogOut,
   Menu,
-  X,
   School,
   Layers3,
   FileStack,
@@ -23,26 +23,24 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
-  SheetClose,
+  SheetTitle,
 } from "@workspace/ui/components/sheet";
 import { cn } from "@workspace/ui/lib/utils";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import Image from "next/image";
 
 const navItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Users", url: "/users", icon: Users },
+  { title: "Dashboard", url: "/", icon: LayoutDashboard, exact: true },
+  { title: "Students", url: "/students", icon: GraduationCap },
+  { title: "Exams", url: "/exams", icon: ClipboardList },
+  { title: "Results", url: "/results", icon: BarChart3 },
+  { title: "Batches", url: "/batches", icon: FileStack },
+  { title: "MCQ Bank", url: "/mcqs", icon: FileText },
   { title: "Classes", url: "/classes", icon: School },
   { title: "Subjects", url: "/subjects", icon: BookOpen },
   { title: "Chapters", url: "/chapters", icon: Layers3 },
   { title: "Institutes", url: "/institutes", icon: Building2 },
-  { title: "Batches", url: "/batches", icon: FileStack },
-  { title: "Students", url: "/students", icon: GraduationCap },
-  { title: "Exams", url: "/exams", icon: ClipboardList },
-  { title: "MCQ Bank", url: "/mcqs", icon: FileText },
-  { title: "Results", url: "/results", icon: BarChart3 },
-  { title: "Settings", url: "/settings", icon: Settings },
+  { title: "Users", url: "/users", icon: Users },
 ];
 
 function SidebarContent({
@@ -53,35 +51,40 @@ function SidebarContent({
   onItemClick?: () => void;
 }) {
   const pathname = usePathname();
+
+  const isActive = (url: string, exact: boolean = false) => {
+    if (exact) {
+      return pathname === url;
+    }
+    // For non-root paths, check if pathname starts with the url
+    // But also ensure it's not a false match (e.g., /classes matching /class)
+    if (url === "/") return false; // Root should only match with exact
+    return pathname === url || pathname.startsWith(url + "/");
+  };
+
   return (
     <>
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 overflow-y-auto">
-        <ul className="space-y-2">
-          {navItems.map((item) => {
-            const isActive =
-              item.url === "/"
-                ? pathname === item.url
-                : pathname.startsWith(item.url);
-
-            return (
-              <li key={item.url}>
-                <Link
-                  href={item.url}
-                  className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200",
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-md"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <item.icon className="w-5 h-5" />
-                  <span>{item.title}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+      <nav className="flex-1 space-y-1 p-2 overflow-y-auto">
+        {navItems.map((item) => {
+          const active = isActive(item.url, item.exact);
+          return (
+            <Link
+              key={item.url}
+              href={item.url}
+              onClick={onItemClick}
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+                collapsed && "justify-center px-2",
+                active &&
+                  "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary"
+              )}
+            >
+              <item.icon className="h-5 w-5 shrink-0" />
+              {!collapsed && <span>{item.title}</span>}
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Footer */}
@@ -119,20 +122,20 @@ export function MobileHeader() {
             {/* Sheet Header */}
             <div className="flex h-14 items-center justify-between border-b border-border px-4">
               <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-sm">
-                    A
+                <Image
+                  src="/logo.jpg"
+                  alt="Logo"
+                  width={32}
+                  height={32}
+                  className="object-contain"
+                />
+                <SheetTitle className="flex flex-col font-semibold text-foreground text-xl tracking-widest text-red-500">
+                  Mr. Dr.
+                  <span className="text-muted-foreground text-[8px]">
+                    Academic & Admission Care
                   </span>
-                </div>
-                <span className="font-semibold text-foreground">
-                  Admin Panel
-                </span>
+                </SheetTitle>
               </div>
-              <SheetClose asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <X className="h-4 w-4" />
-                </Button>
-              </SheetClose>
             </div>
             <SidebarContent
               collapsed={false}
@@ -169,12 +172,21 @@ export function Sidebar() {
         <div className="flex h-16 items-center justify-between border-b border-border px-4">
           {!collapsed && (
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">
-                  A
+              <Image
+                src="/logo.jpg"
+                alt="Logo"
+                width={32}
+                height={32}
+                className="object-contain"
+              />
+              <div className="flex flex-col">
+                <span className="font-bold text-xl tracking-widest text-red-500 text-foreground">
+                  Mr. Dr.
                 </span>
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/70 whitespace-nowrap italic">
+                  Academic & Admission Care
+                </p>
               </div>
-              <span className="font-semibold text-foreground">Admin Panel</span>
             </div>
           )}
           <Button

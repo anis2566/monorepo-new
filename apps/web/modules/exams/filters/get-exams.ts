@@ -7,14 +7,11 @@ const filterParmas = {
   classNameId: parseAsString
     .withDefault("")
     .withOptions({ clearOnDefault: true }),
-  startDate: parseAsString
-    .withDefault("")
-    .withOptions({ clearOnDefault: true }),
-  endDate: parseAsString.withDefault("").withOptions({ clearOnDefault: true }),
   batchId: parseAsString.withDefault("").withOptions({ clearOnDefault: true }),
   subjectId: parseAsString
     .withDefault("")
     .withOptions({ clearOnDefault: true }),
+  search: parseAsString.withDefault("").withOptions({ clearOnDefault: true }),
   page: parseAsInteger
     .withDefault(DEFAULT_PAGE)
     .withOptions({ clearOnDefault: true }),

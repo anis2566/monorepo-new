@@ -122,7 +122,7 @@ export const MultiSelect = React.forwardRef<
               ref={ref}
               {...props}
               className={cn(
-                "flex w-full p-1 rounded-xs border min-h-10 h-auto bg-background items-center justify-between hover:bg-background",
+                "flex w-full p-1 rounded-md border min-h-10 h-auto bg-background items-center justify-between hover:bg-background shadow-none",
                 className
               )}
               disabled={disabled}
