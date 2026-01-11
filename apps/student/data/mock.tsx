@@ -123,48 +123,6 @@ export const mockMcqs: Mcq[] = [
   },
 ];
 
-export const mockResults: ExamResult[] = [
-  {
-    id: "1",
-    examId: "101",
-    examTitle: "Physics Weekly Test - Week 4",
-    score: 32,
-    total: 40,
-    correct: 32,
-    incorrect: 5,
-    skipped: 3,
-    percentage: 80,
-    completedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
-    timeTaken: 38,
-  },
-  {
-    id: "2",
-    examId: "102",
-    examTitle: "Chemistry Chapter Test - Acids & Bases",
-    score: 25,
-    total: 30,
-    correct: 25,
-    incorrect: 3,
-    skipped: 2,
-    percentage: 83.3,
-    completedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
-    timeTaken: 25,
-  },
-  {
-    id: "3",
-    examId: "103",
-    examTitle: "Biology Mock Exam - Chapter 1-3",
-    score: 45,
-    total: 50,
-    correct: 45,
-    incorrect: 4,
-    skipped: 1,
-    percentage: 90,
-    completedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
-    timeTaken: 42,
-  },
-];
-
 export interface LeaderboardEntry {
   id: string;
   rank: number;
@@ -376,3 +334,133 @@ export const mockStreakLeaderboard: LeaderboardEntry[] = [
 ]
   .sort((a, b) => b.bestStreak - a.bestStreak)
   .map((entry, index) => ({ ...entry, rank: index + 1 }));
+
+export const mockResults: ExamResult[] = [
+  {
+    id: "1",
+    examId: "101",
+    examTitle: "Physics Weekly Test - Week 4",
+    score: 32,
+    total: 40,
+    correct: 32,
+    incorrect: 5,
+    skipped: 3,
+    percentage: 80,
+    completedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
+    timeTaken: 38,
+  },
+  {
+    id: "2",
+    examId: "102",
+    examTitle: "Chemistry Chapter Test - Acids & Bases",
+    score: 25,
+    total: 30,
+    correct: 25,
+    incorrect: 3,
+    skipped: 2,
+    percentage: 83.3,
+    completedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
+    timeTaken: 25,
+  },
+  {
+    id: "3",
+    examId: "103",
+    examTitle: "Biology Mock Exam - Chapter 1-3",
+    score: 45,
+    total: 50,
+    correct: 45,
+    incorrect: 4,
+    skipped: 1,
+    percentage: 90,
+    completedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
+    timeTaken: 42,
+  },
+];
+
+// Merit List Data
+export interface MeritEntry {
+  id: string;
+  examId: string;
+  studentId: string;
+  name: string;
+  nameBangla: string;
+  className: string;
+  roll: string;
+  imageUrl?: string;
+  rank: number;
+  score: number;
+  total: number;
+  percentage: number;
+  percentile: number;
+  timeTaken: number;
+}
+
+// Generate mock merit list
+const generateMeritList = (examId: string, total: number): MeritEntry[] => {
+  const names = [
+    { name: "Fatima Akter", nameBangla: "ফাতিমা আক্তার" },
+    { name: "Rahim Uddin", nameBangla: "রহিম উদ্দিন" },
+    { name: "Ahmed Rahman", nameBangla: "আহমেদ রহমান" },
+    { name: "Nusrat Jahan", nameBangla: "নুসরাত জাহান" },
+    { name: "Kamal Hossain", nameBangla: "কামাল হোসেন" },
+    { name: "Salma Begum", nameBangla: "সালমা বেগম" },
+    { name: "Jamal Khan", nameBangla: "জামাল খান" },
+    { name: "Rashida Khatun", nameBangla: "রশিদা খাতুন" },
+    { name: "Habib Rahman", nameBangla: "হাবিব রহমান" },
+    { name: "Aisha Sultana", nameBangla: "আয়শা সুলতানা" },
+    { name: "Mohammad Ali", nameBangla: "মোহাম্মদ আলী" },
+    { name: "Tahmina Akter", nameBangla: "তাহমিনা আক্তার" },
+    { name: "Rafiq Islam", nameBangla: "রফিক ইসলাম" },
+    { name: "Nasreen Begum", nameBangla: "নাসরীন বেগম" },
+    { name: "Zahid Hasan", nameBangla: "জাহিদ হাসান" },
+    { name: "Rubina Parvin", nameBangla: "রুবিনা পারভীন" },
+    { name: "Monir Hossain", nameBangla: "মনির হোসেন" },
+    { name: "Shamima Akter", nameBangla: "শামীমা আক্তার" },
+    { name: "Delwar Uddin", nameBangla: "দেলোয়ার উদ্দিন" },
+    { name: "Jasmine Begum", nameBangla: "জেসমিন বেগম" },
+  ];
+
+  // Generate scores in descending order for ranking
+  const scores = names
+    .map((_, index) => {
+      const baseScore = Math.max(
+        30,
+        100 - index * 3 - Math.floor(Math.random() * 5)
+      );
+      return Math.round((baseScore / 100) * total);
+    })
+    .sort((a, b) => b - a);
+
+  return names.map((person, index) => {
+    const score = scores[index] ?? 0;
+    const percentage = (score / total) * 100;
+    const percentile = Math.round(
+      ((names.length - index) / names.length) * 100
+    );
+
+    return {
+      id: `merit-${examId}-${index + 1}`,
+      examId,
+      studentId:
+        index === 2
+          ? "STD-2024-001"
+          : `STD-2024-${String(index + 10).padStart(3, "0")}`,
+      name: person.name,
+      nameBangla: person.nameBangla,
+      className: "Class 10",
+      roll: String(index + 1),
+      rank: index + 1,
+      score,
+      total,
+      percentage,
+      percentile,
+      timeTaken: Math.floor(20 + Math.random() * 25),
+    };
+  });
+};
+
+export const mockMeritList: MeritEntry[] = [
+  ...generateMeritList("101", 40),
+  ...generateMeritList("102", 30),
+  ...generateMeritList("103", 50),
+];

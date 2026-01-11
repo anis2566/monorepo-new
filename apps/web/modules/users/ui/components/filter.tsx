@@ -51,8 +51,8 @@ export const Filter = () => {
     })) || []),
   ];
 
-  const debounceSearchValue = useDebounce(searchName, 500);
-  const debounceSearchEmail = useDebounce(searchEmail, 500);
+  const debounceSearchValue = useDebounce(searchName, 2000);
+  const debounceSearchEmail = useDebounce(searchEmail, 2000);
 
   useEffect(() => {
     setFilters({

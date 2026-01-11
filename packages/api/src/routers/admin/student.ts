@@ -232,7 +232,7 @@ export const studentRouter = {
       const { page, limit, sort, search, classNameId, batchId, id } = input;
 
       const where: Prisma.StudentWhereInput = {
-        ...(search && { name: { contains: search } }),
+        ...(search && { name: { contains: search, mode: "insensitive" } }),
         ...(classNameId &&
           classNameId !== "All" && { classNameId: { equals: classNameId } }),
         ...(batchId && batchId !== "All" && { batchId: { equals: batchId } }),

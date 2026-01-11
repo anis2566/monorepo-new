@@ -61,7 +61,7 @@ export const ClassList = ({ classes, totalCount }: ClassListProps) => {
   const queryClient = useQueryClient();
   const { onOpen: openEditModal } = useEditClass();
 
-  const debounceSearchValue = useDebounce(search, 500);
+  const debounceSearchValue = useDebounce(search, 2000);
 
   useEffect(() => {
     setFilters({

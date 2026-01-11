@@ -15,6 +15,8 @@ export const userRouter = {
           where: { id },
         });
 
+        console.log(user);
+
         if (!user) {
           throw new TRPCError({
             code: "NOT_FOUND",
@@ -61,7 +63,10 @@ export const userRouter = {
           },
         }),
         ...(email && {
-          email,
+          email: {
+            contains: email,
+            mode: "insensitive",
+          },
         }),
         ...(role &&
           role !== "All" && {

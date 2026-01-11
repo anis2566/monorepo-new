@@ -13,6 +13,7 @@ import {
   Share2,
   Loader2,
   AlertTriangle,
+  ListOrdered,
 } from "lucide-react";
 import { format, intervalToDuration } from "date-fns";
 import { cn } from "@workspace/ui/lib/utils";
@@ -22,6 +23,8 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Badge } from "@workspace/ui/components/badge";
 import { ReviewAnswersSection } from "../components/review-answers";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface ResultDetailProps {
   attemptId: string;
@@ -36,10 +39,59 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
     trpc.student.result.getResult.queryOptions({ attemptId })
   );
 
+  const [examEnded, setExamEnded] = useState(false);
+  const [timeUntilEnd, setTimeUntilEnd] = useState<string>("");
+
+  // Check exam end status
+  useEffect(() => {
+    const endTime = data?.attempt?.endTime;
+
+    if (!endTime) {
+      setExamEnded(true);
+      setTimeUntilEnd("");
+      return;
+    }
+
+    const checkExamEnd = () => {
+      const now = new Date();
+      const end = new Date(endTime);
+
+      if (now >= end) {
+        setExamEnded(true);
+        setTimeUntilEnd("");
+      } else {
+        setExamEnded(false);
+        const diff = end.getTime() - now.getTime();
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+        if (hours > 24) {
+          const days = Math.floor(hours / 24);
+          setTimeUntilEnd(`${days}d ${hours % 24}h`);
+        } else if (hours > 0) {
+          setTimeUntilEnd(`${hours}h ${minutes}m`);
+        } else {
+          setTimeUntilEnd(`${minutes}m`);
+        }
+      }
+    };
+
+    checkExamEnd();
+    const interval = setInterval(checkExamEnd, 60000);
+
+    return () => clearInterval(interval);
+  }, [data?.attempt?.endTime]);
+
   if (isLoading) {
     return (
       <>
-        <ResultHeader onBack={() => router.back()} />
+        <ResultHeader
+          onBack={() => router.back()}
+          endDate={undefined}
+          examId=""
+          examEnded={false}
+          timeUntilEnd=""
+        />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center space-y-4">
             <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto" />
@@ -53,7 +105,13 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
   if (error || !data) {
     return (
       <>
-        <ResultHeader onBack={() => router.back()} />
+        <ResultHeader
+          onBack={() => router.back()}
+          endDate={undefined}
+          examId=""
+          examEnded={false}
+          timeUntilEnd=""
+        />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center space-y-4">
             <XCircle className="w-12 h-12 text-destructive mx-auto" />
@@ -71,7 +129,7 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
 
   const { attempt, reviewQuestions } = data;
 
-  // ✅ Calculate negative marking penalty
+  // Calculate negative marking penalty
   const penalty = attempt.hasNegativeMark
     ? attempt.wrongAnswers * attempt.negativeMark
     : 0;
@@ -82,6 +140,22 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
     if (attempt.percentage >= 80) return "text-success";
     if (attempt.percentage >= 60) return "text-warning";
     return "text-destructive";
+  };
+
+  // Calculate time taken
+  const getTimeTaken = () => {
+    const startTime = attempt.startTime;
+    const completedAt = attempt.completedAt;
+
+    if (!startTime || !completedAt) return "0";
+
+    const duration = intervalToDuration({
+      start: new Date(startTime),
+      end: new Date(completedAt),
+    });
+
+    const totalMinutes = (duration.hours || 0) * 60 + (duration.minutes || 0);
+    return totalMinutes.toString();
   };
 
   const handleDownload = () => {
@@ -114,6 +188,10 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
         examTitle={attempt.examTitle}
         onDownload={handleDownload}
         onShare={handleShare}
+        endDate={attempt.endTime ?? undefined}
+        examId={attempt.examId}
+        examEnded={examEnded}
+        timeUntilEnd={timeUntilEnd}
       />
 
       <div className="px-4 lg:px-8 py-4 lg:py-8 max-w-7xl mx-auto">
@@ -128,7 +206,12 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
               </h2>
               <Badge className="mb-4">{attempt.type}</Badge>
               <p className="text-sm text-muted-foreground mb-6">
-                {format(new Date(attempt.completedAt), "MMMM d, yyyy • h:mm a")}
+                {attempt.completedAt
+                  ? format(
+                      new Date(attempt.completedAt),
+                      "MMMM d, yyyy • h:mm a"
+                    )
+                  : "N/A"}
               </p>
 
               <div className={cn("text-6xl font-bold mb-2", getScoreColor())}>
@@ -144,7 +227,6 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                     {attempt.score.toFixed(1)}
                   </p>
                   <p className="text-muted-foreground">Score</p>
-                  {/* ✅ Show penalty if applied */}
                   {hasPenalty && (
                     <p className="text-xs text-destructive mt-1">
                       (-{penalty.toFixed(2)})
@@ -159,34 +241,35 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-foreground">
-                    {(() => {
-                      const duration = intervalToDuration({
-                        start: new Date(attempt.startTime || new Date()),
-                        end: new Date(attempt.completedAt || new Date()),
-                      });
-                      const value =
-                        duration.hours ||
-                        duration.minutes ||
-                        duration.seconds ||
-                        0;
-                      return value;
-                    })()}
+                    {getTimeTaken()}
                   </p>
-                  <p className="text-muted-foreground">
-                    {(() => {
-                      const duration = intervalToDuration({
-                        start: new Date(attempt.startTime || new Date()),
-                        end: new Date(attempt.completedAt || new Date()),
-                      });
-                      if (duration.hours) return "Hours";
-                      if (duration.minutes) return "Minutes";
-                      return "Seconds";
-                    })()}
-                  </p>
+                  <p className="text-muted-foreground">Minutes</p>
                 </div>
               </div>
 
-              {/* ✅ Negative Marking Warning */}
+              {/* Mobile Merit Button */}
+              <div className="mt-6 lg:hidden">
+                {examEnded ? (
+                  <Button asChild className="w-full" size="lg">
+                    <Link href={`/results/${attempt.examId}/merit`}>
+                      <ListOrdered className="w-5 h-5 mr-2" />
+                      View Merit List
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    size="lg"
+                    disabled
+                  >
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Merit List: {timeUntilEnd}
+                  </Button>
+                )}
+              </div>
+
+              {/* Negative Marking Warning */}
               {hasPenalty && (
                 <div className="mt-6 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
                   <div className="flex items-start gap-2 text-left">
@@ -229,7 +312,7 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
               )}
             </Card>
 
-            {/* ✅ Stats Grid with Negative Marking Info */}
+            {/* Stats Grid with Negative Marking Info */}
             <div className="grid grid-cols-3 gap-3">
               <Card className="p-4 text-center bg-success/10 border-success/20">
                 <CheckCircle2 className="w-6 h-6 mx-auto mb-2 text-success" />
@@ -237,7 +320,6 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                   {attempt.correctAnswers}
                 </p>
                 <p className="text-xs text-muted-foreground">Correct</p>
-                {/* ✅ Show points if no negative marking */}
                 {!attempt.hasNegativeMark && (
                   <p className="text-xs text-success mt-1">
                     +{attempt.correctAnswers}
@@ -250,7 +332,6 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                   {attempt.wrongAnswers}
                 </p>
                 <p className="text-xs text-muted-foreground">Wrong</p>
-                {/* ✅ Show penalty if negative marking */}
                 {hasPenalty && (
                   <p className="text-xs text-destructive mt-1">
                     -{penalty.toFixed(2)}
@@ -267,7 +348,7 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
               </Card>
             </div>
 
-            {/* ✅ Performance Bar with Negative Marking Context */}
+            {/* Performance Bar with Negative Marking Context */}
             <Card className="p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold">Performance Breakdown</h3>
@@ -332,7 +413,7 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
                 </div>
               </div>
 
-              {/* ✅ Score Calculation Summary */}
+              {/* Score Calculation Summary */}
               {attempt.hasNegativeMark && (
                 <div className="mt-4 pt-4 border-t border-border space-y-1.5 text-xs">
                   <div className="flex justify-between">
@@ -374,29 +455,38 @@ export const ResultDetailView = ({ attemptId }: ResultDetailProps) => {
           </div>
 
           {/* Right Column - Review Questions */}
-          <ReviewAnswersSection
-            reviewQuestions={reviewQuestions}
-            correctCount={attempt.correctAnswers}
-            wrongCount={attempt.wrongAnswers}
-            skippedCount={attempt.skippedQuestions}
-          />
+          <div className="lg:col-span-2">
+            <ReviewAnswersSection
+              reviewQuestions={reviewQuestions}
+              correctCount={attempt.correctAnswers}
+              wrongCount={attempt.wrongAnswers}
+              skippedCount={attempt.skippedQuestions}
+            />
+          </div>
         </div>
       </div>
     </>
   );
 };
 
-// Separate Header Component for cleaner code
+// Separate Header Component
 function ResultHeader({
   onBack,
   examTitle,
   onDownload,
   onShare,
+  examId,
+  examEnded,
+  timeUntilEnd,
 }: {
   onBack: () => void;
   examTitle?: string;
   onDownload?: () => void;
   onShare?: () => void;
+  endDate?: Date;
+  examId: string;
+  examEnded: boolean;
+  timeUntilEnd: string;
 }) {
   return (
     <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
@@ -416,18 +506,36 @@ function ResultHeader({
             )}
           </div>
         </div>
-        {onDownload && onShare && (
-          <div className="hidden lg:flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={onDownload}>
-              <Download className="w-4 h-4 mr-2" />
-              Download
+
+        {/* Desktop Merit Button */}
+        <div className="hidden lg:flex items-center gap-2">
+          {examEnded ? (
+            <Button asChild variant="default" size="sm">
+              <Link href={`/results/${examId}/merit`}>
+                <ListOrdered className="w-4 h-4 mr-2" />
+                View Merit List
+              </Link>
             </Button>
-            <Button variant="outline" size="sm" onClick={onShare}>
-              <Share2 className="w-4 h-4 mr-2" />
-              Share
+          ) : (
+            <Button variant="outline" size="sm" disabled className="gap-2">
+              <Loader2 className="w-4 w-4 animate-spin" />
+              <span className="text-xs">{timeUntilEnd}</span>
             </Button>
-          </div>
-        )}
+          )}
+
+          {onDownload && onShare && (
+            <>
+              <Button variant="outline" size="sm" onClick={onDownload}>
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </Button>
+              <Button variant="outline" size="sm" onClick={onShare}>
+                <Share2 className="w-4 h-4 mr-2" />
+                Share
+              </Button>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );

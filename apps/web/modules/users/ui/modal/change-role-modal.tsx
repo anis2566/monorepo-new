@@ -123,6 +123,7 @@ export function ChangeUserRoleModal() {
     }
 
     changeRole({
+      userId,
       role: selectedRole,
     });
   };

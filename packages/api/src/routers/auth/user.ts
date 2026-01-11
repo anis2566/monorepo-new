@@ -16,14 +16,15 @@ export const userRouter = createTRPCRouter({
     .input(
       z.object({
         role: z.string(),
+        userId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { role } = input;
+      const { role, userId } = input;
       try {
         await ctx.db.user.update({
           where: {
-            id: ctx.session.user.id,
+            id: userId,
           },
           data: {
             role,

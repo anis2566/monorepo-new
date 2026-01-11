@@ -39,7 +39,7 @@ export const Filter = () => {
     })) || []),
   ];
 
-  const debounceSearchValue = useDebounce(searchName, 500);
+  const debounceSearchValue = useDebounce(searchName, 2000);
 
   useEffect(() => {
     setFilters({

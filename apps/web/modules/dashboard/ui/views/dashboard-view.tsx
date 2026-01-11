@@ -79,10 +79,10 @@ export const DashboardView = () => {
             today.
           </p>
         </div>
-        <Button className="gap-2 sm:w-auto w-full">
-          <TrendingUp className="h-4 w-4" />
-          View Analytics
-        </Button>
+      </div>
+
+      <div className="md:hidden">
+        <QuickActions />
       </div>
 
       {/* Primary Stats Grid */}
@@ -198,7 +198,9 @@ export const DashboardView = () => {
 
         {/* Right Column - Quick Actions & Activity */}
         <div className="space-y-6 sm:space-y-8">
-          <QuickActions />
+          <div className="hidden md:block">
+            <QuickActions />
+          </div>
           <ExamAttemptAnalytics data={attemptStats} />
           <StudentVerificationQueue
             students={pendingStudents}

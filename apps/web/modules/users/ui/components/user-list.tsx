@@ -66,8 +66,8 @@ export const UserList = ({ users, totalCount }: UserListProps) => {
   const queryClient = useQueryClient();
   const { onOpen: openChangeRoleModal } = useChangeRole();
 
-  const { mutate: deleteStudent } = useMutation(
-    trpc.admin.student.deleteOne.mutationOptions({
+  const { mutate: deleteUser } = useMutation(
+    trpc.admin.user.deleteOne.mutationOptions({
       onError: (err) => {
         toast.error(err.message);
       },
@@ -92,7 +92,7 @@ export const UserList = ({ users, totalCount }: UserListProps) => {
       entityType: "user",
       entityName: userName,
       onConfirm: (id) => {
-        deleteStudent(id);
+        deleteUser({ id });
       },
     });
   };

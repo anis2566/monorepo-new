@@ -12,6 +12,7 @@ import {
   Trash,
   Users,
   MoreHorizontal,
+  Crown,
 } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
@@ -230,6 +231,12 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                           <Link href={`/exams/edit/${exam.id}`}>
                             <Edit className="h-4 w-4" />
                             Edit
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href={`/exams/merit/${exam.id}`}>
+                            <Crown className="h-4 w-4" />
+                            Merit List
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem

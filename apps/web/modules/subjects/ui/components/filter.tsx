@@ -27,7 +27,7 @@ export const Filter = () => {
 
   const [filters, setFilters] = useGetSubjects();
 
-  const debounceSearchValue = useDebounce(searchName, 500);
+  const debounceSearchValue = useDebounce(searchName, 2000);
 
   useEffect(() => {
     setFilters({

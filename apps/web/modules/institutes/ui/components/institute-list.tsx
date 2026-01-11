@@ -65,7 +65,7 @@ export const InstituteList = ({ institutes, totalCount }: Props) => {
   const [filters, setFilters] = useGetInstitutes();
   const { onOpen: openEditModal } = useEditInstitute();
 
-  const debounceSearchValue = useDebounce(search, 500);
+  const debounceSearchValue = useDebounce(search, 2000);
 
   useEffect(() => {
     setFilters({
