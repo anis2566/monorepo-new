@@ -29,6 +29,7 @@ import {
 } from "@workspace/ui/shared/mobile-data-card";
 import { Pagination } from "./pagination";
 import { differenceInSeconds, formatDuration } from "date-fns";
+import Link from "next/link";
 
 interface ResultWithRelation extends ExamAttempt {
   student: {
@@ -181,8 +182,15 @@ export const ResultList = ({ results, totalCount }: ResultListProps) => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        asChild
+                      >
+                        <Link href={`/results/${attempt.id}`}>
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                        </Link>
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -210,8 +218,15 @@ export const ResultList = ({ results, totalCount }: ResultListProps) => {
                       {attempt.exam.title}
                     </p>
                   </div>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    asChild
+                  >
+                    <Link href={`/results/${attempt.id}`}>
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    </Link>
                   </Button>
                 </div>
                 <div className="flex flex-wrap gap-2 mb-3">

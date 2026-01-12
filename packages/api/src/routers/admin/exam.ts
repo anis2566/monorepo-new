@@ -458,6 +458,469 @@ export const examRouter = {
     return { success: true, data: transformedData };
   }),
 
+  getExamDetails: adminProcedure
+    .input(z.object({ examId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { examId } = input;
+
+      const exam = await ctx.db.exam.findUnique({
+        where: { id: examId },
+        include: {
+          classNames: {
+            select: {
+              className: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          batches: {
+            select: {
+              batch: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          subjects: {
+            select: {
+              subject: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          chapters: {
+            select: {
+              chapter: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!exam) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Exam not found",
+        });
+      }
+
+      return {
+        id: exam.id,
+        title: exam.title,
+        type: exam.type,
+        status: exam.status,
+        duration: exam.duration,
+        total: exam.total,
+        cq: exam.cq,
+        mcq: exam.mcq,
+        startDate: exam.startDate.toISOString(),
+        endDate: exam.endDate.toISOString(),
+        hasNegativeMark: exam.hasNegativeMark,
+        negativeMark: exam.negativeMark,
+        hasShuffle: exam.hasSuffle, // Note: typo in schema
+        hasRandom: exam.hasRandom,
+        classes: exam.classNames.map((cn) => cn.className.name),
+        batches: exam.batches.map((b) => b.batch.name),
+        subjects: exam.subjects.map((s) => s.subject.name),
+        chapters: exam.chapters.map((c) => c.chapter.name),
+        createdAt: exam.createdAt.toISOString(),
+        updatedAt: exam.updatedAt.toISOString(),
+      };
+    }),
+
+  getExamStats: adminProcedure
+    .input(z.object({ examId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { examId } = input;
+
+      const [exam, attempts] = await Promise.all([
+        ctx.db.exam.findUnique({
+          where: { id: examId },
+          select: { id: true, total: true },
+        }),
+        ctx.db.examAttempt.findMany({
+          where: { examId },
+          select: {
+            id: true,
+            status: true,
+            score: true,
+            duration: true,
+            tabSwitches: true,
+            submissionType: true,
+            totalQuestions: true,
+          },
+        }),
+      ]);
+
+      if (!exam) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Exam not found",
+        });
+      }
+
+      const completedAttempts = attempts.filter((a) =>
+        ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"].includes(a.status)
+      );
+      const inProgress = attempts.filter(
+        (a) => a.status === "In Progress"
+      ).length;
+
+      // Calculate scores based on totalQuestions from each attempt
+      const scores = completedAttempts.map(
+        (a) => (a.score / a.totalQuestions) * 100
+      );
+
+      const avgScore =
+        scores.length > 0
+          ? scores.reduce((sum, s) => sum + s, 0) / scores.length
+          : 0;
+      const passed = scores.filter((s) => s >= 40).length;
+      const passRate = scores.length > 0 ? (passed / scores.length) * 100 : 0;
+      const highestScore = scores.length > 0 ? Math.max(...scores) : 0;
+      const lowestScore = scores.length > 0 ? Math.min(...scores) : 0;
+
+      const durations = completedAttempts
+        .filter((a) => a.duration)
+        .map((a) => a.duration!);
+      const avgDuration =
+        durations.length > 0
+          ? durations.reduce((sum, d) => sum + d, 0) / durations.length
+          : 0;
+
+      const tabSwitchViolations = attempts.reduce(
+        (sum, a) => sum + a.tabSwitches,
+        0
+      );
+
+      return {
+        totalAttempts: attempts.length,
+        completedAttempts: completedAttempts.length,
+        inProgress,
+        avgScore: parseFloat(avgScore.toFixed(1)),
+        passRate: parseFloat(passRate.toFixed(1)),
+        highestScore: parseFloat(highestScore.toFixed(1)),
+        lowestScore: parseFloat(lowestScore.toFixed(1)),
+        avgDuration: Math.round(avgDuration / 60), // Convert to minutes
+        tabSwitchViolations,
+      };
+    }),
+
+  getExamAttempts: adminProcedure
+    .input(
+      z.object({
+        examId: z.string(),
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(50).default(10),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { examId, page, limit } = input;
+
+      const [attempts, totalCount] = await Promise.all([
+        ctx.db.examAttempt.findMany({
+          where: { examId },
+          include: {
+            student: {
+              select: {
+                id: true,
+                studentId: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: { createdAt: "desc" },
+          skip: (page - 1) * limit,
+          take: limit,
+        }),
+        ctx.db.examAttempt.count({ where: { examId } }),
+      ]);
+
+      return {
+        attempts: attempts.map((attempt) => ({
+          id: attempt.id,
+          studentId: attempt.student.studentId,
+          studentName: attempt.student.name,
+          status: attempt.status,
+          score: attempt.score,
+          totalQuestions: attempt.totalQuestions,
+          percentage: parseFloat(
+            ((attempt.score / attempt.totalQuestions) * 100).toFixed(1)
+          ),
+          correctAnswers: attempt.correctAnswers,
+          wrongAnswers: attempt.wrongAnswers,
+          skippedQuestions: attempt.skippedQuestions,
+          duration: Math.round((attempt.duration || 0) / 60), // Convert to minutes
+          tabSwitches: attempt.tabSwitches,
+          submissionType: attempt.submissionType,
+          startTime: attempt.startTime?.toISOString() || null,
+          endTime: attempt.endTime?.toISOString() || null,
+          createdAt: attempt.createdAt.toISOString(),
+        })),
+        totalCount,
+        currentPage: page,
+        totalPages: Math.ceil(totalCount / limit),
+      };
+    }),
+
+  getExamMcqs: adminProcedure
+    .input(z.object({ examId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { examId } = input;
+
+      const examMcqs = await ctx.db.examMcq.findMany({
+        where: { examId },
+        include: {
+          mcq: {
+            include: {
+              subject: {
+                select: {
+                  name: true,
+                },
+              },
+              chapter: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+      });
+
+      return examMcqs.map((examMcq, index) => ({
+        id: examMcq.mcq.id,
+        question: examMcq.mcq.question,
+        options: examMcq.mcq.options,
+        statements: examMcq.mcq.statements,
+        answer: examMcq.mcq.answer,
+        type: examMcq.mcq.type,
+        reference: examMcq.mcq.reference,
+        explanation: examMcq.mcq.explanation,
+        isMath: examMcq.mcq.isMath,
+        session: examMcq.mcq.session,
+        source: examMcq.mcq.source,
+        questionUrl: examMcq.mcq.questionUrl,
+        context: examMcq.mcq.context,
+        contextUrl: examMcq.mcq.contextUrl,
+        subject: examMcq.mcq.subject.name,
+        chapter: examMcq.mcq.chapter.name,
+        order: index + 1,
+      }));
+    }),
+
+  getScoreDistribution: adminProcedure
+    .input(z.object({ examId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { examId } = input;
+
+      const attempts = await ctx.db.examAttempt.findMany({
+        where: {
+          examId,
+          status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
+        },
+        select: {
+          score: true,
+          totalQuestions: true,
+        },
+      });
+
+      const ranges = [
+        { range: "0-20%", min: 0, max: 20 },
+        { range: "21-40%", min: 21, max: 40 },
+        { range: "41-60%", min: 41, max: 60 },
+        { range: "61-80%", min: 61, max: 80 },
+        { range: "81-100%", min: 81, max: 100 },
+      ];
+
+      const distribution = ranges.map((r) => {
+        const count = attempts.filter((a) => {
+          const percentage = (a.score / a.totalQuestions) * 100;
+          return percentage >= r.min && percentage <= r.max;
+        }).length;
+
+        return {
+          range: r.range,
+          count,
+        };
+      });
+
+      return distribution;
+    }),
+
+  getAnswerDistribution: adminProcedure
+    .input(z.object({ examId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { examId } = input;
+
+      const attempts = await ctx.db.examAttempt.findMany({
+        where: {
+          examId,
+          status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
+        },
+        select: {
+          correctAnswers: true,
+          wrongAnswers: true,
+          skippedQuestions: true,
+        },
+      });
+
+      const totalCorrect = attempts.reduce(
+        (sum, a) => sum + a.correctAnswers,
+        0
+      );
+      const totalWrong = attempts.reduce((sum, a) => sum + a.wrongAnswers, 0);
+      const totalSkipped = attempts.reduce(
+        (sum, a) => sum + a.skippedQuestions,
+        0
+      );
+
+      return [
+        { name: "Correct", value: totalCorrect, color: "#10b981" },
+        { name: "Wrong", value: totalWrong, color: "#ef4444" },
+        { name: "Skipped", value: totalSkipped, color: "#94a3b8" },
+      ];
+    }),
+
+  getTimeAnalysis: adminProcedure
+    .input(z.object({ examId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { examId } = input;
+
+      const [exam, attempts] = await Promise.all([
+        ctx.db.exam.findUnique({
+          where: { id: examId },
+          select: { duration: true },
+        }),
+        ctx.db.examAttempt.findMany({
+          where: {
+            examId,
+            status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
+            duration: { not: null },
+          },
+          select: {
+            duration: true,
+          },
+        }),
+      ]);
+
+      if (!exam) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Exam not found",
+        });
+      }
+
+      const maxDuration = exam.duration * 60; // Convert to seconds
+      const ranges = [
+        { time: "0-25%", min: 0, max: 0.25 },
+        { time: "25-50%", min: 0.25, max: 0.5 },
+        { time: "50-75%", min: 0.5, max: 0.75 },
+        { time: "75-100%", min: 0.75, max: 1.0 },
+      ];
+
+      const analysis = ranges.map((r) => {
+        const students = attempts.filter((a) => {
+          const percentage = a.duration! / maxDuration;
+          return percentage >= r.min && percentage <= r.max;
+        }).length;
+
+        return {
+          time: r.time,
+          students,
+        };
+      });
+
+      return analysis;
+    }),
+
+  getAntiCheatSummary: adminProcedure
+    .input(z.object({ examId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { examId } = input;
+
+      const attempts = await ctx.db.examAttempt.findMany({
+        where: { examId },
+        select: {
+          tabSwitches: true,
+          submissionType: true,
+        },
+      });
+
+      const totalTabSwitches = attempts.reduce(
+        (sum, a) => sum + a.tabSwitches,
+        0
+      );
+      const studentsWithViolations = attempts.filter(
+        (a) => a.tabSwitches > 0
+      ).length;
+      const autoSubmittedTabSwitch = attempts.filter(
+        (a) => a.submissionType === "Auto-TabSwitch"
+      ).length;
+
+      return {
+        totalTabSwitches,
+        studentsWithViolations,
+        autoSubmittedTabSwitch,
+      };
+    }),
+
+  getPerformanceOverview: adminProcedure
+    .input(z.object({ examId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { examId } = input;
+
+      const attempts = await ctx.db.examAttempt.findMany({
+        where: {
+          examId,
+          status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
+        },
+        select: {
+          score: true,
+          totalQuestions: true,
+          tabSwitches: true,
+        },
+      });
+
+      if (attempts.length === 0) {
+        return {
+          highestScore: 0,
+          lowestScore: 0,
+          avgScore: 0,
+          tabSwitchViolations: 0,
+        };
+      }
+
+      const scores = attempts.map((a) => (a.score / a.totalQuestions) * 100);
+      const avgScore = scores.reduce((sum, s) => sum + s, 0) / scores.length;
+      const highestScore = Math.max(...scores);
+      const lowestScore = Math.min(...scores);
+      const tabSwitchViolations = attempts.reduce(
+        (sum, a) => sum + a.tabSwitches,
+        0
+      );
+
+      return {
+        highestScore: parseFloat(highestScore.toFixed(1)),
+        lowestScore: parseFloat(lowestScore.toFixed(1)),
+        avgScore: parseFloat(avgScore.toFixed(1)),
+        tabSwitchViolations,
+      };
+    }),
+
   getMeritList: adminProcedure
     .input(z.object({ examId: z.string() }))
     .query(async ({ ctx, input }) => {

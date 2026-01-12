@@ -112,6 +112,7 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
       },
     });
   };
+
   return (
     <Card className="shadow-card">
       <CardHeader className="pb-3">

@@ -222,7 +222,7 @@ export const MeritView = ({ examId }: MeritViewProps) => {
                       </p>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      {entry.className} • Roll: {entry.roll}
+                      {entry.className} • Roll: {entry.studentId}
                     </p>
                   </div>
 
