@@ -170,6 +170,11 @@ export const examRouter = {
         const numberMcq = data.mcq ? parseInt(data.mcq) : 0;
         const total = numberCq + numberMcq;
 
+        const examStatus =
+          new Date() < new Date(data.startDate)
+            ? EXAM_STATUS.Upcoming
+            : EXAM_STATUS.Ongoing;
+
         // Fetch all batches with their students
         const batches = await ctx.db.batch.findMany({
           where: {
@@ -217,6 +222,7 @@ export const examRouter = {
                 ...(data.negativeMark && {
                   negativeMark: parseFloat(data.negativeMark),
                 }),
+                status: examStatus,
               },
             });
 

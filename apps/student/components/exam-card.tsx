@@ -94,12 +94,24 @@ export function ExamCard({
     return `Starts ${formatDistanceToNow(exam.startDate, { addSuffix: true })}`;
   };
 
+  // ✅ NEW: Get card styling based on status
+  const getCardStyles = () => {
+    if (isActive) {
+      return "border-success/50 bg-success/5 hover:bg-success/10";
+    }
+    if (isExpired) {
+      return "border-muted bg-muted/5 hover:bg-muted/10";
+    }
+    // Upcoming
+    return "border-warning/50 bg-warning/5 hover:bg-warning/10";
+  };
+
   if (variant === "compact") {
     return (
       <Card
         className={cn(
           "p-4 flex items-center gap-4 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer",
-          isActive && "border-success/50 bg-success/5"
+          getCardStyles()
         )}
         onClick={() => isActive && handleClick()}
       >
@@ -132,7 +144,7 @@ export function ExamCard({
     <Card
       className={cn(
         "p-4 lg:p-6 space-y-4 shadow-card transition-all duration-300 hover:shadow-lg animate-fade-in",
-        isActive && "border-success/50 bg-success/5"
+        getCardStyles()
       )}
     >
       <div className="flex items-start justify-between gap-3">

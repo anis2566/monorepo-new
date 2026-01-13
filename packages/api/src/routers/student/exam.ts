@@ -274,14 +274,13 @@ export const examRouter = {
       const newStreak = isCorrect ? attempt.currentStreak + 1 : 0;
       const newBestStreak = Math.max(attempt.bestStreak, newStreak);
 
-      // ✅ CALCULATE SCORE WITH NEGATIVE MARKING
+      // ✅ CALCULATE SCORE WITH NEGATIVE MARKING (FIXED - No rounding)
       let newScore: number;
 
       if (attempt.hasNegativeMark) {
         const penalty = newWrong * attempt.negativeMark;
         newScore = newCorrect - penalty;
         newScore = Math.max(0, newScore);
-        newScore = Math.round(newScore);
       } else {
         newScore = newCorrect;
       }
@@ -337,7 +336,6 @@ export const examRouter = {
         score: newScore,
       };
     }),
-
   // Record tab switch
   recordTabSwitch: studentProcedure
     .input(
@@ -461,13 +459,13 @@ export const examRouter = {
             }
           : undefined;
 
+      // ✅ CALCULATE FINAL SCORE WITH NEGATIVE MARKING (FIXED - No rounding)
       let finalScore: number;
 
       if (attempt.hasNegativeMark) {
         const penalty = attempt.wrongAnswers * attempt.negativeMark;
         finalScore = attempt.correctAnswers - penalty;
         finalScore = Math.max(0, finalScore);
-        finalScore = Math.round(finalScore);
       } else {
         finalScore = attempt.correctAnswers;
       }

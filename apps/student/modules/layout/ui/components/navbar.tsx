@@ -68,7 +68,9 @@ export function Navbar({ className }: NavbarProps) {
           <div className="flex items-center gap-x-2 md:hidden">
             <Image src="/logo.jpg" alt="Logo" width={36} height={36} />
             <div>
-              <p className="text-primary font-bold text-xl">Mr. Dr.</p>
+              <p className="text-primary font-bold text-xl text-red-600 tracking-widest">
+                Mr. Dr.
+              </p>
               <p className="text-xs text-muted-foreground -mt-1">
                 Academic & Admission
               </p>
@@ -77,58 +79,6 @@ export function Navbar({ className }: NavbarProps) {
         </div>
 
         <div className="flex items-center gap-2 justify-self-end">
-          {/* Notifications */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative h-9 w-9">
-                <Bell className="h-5 w-5" />
-                {unreadNotifications > 0 && (
-                  <Badge
-                    variant="destructive"
-                    className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px]"
-                  >
-                    {unreadNotifications}
-                  </Badge>
-                )}
-                <span className="sr-only">Notifications</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80">
-              <DropdownMenuLabel className="flex items-center justify-between">
-                <span>Notifications</span>
-                {unreadNotifications > 0 && (
-                  <Badge variant="secondary" className="text-xs">
-                    {unreadNotifications} new
-                  </Badge>
-                )}
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <div className="max-h-80 overflow-y-auto">
-                <NotificationItem
-                  title="New exam available"
-                  description="Physics Chapter 3"
-                  time="2 hours ago"
-                  isUnread
-                />
-                <NotificationItem
-                  title="Result published"
-                  description="Math Quiz - You scored 85%"
-                  time="5 hours ago"
-                  isUnread
-                />
-                <NotificationItem
-                  title="Exam reminder"
-                  description="Chemistry test starts in 1 day"
-                  time="1 day ago"
-                />
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="justify-center text-primary">
-                View all notifications
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
           {/* Profile */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

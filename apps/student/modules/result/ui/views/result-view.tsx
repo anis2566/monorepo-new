@@ -161,66 +161,6 @@ export const ResultView = () => {
 
   return (
     <div className="px-4 lg:px-8 py-4 lg:py-6 max-w-7xl mx-auto space-y-6">
-      {/* Stats Overview - Desktop */}
-      <div className="hidden lg:grid lg:grid-cols-4 gap-4">
-        <StatsCard
-          icon={<TrendingUp className="w-6 h-6 text-primary" />}
-          value={`${stats.recentAverage}%`}
-          label="Recent Average"
-          sublabel="Last 5 exams"
-          iconBg="bg-primary/10"
-        />
-        <StatsCard
-          icon={<Award className="w-6 h-6 text-success" />}
-          value={`${stats.bestScore.toFixed(0)}%`}
-          label="Best Score"
-          sublabel="Personal record"
-          iconBg="bg-success/10"
-          valueColor="text-success"
-        />
-        <StatsCard
-          icon={<Target className="w-6 h-6 text-accent" />}
-          value={stats.totalExams.toString()}
-          label="Exams Taken"
-          sublabel={`${stats.totalCorrect}/${stats.totalQuestions} correct`}
-          iconBg="bg-accent/10"
-        />
-        <StatsCard
-          icon={<Zap className="w-6 h-6 text-warning" />}
-          value={
-            stats.improvementRate !== 0
-              ? `${stats.improvementRate > 0 ? "+" : ""}${stats.improvementRate}%`
-              : "N/A"
-          }
-          label="Improvement"
-          sublabel="vs earlier exams"
-          iconBg="bg-warning/10"
-          valueColor={
-            stats.improvementRate > 0
-              ? "text-success"
-              : stats.improvementRate < 0
-                ? "text-destructive"
-                : "text-foreground"
-          }
-        />
-      </div>
-
-      {/* Mobile Stats */}
-      <div className="grid grid-cols-2 gap-3 lg:hidden">
-        <Card className="p-4 text-center">
-          <p className="text-2xl font-bold text-primary">
-            {stats.recentAverage}%
-          </p>
-          <p className="text-xs text-muted-foreground">Recent Avg</p>
-        </Card>
-        <Card className="p-4 text-center">
-          <p className="text-2xl font-bold text-success">
-            {stats.bestScore.toFixed(0)}%
-          </p>
-          <p className="text-xs text-muted-foreground">Best Score</p>
-        </Card>
-      </div>
-
       {/* Filters */}
       <Card className="p-4">
         <div className="flex flex-col gap-4">

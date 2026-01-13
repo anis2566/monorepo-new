@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Clock } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 
@@ -16,22 +16,39 @@ export function ExamTimer({
   isPaused = false,
 }: ExamTimerProps) {
   const [seconds, setSeconds] = useState(initialSeconds);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const onTimeUpRef = useRef(onTimeUp);
+
+  // Keep onTimeUp reference updated without re-running effect
+  useEffect(() => {
+    onTimeUpRef.current = onTimeUp;
+  }, [onTimeUp]);
 
   useEffect(() => {
     if (isPaused) return;
 
-    const interval = setInterval(() => {
+    // Clear any existing interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    // Start new interval
+    intervalRef.current = setInterval(() => {
       setSeconds((prev) => {
         if (prev <= 1) {
-          onTimeUp();
+          onTimeUpRef.current();
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, [isPaused, onTimeUp]);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isPaused]); // Only depend on isPaused
 
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;

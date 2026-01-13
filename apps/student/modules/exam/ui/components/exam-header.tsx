@@ -1,7 +1,7 @@
 import { Eye, Zap } from "lucide-react";
 import { ExamTimer } from "./exam-timer";
 import { Badge } from "@workspace/ui/components/badge";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface ExamHeaderProps {
   title: string;
@@ -21,9 +21,16 @@ export function ExamHeader({
   onTimeUp,
 }: ExamHeaderProps) {
   const [seconds, setSeconds] = useState(duration * 60);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    // Clear any existing interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    // Start new interval
+    intervalRef.current = setInterval(() => {
       setSeconds((prev) => {
         if (prev <= 1) {
           return 0;
@@ -32,8 +39,12 @@ export function ExamHeader({
       });
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []); // Only run once on mount
 
   const progress = (seconds / (duration * 60)) * 100;
 

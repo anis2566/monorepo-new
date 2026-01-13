@@ -204,7 +204,7 @@ export function ResultCard({ result }: ResultCardProps) {
             variant="outline"
             size="sm"
             disabled
-            className="gap-2 mt-2 mb-4"
+            className="gap-2 mt-2 mb-4 w-full"
           >
             <Loader2 className="w-4 w-4 animate-spin" />
             <span className="text-xs">{timeUntilEnd}</span>

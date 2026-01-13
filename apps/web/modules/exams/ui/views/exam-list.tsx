@@ -13,6 +13,7 @@ import {
   Users,
   MoreHorizontal,
   Crown,
+  FileQuestionIcon,
 } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
@@ -235,6 +236,12 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
+                          <Link href={`/exams/${exam.id}/question`}>
+                            <FileQuestionIcon className="h-4 w-4" />
+                            Assign Question
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
                           <Link href={`/exams/merit/${exam.id}`}>
                             <Crown className="h-4 w-4" />
                             Merit List
@@ -292,6 +299,12 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                       <Link href={`/exams/edit/${exam.id}`}>
                         <Edit className="h-4 w-4" />
                         Edit
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href={`/exams/${exam.id}/question`}>
+                        <FileQuestionIcon className="h-4 w-4" />
+                        Assign Question
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
