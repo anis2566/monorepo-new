@@ -543,7 +543,6 @@ export const examRouter = {
       const exam = await ctx.db.exam.findUnique({
         where: {
           id: examId,
-          students: { some: { studentId: ctx.session.user.id } },
         },
         select: {
           id: true,
@@ -738,6 +737,14 @@ export const examRouter = {
               _count: {
                 select: {
                   mcqs: true,
+                },
+              },
+              attempts: {
+                where: {
+                  studentId: ctx.studentId,
+                },
+                select: {
+                  id: true,
                 },
               },
             },

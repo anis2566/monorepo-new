@@ -294,6 +294,12 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                         Edit
                       </Link>
                     </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href={`/exams/merit/${exam.id}`}>
+                        <Crown className="h-4 w-4" />
+                        Merit List
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                       className="text-destructive"
                       onClick={() => handleDeleteExam(exam.id, exam.title)}

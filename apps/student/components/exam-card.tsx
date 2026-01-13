@@ -29,6 +29,9 @@ interface ExamWithRelation extends Exam {
       name: string;
     };
   }[];
+  attempts: {
+    id: string;
+  }[];
 }
 
 interface ExamCardProps {
@@ -54,13 +57,12 @@ export function ExamCard({
     exam.status === EXAM_STATUS.Ongoing;
   const isExpired = exam.status === EXAM_STATUS.Completed;
 
-  // ✅ CHANGED: Call setExamData to open modal
   const handleClick = () => {
     setExamData(exam.id, totalQuestions);
   };
 
   const handleResultPush = () => {
-    router.push(`/results/${exam.id}`);
+    router.push(`/results/${exam.attempts[0]?.id || exam.id}`);
   };
 
   const getStatusBadge = () => {

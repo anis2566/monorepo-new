@@ -431,7 +431,7 @@ export type ExamAttemptWhereInput = {
   id?: Prisma.StringFilter<"ExamAttempt"> | string
   type?: Prisma.StringFilter<"ExamAttempt"> | string
   answers?: Prisma.JsonNullableListFilter<"ExamAttempt">
-  score?: Prisma.IntFilter<"ExamAttempt"> | number
+  score?: Prisma.FloatFilter<"ExamAttempt"> | number
   correctAnswers?: Prisma.IntFilter<"ExamAttempt"> | number
   wrongAnswers?: Prisma.IntFilter<"ExamAttempt"> | number
   skippedQuestions?: Prisma.IntFilter<"ExamAttempt"> | number
@@ -510,7 +510,7 @@ export type ExamAttemptWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ExamAttemptWhereInput | Prisma.ExamAttemptWhereInput[]
   type?: Prisma.StringFilter<"ExamAttempt"> | string
   answers?: Prisma.JsonNullableListFilter<"ExamAttempt">
-  score?: Prisma.IntFilter<"ExamAttempt"> | number
+  score?: Prisma.FloatFilter<"ExamAttempt"> | number
   correctAnswers?: Prisma.IntFilter<"ExamAttempt"> | number
   wrongAnswers?: Prisma.IntFilter<"ExamAttempt"> | number
   skippedQuestions?: Prisma.IntFilter<"ExamAttempt"> | number
@@ -591,7 +591,7 @@ export type ExamAttemptScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"ExamAttempt"> | string
   type?: Prisma.StringWithAggregatesFilter<"ExamAttempt"> | string
   answers?: Prisma.JsonNullableListFilter<"ExamAttempt">
-  score?: Prisma.IntWithAggregatesFilter<"ExamAttempt"> | number
+  score?: Prisma.FloatWithAggregatesFilter<"ExamAttempt"> | number
   correctAnswers?: Prisma.IntWithAggregatesFilter<"ExamAttempt"> | number
   wrongAnswers?: Prisma.IntWithAggregatesFilter<"ExamAttempt"> | number
   skippedQuestions?: Prisma.IntWithAggregatesFilter<"ExamAttempt"> | number
@@ -698,7 +698,7 @@ export type ExamAttemptUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   answers?: Prisma.ExamAttemptUpdateanswersInput | runtime.InputJsonValue[]
-  score?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
   correctAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   wrongAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   skippedQuestions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -734,7 +734,7 @@ export type ExamAttemptUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   answers?: Prisma.ExamAttemptUpdateanswersInput | runtime.InputJsonValue[]
-  score?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
   correctAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   wrongAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   skippedQuestions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -805,7 +805,7 @@ export type ExamAttemptUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   answers?: Prisma.ExamAttemptUpdateanswersInput | runtime.InputJsonValue[]
-  score?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
   correctAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   wrongAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   skippedQuestions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -838,7 +838,7 @@ export type ExamAttemptUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   answers?: Prisma.ExamAttemptUpdateanswersInput | runtime.InputJsonValue[]
-  score?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
   correctAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   wrongAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   skippedQuestions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1279,7 +1279,7 @@ export type ExamAttemptScalarWhereInput = {
   id?: Prisma.StringFilter<"ExamAttempt"> | string
   type?: Prisma.StringFilter<"ExamAttempt"> | string
   answers?: Prisma.JsonNullableListFilter<"ExamAttempt">
-  score?: Prisma.IntFilter<"ExamAttempt"> | number
+  score?: Prisma.FloatFilter<"ExamAttempt"> | number
   correctAnswers?: Prisma.IntFilter<"ExamAttempt"> | number
   wrongAnswers?: Prisma.IntFilter<"ExamAttempt"> | number
   skippedQuestions?: Prisma.IntFilter<"ExamAttempt"> | number
@@ -1496,7 +1496,7 @@ export type ExamAttemptUpdateWithoutAnswerHistoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   answers?: Prisma.ExamAttemptUpdateanswersInput | runtime.InputJsonValue[]
-  score?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
   correctAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   wrongAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   skippedQuestions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1531,7 +1531,7 @@ export type ExamAttemptUncheckedUpdateWithoutAnswerHistoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   answers?: Prisma.ExamAttemptUpdateanswersInput | runtime.InputJsonValue[]
-  score?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
   correctAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   wrongAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   skippedQuestions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1600,7 +1600,7 @@ export type ExamAttemptUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   answers?: Prisma.ExamAttemptUpdateanswersInput | runtime.InputJsonValue[]
-  score?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
   correctAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   wrongAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   skippedQuestions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1635,7 +1635,7 @@ export type ExamAttemptUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   answers?: Prisma.ExamAttemptUpdateanswersInput | runtime.InputJsonValue[]
-  score?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
   correctAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   wrongAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   skippedQuestions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1670,7 +1670,7 @@ export type ExamAttemptUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   answers?: Prisma.ExamAttemptUpdateanswersInput | runtime.InputJsonValue[]
-  score?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
   correctAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   wrongAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   skippedQuestions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1738,7 +1738,7 @@ export type ExamAttemptUpdateWithoutExamInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   answers?: Prisma.ExamAttemptUpdateanswersInput | runtime.InputJsonValue[]
-  score?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
   correctAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   wrongAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   skippedQuestions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1773,7 +1773,7 @@ export type ExamAttemptUncheckedUpdateWithoutExamInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   answers?: Prisma.ExamAttemptUpdateanswersInput | runtime.InputJsonValue[]
-  score?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
   correctAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   wrongAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   skippedQuestions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1808,7 +1808,7 @@ export type ExamAttemptUncheckedUpdateManyWithoutExamInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   answers?: Prisma.ExamAttemptUpdateanswersInput | runtime.InputJsonValue[]
-  score?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
   correctAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   wrongAnswers?: Prisma.IntFieldUpdateOperationsInput | number
   skippedQuestions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2502,7 +2502,7 @@ export interface ExamAttemptFieldRefs {
   readonly id: Prisma.FieldRef<"ExamAttempt", 'String'>
   readonly type: Prisma.FieldRef<"ExamAttempt", 'String'>
   readonly answers: Prisma.FieldRef<"ExamAttempt", 'Json[]'>
-  readonly score: Prisma.FieldRef<"ExamAttempt", 'Int'>
+  readonly score: Prisma.FieldRef<"ExamAttempt", 'Float'>
   readonly correctAnswers: Prisma.FieldRef<"ExamAttempt", 'Int'>
   readonly wrongAnswers: Prisma.FieldRef<"ExamAttempt", 'Int'>
   readonly skippedQuestions: Prisma.FieldRef<"ExamAttempt", 'Int'>

@@ -70,6 +70,14 @@ export const dashboardRouter = {
             select: { chapter: { select: { name: true } } },
           },
           _count: { select: { mcqs: true } },
+          attempts: {
+            where: {
+              studentId: ctx.studentId,
+            },
+            select: {
+              id: true,
+            },
+          },
         },
         orderBy: { startDate: "asc" },
         take: 5,
@@ -89,6 +97,14 @@ export const dashboardRouter = {
             select: { chapter: { select: { name: true } } },
           },
           _count: { select: { mcqs: true } },
+          attempts: {
+            where: {
+              studentId: ctx.studentId,
+            },
+            select: {
+              id: true,
+            },
+          },
         },
         orderBy: { startDate: "asc" },
         take: 5,
@@ -115,6 +131,7 @@ export const dashboardRouter = {
                   },
                 },
               },
+              endDate: true,
             },
           },
         },
@@ -198,6 +215,7 @@ export const dashboardRouter = {
         // ✅ ADD THESE MISSING FIELDS
         hasNegativeMark: attempt.hasNegativeMark,
         negativeMark: attempt.negativeMark,
+        endTime: attempt.exam.endDate.toISOString(),
       };
     });
 

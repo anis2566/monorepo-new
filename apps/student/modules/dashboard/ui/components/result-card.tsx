@@ -194,7 +194,7 @@ export function ResultCard({ result }: ResultCardProps) {
             asChild
             onClick={(e) => e.stopPropagation()}
           >
-            <Link href={`/exams/merit/${result.examId}`}>
+            <Link href="/exams/merit">
               <ListOrdered className="w-4 h-4 mr-2" />
               View Merit List
             </Link>

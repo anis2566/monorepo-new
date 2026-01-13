@@ -435,10 +435,10 @@ model ExamAttempt {
   answers Json[] @default([])
 
   // Performance metrics - denormalized for fast queries
-  score            Int @default(0)
-  correctAnswers   Int @default(0)
-  wrongAnswers     Int @default(0)
-  skippedQuestions Int @default(0)
+  score            Float @default(0)
+  correctAnswers   Int   @default(0)
+  wrongAnswers     Int   @default(0)
+  skippedQuestions Int   @default(0)
 
   // Streak tracking for gamification
   currentStreak Int @default(0)

@@ -10,7 +10,6 @@ import {
   GraduationCap,
   UserCheck,
   UsersRound,
-  TrendingUp,
 } from "lucide-react";
 
 import { StatsCard } from "../components/stats-card";
@@ -24,7 +23,6 @@ import { TopPerformers } from "../components/top-performers";
 import { StudentVerificationQueue } from "../components/student-verification-queue";
 import { SubjectPerformanceChart } from "../components/subject-performance-chart";
 import { Card, CardContent } from "@workspace/ui/components/card";
-import { Button } from "@workspace/ui/components/button";
 
 export const DashboardView = () => {
   const trpc = useTRPC();

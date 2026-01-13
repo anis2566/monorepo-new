@@ -160,7 +160,7 @@ export const SignInView = () => {
                 label="Email"
                 type="email"
                 placeholder="Enter your email"
-                className="h-12 text-white"
+                className="h-12"
                 disabled={isPending}
               />
 
@@ -175,7 +175,7 @@ export const SignInView = () => {
                           {...field}
                           type={showPassword ? "text" : "password"}
                           placeholder="Enter your password"
-                          className="h-12 text-white"
+                          className="h-12"
                           disabled={isPending}
                         />
                       </FormControl>

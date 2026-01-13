@@ -18,10 +18,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { ExamCard } from "@/components/exam-card";
-import { ResultCard } from "@/components/result-card";
 import { useTRPC } from "@/trpc/react";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@workspace/ui/lib/utils";
+import { ResultCard } from "@/components/result-card";
 
 export const DashboardView = () => {
   const trpc = useTRPC();
@@ -174,47 +174,6 @@ export const DashboardView = () => {
               )}
             </div>
           </div>
-
-          {/* Performance Breakdown - Mobile Accordion, Desktop Always Visible */}
-          {analytics && (
-            <Card className="p-4 lg:p-6 pt-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-primary" />
-                  <h3 className="font-semibold text-foreground">
-                    Performance Breakdown
-                  </h3>
-                </div>
-                <Badge variant="outline" className="text-xs">
-                  {analytics.totalAttempts} exams
-                </Badge>
-              </div>
-
-              <div className="grid grid-cols-3 gap-3 lg:gap-4">
-                <div className="text-center p-3 lg:p-4 rounded-lg bg-success/10 border border-success/20">
-                  <CheckCircle2 className="w-5 h-5 lg:w-6 lg:h-6 text-success mx-auto mb-2" />
-                  <p className="text-xl lg:text-2xl font-bold text-success">
-                    {analytics.totalCorrect}
-                  </p>
-                  <p className="text-xs text-muted-foreground">Correct</p>
-                </div>
-                <div className="text-center p-3 lg:p-4 rounded-lg bg-destructive/10 border border-destructive/20">
-                  <XCircle className="w-5 h-5 lg:w-6 lg:h-6 text-destructive mx-auto mb-2" />
-                  <p className="text-xl lg:text-2xl font-bold text-destructive">
-                    {analytics.totalWrong}
-                  </p>
-                  <p className="text-xs text-muted-foreground">Wrong</p>
-                </div>
-                <div className="text-center p-3 lg:p-4 rounded-lg bg-muted border border-border">
-                  <MinusCircle className="w-5 h-5 lg:w-6 lg:h-6 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-xl lg:text-2xl font-bold text-foreground">
-                    {analytics.totalSkipped}
-                  </p>
-                  <p className="text-xs text-muted-foreground">Skipped</p>
-                </div>
-              </div>
-            </Card>
-          )}
         </div>
 
         {/* Recent Results - Takes 1 column on desktop */}
@@ -240,39 +199,6 @@ export const DashboardView = () => {
               {recentResults.slice(0, 3).map((result) => (
                 <ResultCard key={result.id} result={result} />
               ))}
-
-              {analytics && averageScore > 0 && (
-                <Card className="p-4 bg-gradient-to-br from-success/10 to-success/5 border-success/20">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-success/20 rounded-lg">
-                      <TrendingUp className="w-5 h-5 text-success" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-foreground text-sm">
-                        {analytics.improvementTrend >= 0
-                          ? "Great Progress!"
-                          : "Keep Practicing!"}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Your average is {averageScore}%
-                        {analytics.improvementTrend !== 0 && (
-                          <span
-                            className={cn(
-                              "ml-1",
-                              analytics.improvementTrend > 0
-                                ? "text-success"
-                                : "text-destructive"
-                            )}
-                          >
-                            ({analytics.improvementTrend > 0 ? "+" : ""}
-                            {analytics.improvementTrend.toFixed(1)}%)
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              )}
             </div>
           ) : (
             <Card className="p-8 text-center text-muted-foreground">
@@ -283,37 +209,6 @@ export const DashboardView = () => {
           )}
         </div>
       </div>
-
-      {/* Motivational Card - Only show if has completed exams */}
-      {analytics && analytics.totalAttempts > 0 && (
-        <Card className="p-4 lg:p-6 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-primary/20">
-          <div className="flex items-start gap-4">
-            <div className="p-3 bg-primary/20 rounded-xl">
-              <Zap className="w-6 h-6 text-primary" />
-            </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-foreground mb-1">
-                {analytics.currentStreak >= 5
-                  ? `Amazing ${analytics.currentStreak}-question streak! 🔥`
-                  : analytics.overallPercentage >= 80
-                    ? "You're doing great!"
-                    : "Keep up the momentum!"}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {analytics.currentStreak >= 5
-                  ? `You're on fire! Keep this streak going!`
-                  : analytics.overallPercentage >= 80
-                    ? `Your ${analytics.overallPercentage.toFixed(
-                        1
-                      )}% average shows excellent understanding. Keep it up!`
-                    : `You've completed ${analytics.totalAttempts} exam${
-                        analytics.totalAttempts !== 1 ? "s" : ""
-                      }. Practice makes perfect!`}
-              </p>
-            </div>
-          </div>
-        </Card>
-      )}
     </div>
   );
 };

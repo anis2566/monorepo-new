@@ -194,6 +194,7 @@ export const resultRouter = {
                 },
               },
             },
+            endDate: true,
           },
         },
       },
@@ -241,6 +242,7 @@ export const resultRouter = {
         // ✅ ADD THESE MISSING FIELDS
         hasNegativeMark: attempt.hasNegativeMark,
         negativeMark: attempt.negativeMark,
+        endTime: attempt.exam.endDate.toISOString(),
       };
     });
   }),
