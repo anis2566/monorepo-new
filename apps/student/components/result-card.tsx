@@ -55,7 +55,7 @@ export function ResultCard({ result }: ResultCardProps) {
   const penalty = result.hasNegativeMark
     ? result.incorrect * result.negativeMark
     : 0;
-  const scoreWithoutPenalty = result.correct;
+  const scoreWithPenalty = result.score - penalty;
 
   const [examEnded, setExamEnded] = useState(false);
   const [timeUntilEnd, setTimeUntilEnd] = useState<string>("");
@@ -170,18 +170,25 @@ export function ResultCard({ result }: ResultCardProps) {
         </div>
 
         <div className="grid grid-cols-2 gap-2 mb-2">
-          <div className="bg-blue-50 p-2 rounded-lg border border-blue-200">
-            <h3 className="text-sm font-medium text-blue-600">Total Marks</h3>
-            <p className="text-3xl font-bold text-blue-900">
-              {scoreWithoutPenalty}
-            </p>
+          <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+            <h3 className="text-sm font-medium text-blue-600">Total Score</h3>
+            <p className="text-3xl font-bold text-blue-900">{result.total}</p>
           </div>
 
-          <div className="bg-green-50 p-2 rounded-lg border border-green-200">
+          <div className="bg-green-50 p-3 rounded-lg border border-green-200">
             <h3 className="text-sm font-medium text-green-600">
-              Obtained Marks
+              {result.hasNegativeMark ? "Final Score" : "Obtained Score"}
             </h3>
             <p className="text-3xl font-bold text-green-900">{result.score}</p>
+            {/* ✅ Show score breakdown if negative marking is enabled */}
+            {result.hasNegativeMark && penalty > 0 && (
+              <div className="mt-1 pt-1 border-t border-green-200">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-red-700">Penalty:</span>
+                  <span className="font-semibold text-red-800">{penalty}</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -213,47 +220,61 @@ export function ResultCard({ result }: ResultCardProps) {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-3 gap-3 mb-4">
-          <div className="flex flex-col items-center p-2 rounded-lg bg-success/10 border border-success/20">
+          {/* Correct Answers */}
+          <div className="flex flex-col items-center p-3 rounded-lg bg-gradient-to-br from-success/10 to-success/5 border border-success/30 hover:border-success/50 transition-colors">
             <div className="flex items-center gap-1 mb-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-success" />
-              <span className="text-sm font-bold text-success">
+              <CheckCircle2 className="w-4 h-4 text-success" />
+              <span className="text-lg font-bold text-success">
                 {result.correct}
               </span>
             </div>
-            <span className="text-xs text-muted-foreground">Correct</span>
-            {/* ✅ Show points if no negative marking */}
-            {!result.hasNegativeMark && (
-              <span className="text-xs text-success mt-0.5">
-                +{result.correct}
-              </span>
-            )}
+            <span className="text-xs font-medium text-muted-foreground">
+              Correct
+            </span>
+            {/* ✅ Show points calculation */}
+            <div className="mt-1 text-xs font-semibold text-success">
+              +{result.correct}
+            </div>
           </div>
 
-          <div className="flex flex-col items-center p-2 rounded-lg bg-destructive/10 border border-destructive/20">
+          {/* Wrong Answers */}
+          <div className="flex flex-col items-center p-3 rounded-lg bg-gradient-to-br from-destructive/10 to-destructive/5 border border-destructive/30 hover:border-destructive/50 transition-colors">
             <div className="flex items-center gap-1 mb-1">
-              <XCircle className="w-3.5 h-3.5 text-destructive" />
-              <span className="text-sm font-bold text-destructive">
+              <XCircle className="w-4 h-4 text-destructive" />
+              <span className="text-lg font-bold text-destructive">
                 {result.incorrect}
               </span>
             </div>
-            <span className="text-xs text-muted-foreground">Wrong</span>
+            <span className="text-xs font-medium text-muted-foreground">
+              Wrong
+            </span>
             {/* ✅ Show penalty if negative marking */}
-            {result.hasNegativeMark && result.incorrect > 0 && (
-              <span className="text-xs text-destructive mt-0.5">
-                -{penalty.toFixed(2)}
-              </span>
-            )}
+            <div
+              className={cn(
+                "mt-1 text-xs font-semibold",
+                result.hasNegativeMark && penalty > 0
+                  ? "text-destructive"
+                  : "text-muted-foreground"
+              )}
+            >
+              {result.hasNegativeMark ? `-${penalty.toFixed(2)}` : "0"}
+            </div>
           </div>
 
-          <div className="flex flex-col items-center p-2 rounded-lg bg-muted border border-border">
+          {/* Skipped */}
+          <div className="flex flex-col items-center p-3 rounded-lg bg-gradient-to-br from-muted to-muted/50 border border-border hover:border-border/80 transition-colors">
             <div className="flex items-center gap-1 mb-1">
-              <MinusCircle className="w-3.5 h-3.5 text-muted-foreground" />
-              <span className="text-sm font-bold text-foreground">
+              <MinusCircle className="w-4 h-4 text-muted-foreground" />
+              <span className="text-lg font-bold text-foreground">
                 {result.skipped}
               </span>
             </div>
-            <span className="text-xs text-muted-foreground">Skipped</span>
-            <span className="text-xs text-muted-foreground mt-0.5">0</span>
+            <span className="text-xs font-medium text-muted-foreground">
+              Skipped
+            </span>
+            <div className="mt-1 text-xs font-semibold text-muted-foreground">
+              0
+            </div>
           </div>
         </div>
 
