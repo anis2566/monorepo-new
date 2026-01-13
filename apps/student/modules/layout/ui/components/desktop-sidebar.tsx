@@ -10,7 +10,7 @@ const navItems = [
   { href: "/", icon: Home, label: "Dashboard" },
   { href: "/exams", icon: BookOpen, label: "Exams" },
   { href: "/results", icon: Trophy, label: "Results" },
-  { href: "/leaderboard", icon: Medal, label: "Leaderboard" },
+  // { href: "/leaderboard", icon: Medal, label: "Leaderboard" },
   // { href: "/achievements", icon: Award, label: "Achievements" },
   { href: "/profile", icon: User, label: "Profile" },
 ];
