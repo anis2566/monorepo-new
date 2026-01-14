@@ -72,7 +72,7 @@ export function Navbar({ className }: NavbarProps) {
                 Mr. Dr.
               </p>
               <p className="text-xs text-muted-foreground -mt-1">
-                Academic & Admission
+                Academic & Admission Care
               </p>
             </div>
           </div>

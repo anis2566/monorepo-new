@@ -261,9 +261,10 @@ model Mcq {
 
   exams ExamMcq[]
 
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  answerHistories AnswerHistory[]
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  answerHistories       AnswerHistory[]
+  publicAnswerHistories PublicAnswerHistory[]
 
   @@index([subjectId])
   @@index([chapterId])
@@ -307,16 +308,18 @@ model Exam {
   hasNegativeMark Boolean  @default(false)
   negativeMark    Float    @default(0)
   type            String
+  isPublic        Boolean  @default(false)
 
   status String @default("Pending")
 
-  subjects   ExamSubject[]
-  batches    ExamBatch[]
-  classNames ExamClassName[]
-  students   ExamStudent[]
-  mcqs       ExamMcq[]
-  attempts   ExamAttempt[]
-  chapters   ExamChapter[]
+  subjects       ExamSubject[]
+  batches        ExamBatch[]
+  classNames     ExamClassName[]
+  students       ExamStudent[]
+  mcqs           ExamMcq[]
+  attempts       ExamAttempt[]
+  chapters       ExamChapter[]
+  publicAttempts PublicExamAttempt[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -325,6 +328,7 @@ model Exam {
   @@index([status])
   @@index([createdAt])
   @@index([status, createdAt])
+  @@index([isPublic])
 }
 
 model ExamChapter {
@@ -531,6 +535,132 @@ model AnswerHistory {
   previousAnswer String?
   isChanged      Boolean @default(false)
   changeCount    Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([attemptId])
+  @@index([mcqId])
+  @@index([attemptId, questionNumber])
+  @@index([answeredAt])
+  @@index([isCorrect])
+}
+
+// ============================================
+// PUBLIC EXAM MODELS
+// ============================================
+
+model PublicExamParticipant {
+  id      String  @id @default(uuid())
+  name    String
+  class   String
+  phone   String
+  college String
+  email   String? // Optional
+
+  // Relations
+  attempts PublicExamAttempt[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([phone])
+  @@index([name])
+  @@index([college])
+  @@index([class])
+}
+
+model PublicExamAttempt {
+  id   String @id @default(uuid())
+  type String
+
+  // Answer tracking - store detailed answer information as JSON
+  // Format: [{mcqId, selectedOption, isCorrect, answeredAt, timeSpent}]
+  answers Json[] @default([])
+
+  // Performance metrics - denormalized for fast queries
+  score            Float @default(0)
+  correctAnswers   Int   @default(0)
+  wrongAnswers     Int   @default(0)
+  skippedQuestions Int   @default(0)
+
+  // Streak tracking for gamification
+  currentStreak Int @default(0)
+  bestStreak    Int @default(0)
+
+  // Timing information
+  startTime      DateTime?
+  endTime        DateTime?
+  duration       Int?      @default(0) // Total duration in seconds
+  lastActivityAt DateTime? // Last time user interacted (for monitoring)
+
+  // Question management
+  totalQuestions   Int // Total questions at attempt start
+  answeredCount    Int   @default(0) // Denormalized count
+  flaggedQuestions Int[] @default([])
+
+  // Exam status and behavior
+  status         String  @default("Not Started") // Not Started, In Progress, Submitted, Auto-Submitted, Abandoned
+  submissionType String? // Manual, Auto-TimeUp, Auto-TabSwitch
+
+  // Features and settings - snapshot at attempt creation
+  hasNegativeMark Boolean @default(false) // Copy from exam at creation
+  negativeMark    Float   @default(0) // Copy from exam at creation
+  hasShuffle      Boolean @default(false)
+  hasRandom       Boolean @default(false)
+
+  // Anti-cheat tracking
+  tabSwitches    Int        @default(0)
+  tabSwitchTimes DateTime[] @default([])
+  warnings       Json[]     @default([]) // Store warning events
+
+  // Relations
+  examId String
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  participantId String
+  participant   PublicExamParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  answerHistory PublicAnswerHistory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Indexes for performance
+  @@index([participantId])
+  @@index([examId])
+  @@index([status])
+  @@index([score])
+  @@index([createdAt])
+  @@index([participantId, examId])
+  @@index([participantId, status])
+  @@index([participantId, createdAt])
+  @@index([examId, status])
+  @@index([status, createdAt])
+  @@index([participantId, score])
+  @@index([lastActivityAt])
+  @@index([submissionType])
+  @@index([bestStreak])
+}
+
+model PublicAnswerHistory {
+  id String @id @default(uuid())
+
+  attemptId String
+  attempt   PublicExamAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  mcqId          String
+  mcq            Mcq    @relation(fields: [mcqId], references: [id], onDelete: Cascade)
+  questionNumber Int // Position in exam
+
+  // Answer details
+  selectedOption String
+  correctAnswer  String
+  isCorrect      Boolean
+
+  // Timing
+  answeredAt DateTime @default(now())
+  timeSpent  Int? // Seconds spent on this question
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

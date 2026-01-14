@@ -2,6 +2,7 @@ import z from "zod";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { ROLE } from "@workspace/utils/constant";
+import { generateOTP, sendSMS } from "../sms";
 
 const handleError = (error: unknown, operation: string) => {
   console.error(`Error ${operation}:`, error);
@@ -93,14 +94,18 @@ export const userRouter = createTRPCRouter({
           };
         }
 
+        const otp = generateOTP();
         await ctx.db.smsVerification.create({
           data: {
             identifier: `${student.id}/${ctx.user.id}`,
-            // value: generateVerificationCode(),
-            value: "123456",
+            value: otp,
             expiresAt: new Date(Date.now() + 60 * 5 * 1000),
           },
         });
+
+        console.log(phone);
+
+        await sendSMS(phone, `Your verification code is ${otp}`);
 
         return {
           success: true,

@@ -2,17 +2,12 @@
 
 import { WelcomeCard } from "../components/welcome-card";
 import { Card } from "@workspace/ui/components/card";
-import { Badge } from "@workspace/ui/components/badge";
 import {
   ChevronRight,
-  TrendingUp,
   Trophy,
-  Zap,
   Calendar,
-  BarChart3,
   CheckCircle2,
   XCircle,
-  MinusCircle,
   BookOpen,
   Clock,
 } from "lucide-react";
@@ -20,7 +15,6 @@ import Link from "next/link";
 import { ExamCard } from "@/components/exam-card";
 import { useTRPC } from "@/trpc/react";
 import { useQuery } from "@tanstack/react-query";
-import { cn } from "@workspace/ui/lib/utils";
 import { ResultCard } from "@/components/result-card";
 
 export const DashboardView = () => {
@@ -37,15 +31,7 @@ export const DashboardView = () => {
     completedExam = 0,
     ongoingExam = [],
     recentResults = [],
-    analytics,
   } = data || {};
-
-  const averageScore = recentResults.length
-    ? Math.round(
-        recentResults.reduce((acc, r) => acc + r.percentage, 0) /
-          recentResults.length
-      )
-    : 0;
 
   return (
     <div className="px-4 lg:px-8 pt-4 pb-6 max-w-7xl mx-auto space-y-6">

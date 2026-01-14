@@ -25,6 +25,7 @@ export const examRouter = {
         negativeMark,
         type,
         chapterIds,
+        isPublic,
       } = input;
 
       try {
@@ -74,6 +75,7 @@ export const examRouter = {
             hasRandom,
             type,
             hasNegativeMark,
+            isPublic,
             ...(negativeMark && { negativeMark: parseFloat(negativeMark) }),
             status: examStatus,
           },
@@ -219,6 +221,7 @@ export const examRouter = {
                 hasSuffle: data.hasSuffle,
                 hasRandom: data.hasRandom,
                 hasNegativeMark: data.hasNegativeMark,
+                isPublic: data.isPublic,
                 ...(data.negativeMark && {
                   negativeMark: parseFloat(data.negativeMark),
                 }),
@@ -458,6 +461,7 @@ export const examRouter = {
       duration: examData.duration.toString(),
       cq: examData.cq?.toString() || "",
       mcq: examData.mcq?.toString() || "",
+      isPublic: examData.isPublic,
       negativeMark: examData.negativeMark?.toString() || "",
     };
 

@@ -97,6 +97,7 @@ export const EditExamView = ({ examId }: EditExamViewProps) => {
       hasRandom: true,
       hasNegativeMark: false,
       negativeMark: "",
+      isPublic: false,
       classNameIds: [],
       batchIds: [],
       subjectIds: [],
@@ -140,6 +141,7 @@ export const EditExamView = ({ examId }: EditExamViewProps) => {
         hasRandom: exam.hasRandom ?? true,
         hasNegativeMark: exam.hasNegativeMark ?? false,
         negativeMark: exam.negativeMark?.toString() || "",
+        isPublic: exam.isPublic ?? false,
         classNameIds,
         batchIds,
         subjectIds,
@@ -532,6 +534,35 @@ export const EditExamView = ({ examId }: EditExamViewProps) => {
                     </div>
                   </Card>
                 </div>
+
+                {/* Public Access Card */}
+                <Card className="p-4 bg-primary/5 border-primary/20">
+                  <h4 className="text-sm font-medium mb-4 flex items-center gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="text-primary"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                      <path d="M2 12h20" />
+                    </svg>
+                    Public Access
+                  </h4>
+                  <FormSwitch
+                    name="isPublic"
+                    label="Make this exam public"
+                    description="Allow anyone to take this exam without authentication. Perfect for entrance exams and public assessments."
+                    disabled={isPending}
+                  />
+                </Card>
               </div>
 
               {/* Submit Button */}

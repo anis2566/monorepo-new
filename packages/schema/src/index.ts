@@ -98,6 +98,7 @@ export const ExamSchema = z
     hasRandom: z.boolean({ message: "required" }),
     hasNegativeMark: z.boolean({ message: "required" }),
     negativeMark: z.string().optional(),
+    isPublic: z.boolean(),
     classNameIds: z.array(z.string()).min(1, { message: "required" }),
     subjectIds: z.array(z.string()).min(1, { message: "required" }),
     batchIds: z.array(z.string()).min(1, { message: "required" }),

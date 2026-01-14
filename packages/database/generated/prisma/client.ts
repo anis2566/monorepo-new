@@ -149,3 +149,18 @@ export type ExamAttempt = Prisma.ExamAttemptModel
  * 
  */
 export type AnswerHistory = Prisma.AnswerHistoryModel
+/**
+ * Model PublicExamParticipant
+ * 
+ */
+export type PublicExamParticipant = Prisma.PublicExamParticipantModel
+/**
+ * Model PublicExamAttempt
+ * 
+ */
+export type PublicExamAttempt = Prisma.PublicExamAttemptModel
+/**
+ * Model PublicAnswerHistory
+ * 
+ */
+export type PublicAnswerHistory = Prisma.PublicAnswerHistoryModel

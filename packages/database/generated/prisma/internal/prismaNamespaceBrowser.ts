@@ -72,7 +72,10 @@ export const ModelName = {
   ExamSubject: 'ExamSubject',
   ExamMcq: 'ExamMcq',
   ExamAttempt: 'ExamAttempt',
-  AnswerHistory: 'AnswerHistory'
+  AnswerHistory: 'AnswerHistory',
+  PublicExamParticipant: 'PublicExamParticipant',
+  PublicExamAttempt: 'PublicExamAttempt',
+  PublicAnswerHistory: 'PublicAnswerHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -308,6 +311,7 @@ export const ExamScalarFieldEnum = {
   hasNegativeMark: 'hasNegativeMark',
   negativeMark: 'negativeMark',
   type: 'type',
+  isPublic: 'isPublic',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -438,6 +442,72 @@ export const AnswerHistoryScalarFieldEnum = {
 } as const
 
 export type AnswerHistoryScalarFieldEnum = (typeof AnswerHistoryScalarFieldEnum)[keyof typeof AnswerHistoryScalarFieldEnum]
+
+
+export const PublicExamParticipantScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  class: 'class',
+  phone: 'phone',
+  college: 'college',
+  email: 'email',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PublicExamParticipantScalarFieldEnum = (typeof PublicExamParticipantScalarFieldEnum)[keyof typeof PublicExamParticipantScalarFieldEnum]
+
+
+export const PublicExamAttemptScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  answers: 'answers',
+  score: 'score',
+  correctAnswers: 'correctAnswers',
+  wrongAnswers: 'wrongAnswers',
+  skippedQuestions: 'skippedQuestions',
+  currentStreak: 'currentStreak',
+  bestStreak: 'bestStreak',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  duration: 'duration',
+  lastActivityAt: 'lastActivityAt',
+  totalQuestions: 'totalQuestions',
+  answeredCount: 'answeredCount',
+  flaggedQuestions: 'flaggedQuestions',
+  status: 'status',
+  submissionType: 'submissionType',
+  hasNegativeMark: 'hasNegativeMark',
+  negativeMark: 'negativeMark',
+  hasShuffle: 'hasShuffle',
+  hasRandom: 'hasRandom',
+  tabSwitches: 'tabSwitches',
+  tabSwitchTimes: 'tabSwitchTimes',
+  warnings: 'warnings',
+  examId: 'examId',
+  participantId: 'participantId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PublicExamAttemptScalarFieldEnum = (typeof PublicExamAttemptScalarFieldEnum)[keyof typeof PublicExamAttemptScalarFieldEnum]
+
+
+export const PublicAnswerHistoryScalarFieldEnum = {
+  id: 'id',
+  attemptId: 'attemptId',
+  mcqId: 'mcqId',
+  questionNumber: 'questionNumber',
+  selectedOption: 'selectedOption',
+  correctAnswer: 'correctAnswer',
+  isCorrect: 'isCorrect',
+  answeredAt: 'answeredAt',
+  timeSpent: 'timeSpent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PublicAnswerHistoryScalarFieldEnum = (typeof PublicAnswerHistoryScalarFieldEnum)[keyof typeof PublicAnswerHistoryScalarFieldEnum]
 
 
 export const SortOrder = {

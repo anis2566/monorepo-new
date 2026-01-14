@@ -405,7 +405,10 @@ export const ModelName = {
   ExamSubject: 'ExamSubject',
   ExamMcq: 'ExamMcq',
   ExamAttempt: 'ExamAttempt',
-  AnswerHistory: 'AnswerHistory'
+  AnswerHistory: 'AnswerHistory',
+  PublicExamParticipant: 'PublicExamParticipant',
+  PublicExamAttempt: 'PublicExamAttempt',
+  PublicAnswerHistory: 'PublicAnswerHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -421,7 +424,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "smsVerification" | "className" | "institute" | "student" | "studentStatus" | "subject" | "chapter" | "mcq" | "batch" | "exam" | "examChapter" | "examBatch" | "examClassName" | "examStudent" | "examSubject" | "examMcq" | "examAttempt" | "answerHistory"
+    modelProps: "user" | "session" | "account" | "verification" | "smsVerification" | "className" | "institute" | "student" | "studentStatus" | "subject" | "chapter" | "mcq" | "batch" | "exam" | "examChapter" | "examBatch" | "examClassName" | "examStudent" | "examSubject" | "examMcq" | "examAttempt" | "answerHistory" | "publicExamParticipant" | "publicExamAttempt" | "publicAnswerHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2053,6 +2056,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PublicExamParticipant: {
+      payload: Prisma.$PublicExamParticipantPayload<ExtArgs>
+      fields: Prisma.PublicExamParticipantFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PublicExamParticipantFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamParticipantPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PublicExamParticipantFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamParticipantPayload>
+        }
+        findFirst: {
+          args: Prisma.PublicExamParticipantFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamParticipantPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PublicExamParticipantFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamParticipantPayload>
+        }
+        findMany: {
+          args: Prisma.PublicExamParticipantFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamParticipantPayload>[]
+        }
+        create: {
+          args: Prisma.PublicExamParticipantCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamParticipantPayload>
+        }
+        createMany: {
+          args: Prisma.PublicExamParticipantCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PublicExamParticipantCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamParticipantPayload>[]
+        }
+        delete: {
+          args: Prisma.PublicExamParticipantDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamParticipantPayload>
+        }
+        update: {
+          args: Prisma.PublicExamParticipantUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamParticipantPayload>
+        }
+        deleteMany: {
+          args: Prisma.PublicExamParticipantDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PublicExamParticipantUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PublicExamParticipantUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamParticipantPayload>[]
+        }
+        upsert: {
+          args: Prisma.PublicExamParticipantUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamParticipantPayload>
+        }
+        aggregate: {
+          args: Prisma.PublicExamParticipantAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePublicExamParticipant>
+        }
+        groupBy: {
+          args: Prisma.PublicExamParticipantGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PublicExamParticipantGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PublicExamParticipantCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PublicExamParticipantCountAggregateOutputType> | number
+        }
+      }
+    }
+    PublicExamAttempt: {
+      payload: Prisma.$PublicExamAttemptPayload<ExtArgs>
+      fields: Prisma.PublicExamAttemptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PublicExamAttemptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamAttemptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PublicExamAttemptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamAttemptPayload>
+        }
+        findFirst: {
+          args: Prisma.PublicExamAttemptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamAttemptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PublicExamAttemptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamAttemptPayload>
+        }
+        findMany: {
+          args: Prisma.PublicExamAttemptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamAttemptPayload>[]
+        }
+        create: {
+          args: Prisma.PublicExamAttemptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamAttemptPayload>
+        }
+        createMany: {
+          args: Prisma.PublicExamAttemptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PublicExamAttemptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamAttemptPayload>[]
+        }
+        delete: {
+          args: Prisma.PublicExamAttemptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamAttemptPayload>
+        }
+        update: {
+          args: Prisma.PublicExamAttemptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamAttemptPayload>
+        }
+        deleteMany: {
+          args: Prisma.PublicExamAttemptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PublicExamAttemptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PublicExamAttemptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamAttemptPayload>[]
+        }
+        upsert: {
+          args: Prisma.PublicExamAttemptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicExamAttemptPayload>
+        }
+        aggregate: {
+          args: Prisma.PublicExamAttemptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePublicExamAttempt>
+        }
+        groupBy: {
+          args: Prisma.PublicExamAttemptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PublicExamAttemptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PublicExamAttemptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PublicExamAttemptCountAggregateOutputType> | number
+        }
+      }
+    }
+    PublicAnswerHistory: {
+      payload: Prisma.$PublicAnswerHistoryPayload<ExtArgs>
+      fields: Prisma.PublicAnswerHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PublicAnswerHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicAnswerHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PublicAnswerHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicAnswerHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.PublicAnswerHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicAnswerHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PublicAnswerHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicAnswerHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.PublicAnswerHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicAnswerHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.PublicAnswerHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicAnswerHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.PublicAnswerHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PublicAnswerHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicAnswerHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.PublicAnswerHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicAnswerHistoryPayload>
+        }
+        update: {
+          args: Prisma.PublicAnswerHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicAnswerHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.PublicAnswerHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PublicAnswerHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PublicAnswerHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicAnswerHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.PublicAnswerHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PublicAnswerHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.PublicAnswerHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePublicAnswerHistory>
+        }
+        groupBy: {
+          args: Prisma.PublicAnswerHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PublicAnswerHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PublicAnswerHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PublicAnswerHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2309,6 +2534,7 @@ export const ExamScalarFieldEnum = {
   hasNegativeMark: 'hasNegativeMark',
   negativeMark: 'negativeMark',
   type: 'type',
+  isPublic: 'isPublic',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -2439,6 +2665,72 @@ export const AnswerHistoryScalarFieldEnum = {
 } as const
 
 export type AnswerHistoryScalarFieldEnum = (typeof AnswerHistoryScalarFieldEnum)[keyof typeof AnswerHistoryScalarFieldEnum]
+
+
+export const PublicExamParticipantScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  class: 'class',
+  phone: 'phone',
+  college: 'college',
+  email: 'email',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PublicExamParticipantScalarFieldEnum = (typeof PublicExamParticipantScalarFieldEnum)[keyof typeof PublicExamParticipantScalarFieldEnum]
+
+
+export const PublicExamAttemptScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  answers: 'answers',
+  score: 'score',
+  correctAnswers: 'correctAnswers',
+  wrongAnswers: 'wrongAnswers',
+  skippedQuestions: 'skippedQuestions',
+  currentStreak: 'currentStreak',
+  bestStreak: 'bestStreak',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  duration: 'duration',
+  lastActivityAt: 'lastActivityAt',
+  totalQuestions: 'totalQuestions',
+  answeredCount: 'answeredCount',
+  flaggedQuestions: 'flaggedQuestions',
+  status: 'status',
+  submissionType: 'submissionType',
+  hasNegativeMark: 'hasNegativeMark',
+  negativeMark: 'negativeMark',
+  hasShuffle: 'hasShuffle',
+  hasRandom: 'hasRandom',
+  tabSwitches: 'tabSwitches',
+  tabSwitchTimes: 'tabSwitchTimes',
+  warnings: 'warnings',
+  examId: 'examId',
+  participantId: 'participantId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PublicExamAttemptScalarFieldEnum = (typeof PublicExamAttemptScalarFieldEnum)[keyof typeof PublicExamAttemptScalarFieldEnum]
+
+
+export const PublicAnswerHistoryScalarFieldEnum = {
+  id: 'id',
+  attemptId: 'attemptId',
+  mcqId: 'mcqId',
+  questionNumber: 'questionNumber',
+  selectedOption: 'selectedOption',
+  correctAnswer: 'correctAnswer',
+  isCorrect: 'isCorrect',
+  answeredAt: 'answeredAt',
+  timeSpent: 'timeSpent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PublicAnswerHistoryScalarFieldEnum = (typeof PublicAnswerHistoryScalarFieldEnum)[keyof typeof PublicAnswerHistoryScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2664,6 +2956,9 @@ export type GlobalOmitConfig = {
   examMcq?: Prisma.ExamMcqOmit
   examAttempt?: Prisma.ExamAttemptOmit
   answerHistory?: Prisma.AnswerHistoryOmit
+  publicExamParticipant?: Prisma.PublicExamParticipantOmit
+  publicExamAttempt?: Prisma.PublicExamAttemptOmit
+  publicAnswerHistory?: Prisma.PublicAnswerHistoryOmit
 }
 
 /* Types for Logging */

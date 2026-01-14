@@ -23,7 +23,7 @@ export const OTPVerificationStep = ({
   onBack,
   onResend,
 }: OTPVerificationStepProps) => {
-  const [otp, setOtp] = useState("123456");
+  const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [resendTimer, setResendTimer] = useState(30);

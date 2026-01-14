@@ -50,7 +50,7 @@ export function WelcomeCard({ student }: WelcomeCardProps) {
               {student?.name}
             </h1>
             <p className="text-sm text-muted-foreground">
-              {student?.className.name} • #ID: {student?.studentId}
+              ID: {student?.studentId}
             </p>
           </div>
         </div>
