@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   BookOpen,
   Calendar,
@@ -14,6 +15,9 @@ import {
   MoreHorizontal,
   Crown,
   FileQuestionIcon,
+  Globe,
+  Copy,
+  Check,
 } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
@@ -114,6 +118,16 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
     });
   };
 
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const handleCopyPublicLink = (examId: string) => {
+    const publicUrl = `https://mrdr.education/public/exams/${examId}`;
+    navigator.clipboard.writeText(publicUrl);
+    setCopiedId(examId);
+    toast.success("Public link copied to clipboard!");
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   return (
     <Card className="shadow-card">
       <CardHeader className="pb-3">
@@ -146,7 +160,18 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                 <TableRow key={exam.id}>
                   <TableCell>
                     <div>
-                      <p className="font-medium">{exam.title}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium">{exam.title}</p>
+                        {exam.isPublic && (
+                          <Badge
+                            variant="outline"
+                            className="bg-primary/10 text-primary border-primary/20 text-xs"
+                          >
+                            <Globe className="h-3 w-3 mr-1" />
+                            Public
+                          </Badge>
+                        )}
+                      </div>
                       <div className="flex gap-1 mt-1">
                         {exam.subjects.map((subject, index) => (
                           <Badge
@@ -247,6 +272,20 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                             Merit List
                           </Link>
                         </DropdownMenuItem>
+                        {exam.isPublic && (
+                          <DropdownMenuItem
+                            onClick={() => handleCopyPublicLink(exam.id)}
+                          >
+                            {copiedId === exam.id ? (
+                              <Check className="h-4 w-4" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                            {copiedId === exam.id
+                              ? "Copied!"
+                              : "Copy Public Link"}
+                          </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem
                           className="text-destructive"
                           onClick={() => handleDeleteExam(exam.id, exam.title)}
@@ -269,7 +308,18 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
             <MobileDataCard key={exam.id}>
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
-                  <p className="font-medium">{exam.title}</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="font-medium">{exam.title}</p>
+                    {exam.isPublic && (
+                      <Badge
+                        variant="outline"
+                        className="bg-primary/10 text-primary border-primary/20 text-xs"
+                      >
+                        <Globe className="h-3 w-3 mr-1" />
+                        Public
+                      </Badge>
+                    )}
+                  </div>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {exam.subjects.map((subject, index) => (
                       <Badge
@@ -313,6 +363,18 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                         Merit List
                       </Link>
                     </DropdownMenuItem>
+                    {exam.isPublic && (
+                      <DropdownMenuItem
+                        onClick={() => handleCopyPublicLink(exam.id)}
+                      >
+                        {copiedId === exam.id ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                        {copiedId === exam.id ? "Copied!" : "Copy Public Link"}
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem
                       className="text-destructive"
                       onClick={() => handleDeleteExam(exam.id, exam.title)}

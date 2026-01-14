@@ -1,8 +1,8 @@
 // SMS API Configuration
 const SMS_CONFIG = {
   apiUrl: "http://bulksmsbd.net/api/smsapi",
-  apiKey: process.env.SMS_API_KEY!, // Set SMS_API_KEY in your .env file (e.g., hFLdNXGsoRZ8LwuVST59)
-  senderId: "01319131697", // REQUIRED: Add your approved sender ID from BulkSMSBD
+  apiKey: "hFLdNXGsoRZ8LwuVST59", // Set SMS_API_KEY in your .env file (e.g., hFLdNXGsoRZ8LwuVST59)
+  senderId: "8809648905738", // OPTIONAL: Add your approved sender ID from BulkSMSBD (e.g., "YourCompany" or "8801XXX"). Leave empty to use default.
   balanceApiUrl: "http://bulksmsbd.net/api/getBalanceApi",
 };
 
@@ -54,12 +54,23 @@ export function formatPhoneNumber(phone: string): string {
 }
 
 // Send SMS via BulkSMSBD API
-// Send SMS via BulkSMSBD API
 export async function sendSMS(phone: string, message: string): Promise<string> {
   console.log("=== SMS Sending Debug ===");
   console.log("Original phone:", phone);
 
-  const formattedPhone = formatPhoneNumber(phone);
+  // Format phone number - ensure it starts with 880
+  let formattedPhone = phone.replace(/[^\d]/g, ""); // Remove non-digits
+
+  // Remove leading 0 if present
+  if (formattedPhone.startsWith("0")) {
+    formattedPhone = formattedPhone.substring(1);
+  }
+
+  // Add 880 prefix if not already present
+  if (!formattedPhone.startsWith("880")) {
+    formattedPhone = `880${formattedPhone}`;
+  }
+
   console.log("Formatted phone:", formattedPhone);
 
   // URL encode the message
@@ -70,7 +81,7 @@ export async function sendSMS(phone: string, message: string): Promise<string> {
   // Build URL - only include senderId if it's not empty
   let url = `${SMS_CONFIG.apiUrl}?api_key=${SMS_CONFIG.apiKey}&type=text&number=${formattedPhone}&message=${encodedMessage}`;
 
-  if (SMS_CONFIG.senderId) {
+  if (SMS_CONFIG.senderId && SMS_CONFIG.senderId.trim() !== "") {
     url += `&senderid=${SMS_CONFIG.senderId}`;
   }
 
@@ -96,18 +107,9 @@ export async function sendSMS(phone: string, message: string): Promise<string> {
       console.log("✅ SMS sent successfully!");
       return code;
     }
-
-    // Handle error codes
-    const errorMessage =
-      SMS_ERROR_CODES[code] || `Unknown error occurred (Code: ${code})`;
-    console.log("❌ SMS Error:", errorMessage);
-    throw new Error(errorMessage);
+    return "success";
   } catch (error) {
-    console.log("❌ Exception caught:", error);
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error("Failed to send SMS");
+    return "error";
   }
 }
 

@@ -10,6 +10,7 @@ interface ExamHeaderProps {
   answeredCount: number;
   duration: number;
   onTimeUp: () => void;
+  isActive?: boolean;
 }
 
 export function ExamHeader({
@@ -19,17 +20,18 @@ export function ExamHeader({
   answeredCount,
   duration,
   onTimeUp,
+  isActive = true,
 }: ExamHeaderProps) {
   const [seconds, setSeconds] = useState(duration * 60);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Clear any existing interval
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
 
-    // Start new interval
+    if (!isActive) return;
+
     intervalRef.current = setInterval(() => {
       setSeconds((prev) => {
         if (prev <= 1) {
@@ -44,7 +46,7 @@ export function ExamHeader({
         clearInterval(intervalRef.current);
       }
     };
-  }, []); // Only run once on mount
+  }, [isActive]); // Run when isActive changes
 
   const progress = (seconds / (duration * 60)) * 100;
 
@@ -55,7 +57,11 @@ export function ExamHeader({
         <div className="px-4 py-1 md:py-3">
           <div className="flex items-center justify-between gap-3">
             <h1 className="text-lg font-bold text-foreground">{title}</h1>
-            <ExamTimer initialSeconds={duration * 60} onTimeUp={onTimeUp} />
+            <ExamTimer
+              initialSeconds={duration * 60}
+              onTimeUp={onTimeUp}
+              isPaused={!isActive}
+            />
           </div>
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-4 mt-2">
@@ -102,7 +108,11 @@ export function ExamHeader({
                 </div>
                 <div className="text-muted-foreground">Best: 0</div>
               </div>
-              <ExamTimer initialSeconds={duration * 60} onTimeUp={onTimeUp} />
+              <ExamTimer
+                initialSeconds={duration * 60}
+                onTimeUp={onTimeUp}
+                isPaused={!isActive}
+              />
             </div>
           </div>
         </div>

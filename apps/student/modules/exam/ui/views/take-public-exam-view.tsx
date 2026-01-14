@@ -2,7 +2,21 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { Button } from "@workspace/ui/components/button";
-import { AlertTriangle, Send } from "lucide-react";
+import {
+  AlertTriangle,
+  Send,
+  ShieldCheck,
+  RefreshCw,
+  Phone,
+} from "lucide-react";
+import { useEffect } from "react";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@workspace/ui/components/input-otp";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,6 +76,89 @@ export default function TakePublicExam({
     trpc.public.exam.getPublicExam.queryOptions({ id: examId })
   );
 
+  const { data: attemptData, refetch: refetchAttempt } = useSuspenseQuery(
+    trpc.public.exam.getPublicAttempt.queryOptions({ attemptId })
+  );
+
+  const [otp, setOtp] = useState("");
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  const sendOtpMutation = useMutation(
+    trpc.public.exam.sendPublicOtp.mutationOptions() || {
+      mutationFn: async () => {
+        throw new Error("sendPublicOtp not available");
+      },
+    }
+  );
+
+  const verifyOtpMutation = useMutation(
+    trpc.public.exam.verifyPublicPhone.mutationOptions() || {
+      mutationFn: async () => {
+        throw new Error("verifyPublicPhone not available");
+      },
+    }
+  );
+
+  const handleSendOtp = useCallback(async () => {
+    if (!attemptData?.participant?.phone) return;
+    try {
+      await sendOtpMutation.mutateAsync({
+        phone: attemptData.participant.phone,
+      });
+      setTimeLeft(60);
+      toast.success("Verification code sent to your phone");
+    } catch (error: unknown) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to send OTP"
+      );
+    }
+  }, [attemptData, sendOtpMutation]);
+
+  const handleVerifyOtp = useCallback(async () => {
+    if (otp.length !== 6 || !attemptData?.participant?.phone) return;
+    setIsVerifying(true);
+    try {
+      await verifyOtpMutation.mutateAsync({
+        phone: attemptData.participant.phone,
+        code: otp,
+      });
+      await refetchAttempt();
+      toast.success("Phone verified successfully!");
+    } catch (error: unknown) {
+      toast.error(
+        error instanceof Error ? error.message : "Invalid verification code"
+      );
+    } finally {
+      setIsVerifying(false);
+    }
+  }, [otp, attemptData, verifyOtpMutation, refetchAttempt]);
+
+  useEffect(() => {
+    if (
+      attemptData?.participant &&
+      !attemptData.participant.isVerified &&
+      timeLeft === 0 &&
+      !sendOtpMutation.isPending
+    ) {
+      handleSendOtp();
+    }
+  }, [
+    attemptData?.participant,
+    timeLeft,
+    sendOtpMutation.isPending,
+    handleSendOtp,
+  ]);
+
+  const isVerified = attemptData?.participant?.isVerified ?? false;
   const exam = data.exam;
   const rawQuestions = data.questions;
 
@@ -132,7 +229,7 @@ export default function TakePublicExam({
   ]);
 
   useTabVisibility({
-    enabled: status === "In Progress",
+    enabled: status === "In Progress" && isVerified,
     onVisibilityChange: (isVisible) => {
       if (!isVisible) handleTabSwitch();
     },
@@ -175,7 +272,88 @@ export default function TakePublicExam({
 
   return (
     <>
-      <div className="min-h-screen flex flex-col lg:flex-row bg-background">
+      <div className="min-h-screen flex flex-col lg:flex-row bg-background relative">
+        {!isVerified && (
+          <div className="absolute inset-0 z-[100] bg-background/80 backdrop-blur-md flex items-center justify-center p-4">
+            <div className="max-w-md w-full bg-card border shadow-2xl rounded-2xl p-8 space-y-6 animate-in fade-in zoom-in duration-300">
+              <div className="flex flex-col items-center text-center space-y-2">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-2">
+                  <ShieldCheck className="w-8 h-8 text-primary" />
+                </div>
+                <h2 className="text-2xl font-bold">Verification Required</h2>
+                <p className="text-muted-foreground">
+                  Please verify your phone number to start the exam questions.
+                </p>
+                <div className="flex items-center gap-2 text-sm font-medium bg-muted px-3 py-1.5 rounded-full mt-2">
+                  <Phone className="w-4 h-4 text-primary" />
+                  <span>
+                    +88{" "}
+                    {attemptData?.participant?.phone?.replace(
+                      /(\d{3})(\d{4})(\d{4})/,
+                      "$1 **** $3"
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex justify-center">
+                  <InputOTP
+                    maxLength={6}
+                    value={otp}
+                    onChange={(v) => setOtp(v)}
+                    disabled={isVerifying}
+                  >
+                    <InputOTPGroup className="gap-2">
+                      {[0, 1, 2, 3, 4, 5].map((idx) => (
+                        <InputOTPSlot
+                          key={idx}
+                          index={idx}
+                          className="w-12 h-14 text-xl font-bold bg-muted/50 border-muted-foreground/20 rounded-xl"
+                        />
+                      ))}
+                    </InputOTPGroup>
+                  </InputOTP>
+                </div>
+
+                <div className="flex flex-col space-y-3">
+                  <Button
+                    onClick={handleVerifyOtp}
+                    disabled={otp.length !== 6 || isVerifying}
+                    className="w-full h-12 text-lg font-semibold"
+                  >
+                    {isVerifying ? "Verifying..." : "Verify & Start Exam"}
+                  </Button>
+
+                  <div className="text-center">
+                    {timeLeft > 0 ? (
+                      <p className="text-sm text-muted-foreground">
+                        Resend code in{" "}
+                        <span className="font-bold text-foreground">
+                          {timeLeft}s
+                        </span>
+                      </p>
+                    ) : (
+                      <button
+                        onClick={handleSendOtp}
+                        disabled={sendOtpMutation.isPending}
+                        className="text-sm text-primary font-bold hover:underline inline-flex items-center gap-1"
+                      >
+                        <RefreshCw
+                          className={cn(
+                            "w-3 h-3",
+                            sendOtpMutation.isPending && "animate-spin"
+                          )}
+                        />
+                        Resend Verification Code
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="flex-1 flex flex-col min-h-screen">
           <ExamHeader
             title={exam.title}
@@ -184,6 +362,7 @@ export default function TakePublicExam({
             duration={exam.duration}
             onTimeUp={handleTimeUp}
             type={exam.type}
+            isActive={isVerified}
           />
 
           <div className="flex-1 overflow-y-auto">

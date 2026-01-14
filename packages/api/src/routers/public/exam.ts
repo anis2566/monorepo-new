@@ -2,6 +2,7 @@ import { TRPCError, type TRPCRouterRecord } from "@trpc/server";
 import { publicProcedure } from "../../trpc";
 import { z } from "zod";
 import { Prisma } from "@workspace/db";
+import { generateOTP, sendSMS } from "../sms";
 
 // ✅ Bangla to English conversion utilities (reused from student exam)
 const BANGLA_TO_ENGLISH_MAP: Record<string, string> = {
@@ -104,6 +105,110 @@ export const publicExamRouter = {
       };
     }),
 
+  // Send OTP for public exam registration
+  sendPublicOtp: publicProcedure
+    .input(
+      z.object({
+        phone: z.string().regex(/^01[0-9]{9}$/, "Invalid phone number"),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const otp = generateOTP();
+      const identifier = `public:${input.phone}`;
+
+      // Delete existing verification if any
+      await ctx.db.smsVerification.deleteMany({
+        where: { identifier },
+      });
+
+      await ctx.db.smsVerification.create({
+        data: {
+          identifier,
+          value: otp,
+          expiresAt: new Date(Date.now() + 60 * 5 * 1000), // 5 minutes
+        },
+      });
+
+      await sendSMS(
+        input.phone,
+        `Your Mr. Dr. public exam verification code is ${otp}`
+      );
+
+      return { success: true };
+    }),
+
+  // Get public attempt details
+  getPublicAttempt: publicProcedure
+    .input(z.object({ attemptId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const attempt = await ctx.db.publicExamAttempt.findUnique({
+        where: { id: input.attemptId },
+        include: {
+          participant: {
+            select: {
+              id: true,
+              name: true,
+              phone: true,
+              isVerified: true,
+            },
+          },
+        },
+      });
+
+      if (!attempt) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Attempt not found",
+        });
+      }
+
+      return attempt;
+    }),
+
+  // Verify phone number for public participant
+  verifyPublicPhone: publicProcedure
+    .input(
+      z.object({
+        phone: z.string().regex(/^01[0-9]{9}$/, "Invalid phone number"),
+        code: z.string().length(6, "Invalid code"),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const identifier = `public:${input.phone}`;
+      const verification = await ctx.db.smsVerification.findFirst({
+        where: {
+          identifier,
+          value: input.code,
+          expiresAt: { gt: new Date() },
+        },
+      });
+
+      if (!verification) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid or expired verification code",
+        });
+      }
+
+      // Check if participant exists
+      const participant = await ctx.db.publicExamParticipant.findFirst({
+        where: { phone: input.phone },
+      });
+
+      if (participant) {
+        await ctx.db.publicExamParticipant.update({
+          where: { id: participant.id },
+          data: { isVerified: true },
+        });
+      }
+
+      await ctx.db.smsVerification.delete({
+        where: { id: verification.id },
+      });
+
+      return { success: true };
+    }),
+
   // Register participant and create attempt
   registerParticipant: publicProcedure
     .input(
@@ -114,9 +219,37 @@ export const publicExamRouter = {
         phone: z.string().regex(/^01[0-9]{9}$/, "Invalid phone number format"),
         college: z.string().min(2, "College name is required"),
         email: z.string().email().optional().or(z.literal("")),
+        isVerified: z.boolean().optional().default(false),
+        otpCode: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // If otpCode is provided, verify it first
+      let isActuallyVerified = input.isVerified;
+      if (input.otpCode) {
+        const identifier = `public:${input.phone}`;
+        const verification = await ctx.db.smsVerification.findFirst({
+          where: {
+            identifier,
+            value: input.otpCode,
+            expiresAt: { gt: new Date() },
+          },
+        });
+
+        if (!verification) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Invalid or expired verification code",
+          });
+        }
+        isActuallyVerified = true;
+
+        // Cleanup verification
+        await ctx.db.smsVerification.delete({
+          where: { id: verification.id },
+        });
+      }
+
       const exam = await ctx.db.exam.findUnique({
         where: { id: input.examId },
       });
@@ -149,6 +282,19 @@ export const publicExamRouter = {
             phone: input.phone,
             college: input.college,
             email: input.email || null,
+            isVerified: isActuallyVerified,
+          },
+        });
+      } else if (isActuallyVerified) {
+        // Update verification status if verified during registration
+        participant = await ctx.db.publicExamParticipant.update({
+          where: { id: participant.id },
+          data: {
+            name: input.name,
+            class: input.class,
+            college: input.college,
+            email: input.email || null,
+            isVerified: true,
           },
         });
       }

@@ -451,6 +451,7 @@ export const PublicExamParticipantScalarFieldEnum = {
   phone: 'phone',
   college: 'college',
   email: 'email',
+  isVerified: 'isVerified',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

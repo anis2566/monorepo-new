@@ -103,9 +103,7 @@ export const userRouter = createTRPCRouter({
           },
         });
 
-        console.log(phone);
-
-        await sendSMS(phone, `Your verification code is ${otp}`);
+        await sendSMS(phone, `Mr. Dr. verification code is ${otp}`);
 
         return {
           success: true,

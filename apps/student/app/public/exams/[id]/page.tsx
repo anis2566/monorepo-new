@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -25,7 +25,19 @@ import {
 import { useTRPC } from "@/trpc/react";
 import { toast } from "sonner";
 import {
-  BookOpen,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@workspace/ui/components/dialog";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@workspace/ui/components/input-otp";
+import {
   GraduationCap,
   Phone,
   User,
@@ -34,6 +46,8 @@ import {
   HelpCircle,
   Trophy,
   AlertTriangle,
+  ShieldCheck,
+  RefreshCw,
 } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -45,6 +59,7 @@ const formSchema = z.object({
     .regex(/^01[0-9]{9}$/, "Invalid phone number format (e.g., 01712345678)"),
   college: z.string().min(2, "College name is required"),
   email: z.string().email().optional().or(z.literal("")),
+  otpCode: z.string().optional(),
 });
 
 interface PublicExamPageProps {
@@ -56,10 +71,34 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
   const router = useRouter();
   const trpc = useTRPC();
 
+  const [otpSent, setOtpSent] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [tempFormData, setTempFormData] = useState<z.infer<
+    typeof formSchema
+  > | null>(null);
+  const [otpValue, setOtpValue] = useState("");
+
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
   const { data: examData, isLoading } = useQuery(
     trpc.public?.exam?.getPublicExam.queryOptions({ id }) || {
       queryKey: ["publicExam", id],
       queryFn: async () => null,
+    }
+  );
+
+  const sendOtpMutation = useMutation(
+    trpc.public?.exam?.sendPublicOtp.mutationOptions() || {
+      mutationFn: async () => {
+        throw new Error("sendPublicOtp not available");
+      },
     }
   );
 
@@ -79,10 +118,22 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
       phone: "",
       college: "",
       email: "",
+      otpCode: "",
     },
   });
 
+  const phone = form.watch("phone");
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!otpSent) {
+      setTempFormData(values);
+      const ok = await handleSendOtp(values.phone);
+      if (ok) {
+        setShowOtpModal(true);
+      }
+      return;
+    }
+
     try {
       const result = await registerMutation.mutateAsync({
         examId: id,
@@ -98,6 +149,63 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
           ? error.message
           : "Something went wrong! Maybe you have already attempted this exam.";
       toast.error(errorMessage);
+    }
+  }
+
+  const handleModalSubmit = async () => {
+    if (!tempFormData) return;
+    if (otpValue.length !== 6) {
+      toast.error("Please enter a valid 6-digit OTP");
+      return;
+    }
+
+    try {
+      const result = await registerMutation.mutateAsync({
+        examId: id,
+        ...tempFormData,
+        otpCode: otpValue,
+      });
+
+      setShowOtpModal(false);
+      toast.success("Registration successful! Redirecting to exam...");
+      router.push(
+        `/public/exams/${id}/take/${result.attemptId}?participantId=${result.participantId}`
+      );
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Invalid OTP or registration failed.";
+      toast.error(errorMessage);
+    }
+  };
+
+  async function handleSendOtp(phoneToUse?: string) {
+    const targetPhone = phoneToUse || phone || "";
+    if (!targetPhone || !targetPhone.match(/^01[0-9]{9}$/)) {
+      toast.error("Please enter a valid phone number first");
+      return false;
+    }
+
+    // Capture current form values if we don't have them yet
+    if (!tempFormData) {
+      setTempFormData(form.getValues());
+    }
+
+    try {
+      await sendOtpMutation.mutateAsync({ phone: targetPhone });
+      setOtpSent(true);
+      setTimeLeft(60);
+      setShowOtpModal(true);
+      toast.success("OTP sent successfully to your phone");
+      return true;
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to send OTP. Please try again.";
+      toast.error(errorMessage);
+      return false;
     }
   }
 
@@ -233,16 +341,19 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Phone Number</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Phone className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input
-                              placeholder="017XXXXXXXX"
-                              className="pl-10"
-                              {...field}
-                            />
-                          </div>
-                        </FormControl>
+                        <div className="flex gap-2">
+                          <FormControl>
+                            <div className="relative flex-1">
+                              <Phone className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                              <Input
+                                placeholder="017XXXXXXXX"
+                                className="pl-10"
+                                disabled={otpSent || sendOtpMutation.isPending}
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -287,17 +398,85 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
                 <Button
                   type="submit"
                   className="w-full h-12 text-lg"
-                  disabled={registerMutation.isPending}
+                  disabled={
+                    registerMutation.isPending || sendOtpMutation.isPending
+                  }
                 >
-                  {registerMutation.isPending
+                  {registerMutation.isPending || sendOtpMutation.isPending
                     ? "Processing..."
-                    : "Start Exam Now"}
+                    : "Verify & Start Exam"}
                 </Button>
               </form>
             </Form>
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={showOtpModal} onOpenChange={setShowOtpModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-primary" />
+              Verify Phone Number
+            </DialogTitle>
+            <DialogDescription>
+              We&apos;ve sent a 6-digit verification code to
+              <span className="font-semibold text-foreground ml-1">
+                {tempFormData?.phone || phone}
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col items-center justify-center space-y-4 py-4">
+            <InputOTP
+              maxLength={6}
+              value={otpValue}
+              onChange={(value) => setOtpValue(value)}
+            >
+              <InputOTPGroup className="gap-2">
+                {[0, 1, 2, 3, 4, 5].map((index) => (
+                  <InputOTPSlot
+                    key={index}
+                    index={index}
+                    className="h-12 w-12 text-lg font-bold"
+                  />
+                ))}
+              </InputOTPGroup>
+            </InputOTP>
+
+            <div className="h-4">
+              {timeLeft > 0 ? (
+                <p className="text-xs text-muted-foreground">
+                  Resend code in{" "}
+                  <span className="font-medium">{timeLeft}s</span>
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => handleSendOtp(tempFormData?.phone)}
+                  disabled={sendOtpMutation.isPending}
+                  className="text-xs text-primary hover:underline flex items-center gap-1"
+                >
+                  <RefreshCw
+                    className={`h-3 w-3 ${sendOtpMutation.isPending ? "animate-spin" : ""}`}
+                  />
+                  Resend Code
+                </button>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              className="w-full h-11"
+              onClick={handleModalSubmit}
+              disabled={registerMutation.isPending || otpValue.length !== 6}
+            >
+              {registerMutation.isPending
+                ? "Verifying..."
+                : "Verify & Start Exam"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

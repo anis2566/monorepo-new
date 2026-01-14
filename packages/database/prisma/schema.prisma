@@ -551,12 +551,13 @@ model AnswerHistory {
 // ============================================
 
 model PublicExamParticipant {
-  id      String  @id @default(uuid())
-  name    String
-  class   String
-  phone   String
-  college String
-  email   String? // Optional
+  id         String  @id @default(uuid())
+  name       String
+  class      String
+  phone      String
+  college    String
+  email      String? // Optional
+  isVerified Boolean @default(false)
 
   // Relations
   attempts PublicExamAttempt[]

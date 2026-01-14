@@ -31,6 +31,7 @@ export type PublicExamParticipantMinAggregateOutputType = {
   phone: string | null
   college: string | null
   email: string | null
+  isVerified: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +43,7 @@ export type PublicExamParticipantMaxAggregateOutputType = {
   phone: string | null
   college: string | null
   email: string | null
+  isVerified: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,6 +55,7 @@ export type PublicExamParticipantCountAggregateOutputType = {
   phone: number
   college: number
   email: number
+  isVerified: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -66,6 +69,7 @@ export type PublicExamParticipantMinAggregateInputType = {
   phone?: true
   college?: true
   email?: true
+  isVerified?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -77,6 +81,7 @@ export type PublicExamParticipantMaxAggregateInputType = {
   phone?: true
   college?: true
   email?: true
+  isVerified?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,6 +93,7 @@ export type PublicExamParticipantCountAggregateInputType = {
   phone?: true
   college?: true
   email?: true
+  isVerified?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -172,6 +178,7 @@ export type PublicExamParticipantGroupByOutputType = {
   phone: string
   college: string
   email: string | null
+  isVerified: boolean
   createdAt: Date
   updatedAt: Date
   _count: PublicExamParticipantCountAggregateOutputType | null
@@ -204,6 +211,7 @@ export type PublicExamParticipantWhereInput = {
   phone?: Prisma.StringFilter<"PublicExamParticipant"> | string
   college?: Prisma.StringFilter<"PublicExamParticipant"> | string
   email?: Prisma.StringNullableFilter<"PublicExamParticipant"> | string | null
+  isVerified?: Prisma.BoolFilter<"PublicExamParticipant"> | boolean
   createdAt?: Prisma.DateTimeFilter<"PublicExamParticipant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PublicExamParticipant"> | Date | string
   attempts?: Prisma.PublicExamAttemptListRelationFilter
@@ -216,6 +224,7 @@ export type PublicExamParticipantOrderByWithRelationInput = {
   phone?: Prisma.SortOrder
   college?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   attempts?: Prisma.PublicExamAttemptOrderByRelationAggregateInput
@@ -231,6 +240,7 @@ export type PublicExamParticipantWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringFilter<"PublicExamParticipant"> | string
   college?: Prisma.StringFilter<"PublicExamParticipant"> | string
   email?: Prisma.StringNullableFilter<"PublicExamParticipant"> | string | null
+  isVerified?: Prisma.BoolFilter<"PublicExamParticipant"> | boolean
   createdAt?: Prisma.DateTimeFilter<"PublicExamParticipant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PublicExamParticipant"> | Date | string
   attempts?: Prisma.PublicExamAttemptListRelationFilter
@@ -243,6 +253,7 @@ export type PublicExamParticipantOrderByWithAggregationInput = {
   phone?: Prisma.SortOrder
   college?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PublicExamParticipantCountOrderByAggregateInput
@@ -260,6 +271,7 @@ export type PublicExamParticipantScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringWithAggregatesFilter<"PublicExamParticipant"> | string
   college?: Prisma.StringWithAggregatesFilter<"PublicExamParticipant"> | string
   email?: Prisma.StringNullableWithAggregatesFilter<"PublicExamParticipant"> | string | null
+  isVerified?: Prisma.BoolWithAggregatesFilter<"PublicExamParticipant"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PublicExamParticipant"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PublicExamParticipant"> | Date | string
 }
@@ -271,6 +283,7 @@ export type PublicExamParticipantCreateInput = {
   phone: string
   college: string
   email?: string | null
+  isVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   attempts?: Prisma.PublicExamAttemptCreateNestedManyWithoutParticipantInput
@@ -283,6 +296,7 @@ export type PublicExamParticipantUncheckedCreateInput = {
   phone: string
   college: string
   email?: string | null
+  isVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   attempts?: Prisma.PublicExamAttemptUncheckedCreateNestedManyWithoutParticipantInput
@@ -295,6 +309,7 @@ export type PublicExamParticipantUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   college?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attempts?: Prisma.PublicExamAttemptUpdateManyWithoutParticipantNestedInput
@@ -307,6 +322,7 @@ export type PublicExamParticipantUncheckedUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   college?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attempts?: Prisma.PublicExamAttemptUncheckedUpdateManyWithoutParticipantNestedInput
@@ -319,6 +335,7 @@ export type PublicExamParticipantCreateManyInput = {
   phone: string
   college: string
   email?: string | null
+  isVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -330,6 +347,7 @@ export type PublicExamParticipantUpdateManyMutationInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   college?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -341,6 +359,7 @@ export type PublicExamParticipantUncheckedUpdateManyInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   college?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -352,6 +371,7 @@ export type PublicExamParticipantCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   college?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -363,6 +383,7 @@ export type PublicExamParticipantMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   college?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -374,6 +395,7 @@ export type PublicExamParticipantMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   college?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -404,6 +426,7 @@ export type PublicExamParticipantCreateWithoutAttemptsInput = {
   phone: string
   college: string
   email?: string | null
+  isVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -415,6 +438,7 @@ export type PublicExamParticipantUncheckedCreateWithoutAttemptsInput = {
   phone: string
   college: string
   email?: string | null
+  isVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -442,6 +466,7 @@ export type PublicExamParticipantUpdateWithoutAttemptsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   college?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -453,6 +478,7 @@ export type PublicExamParticipantUncheckedUpdateWithoutAttemptsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   college?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -495,6 +521,7 @@ export type PublicExamParticipantSelect<ExtArgs extends runtime.Types.Extensions
   phone?: boolean
   college?: boolean
   email?: boolean
+  isVerified?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   attempts?: boolean | Prisma.PublicExamParticipant$attemptsArgs<ExtArgs>
@@ -508,6 +535,7 @@ export type PublicExamParticipantSelectCreateManyAndReturn<ExtArgs extends runti
   phone?: boolean
   college?: boolean
   email?: boolean
+  isVerified?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["publicExamParticipant"]>
@@ -519,6 +547,7 @@ export type PublicExamParticipantSelectUpdateManyAndReturn<ExtArgs extends runti
   phone?: boolean
   college?: boolean
   email?: boolean
+  isVerified?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["publicExamParticipant"]>
@@ -530,11 +559,12 @@ export type PublicExamParticipantSelectScalar = {
   phone?: boolean
   college?: boolean
   email?: boolean
+  isVerified?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PublicExamParticipantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "class" | "phone" | "college" | "email" | "createdAt" | "updatedAt", ExtArgs["result"]["publicExamParticipant"]>
+export type PublicExamParticipantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "class" | "phone" | "college" | "email" | "isVerified" | "createdAt" | "updatedAt", ExtArgs["result"]["publicExamParticipant"]>
 export type PublicExamParticipantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attempts?: boolean | Prisma.PublicExamParticipant$attemptsArgs<ExtArgs>
   _count?: boolean | Prisma.PublicExamParticipantCountOutputTypeDefaultArgs<ExtArgs>
@@ -554,6 +584,7 @@ export type $PublicExamParticipantPayload<ExtArgs extends runtime.Types.Extensio
     phone: string
     college: string
     email: string | null
+    isVerified: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["publicExamParticipant"]>
@@ -986,6 +1017,7 @@ export interface PublicExamParticipantFieldRefs {
   readonly phone: Prisma.FieldRef<"PublicExamParticipant", 'String'>
   readonly college: Prisma.FieldRef<"PublicExamParticipant", 'String'>
   readonly email: Prisma.FieldRef<"PublicExamParticipant", 'String'>
+  readonly isVerified: Prisma.FieldRef<"PublicExamParticipant", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"PublicExamParticipant", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PublicExamParticipant", 'DateTime'>
 }
