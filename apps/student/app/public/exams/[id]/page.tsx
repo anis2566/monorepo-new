@@ -50,6 +50,13 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -78,6 +85,10 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
     typeof formSchema
   > | null>(null);
   const [otpValue, setOtpValue] = useState("");
+
+  const { data: classes } = useQuery(
+    trpc.admin.class.forSelect.queryOptions({ search: "" })
+  );
 
   useEffect(() => {
     if (timeLeft <= 0) return;
@@ -322,12 +333,25 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
                         <FormLabel>Class/Level</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <GraduationCap className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input
-                              placeholder="HSC 2025"
-                              className="pl-10"
-                              {...field}
-                            />
+                            <GraduationCap className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground z-10" />
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <SelectTrigger className="pl-10 w-full">
+                                <SelectValue placeholder="Select class" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {classes?.map((classItem) => (
+                                  <SelectItem
+                                    key={classItem.id}
+                                    value={classItem.name}
+                                  >
+                                    {classItem.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -375,20 +399,6 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
                             {...field}
                           />
                         </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email (Optional)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="john@example.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
