@@ -129,10 +129,7 @@ export const publicExamRouter = {
         },
       });
 
-      await sendSMS(
-        input.phone,
-        `Your Mr. Dr. public exam verification code is ${otp}`
-      );
+      await sendSMS(input.phone, `Your Mr. Dr. verification code is ${otp}`);
 
       return { success: true };
     }),

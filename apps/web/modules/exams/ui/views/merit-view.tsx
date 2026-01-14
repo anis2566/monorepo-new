@@ -15,19 +15,342 @@ import {
   Trophy,
   Medal,
   Crown,
-  TrendingUp,
   Target,
+  Download,
 } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  PDFDownloadLink,
+} from "@react-pdf/renderer";
 
 interface MeritViewProps {
   examId: string;
 }
 
+// PDF Styles
+const styles = StyleSheet.create({
+  page: {
+    padding: 30,
+    backgroundColor: "#ffffff",
+    fontFamily: "Helvetica",
+  },
+  header: {
+    marginBottom: 20,
+    borderBottom: "2 solid #3b82f6",
+    paddingBottom: 10,
+  },
+  brandingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 5,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+  },
+  institutionName: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#dc2626",
+    textAlign: "center",
+  },
+  institutionTagline: {
+    fontSize: 10,
+    color: "#6b7280",
+    textAlign: "center",
+    marginTop: 3,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#1f2937",
+    textAlign: "center",
+    marginTop: 10,
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 12,
+    color: "#6b7280",
+    textAlign: "center",
+  },
+  table: {
+    width: "100%",
+  },
+  tableHeader: {
+    flexDirection: "row",
+    backgroundColor: "#1e40af",
+    padding: 12,
+    borderRadius: 4,
+    marginBottom: 8,
+  },
+  tableHeaderText: {
+    fontSize: 11,
+    fontWeight: "bold",
+    color: "#ffffff",
+  },
+  // For column headers - ensuring white text
+  headerText: {
+    color: "#ffffff",
+  },
+  tableRow: {
+    flexDirection: "row",
+    padding: 10,
+    borderBottom: "1 solid #e5e7eb",
+    alignItems: "center",
+    minHeight: 35,
+  },
+  tableRowAlt: {
+    backgroundColor: "#f9fafb",
+  },
+  // Special styles for top 3 - using orange with different opacity
+  tableRowRank1: {
+    backgroundColor: "rgba(249, 115, 22, 0.25)", // orange-500 at 25% opacity
+    borderLeft: "4 solid #f97316",
+  },
+  tableRowRank2: {
+    backgroundColor: "rgba(249, 115, 22, 0.15)", // orange-500 at 15% opacity
+    borderLeft: "4 solid #f97316",
+  },
+  tableRowRank3: {
+    backgroundColor: "rgba(249, 115, 22, 0.10)", // orange-500 at 10% opacity
+    borderLeft: "4 solid #f97316",
+  },
+  rankCell: {
+    width: "12%",
+    fontSize: 10,
+    fontWeight: "bold",
+  },
+  nameCell: {
+    width: "38%",
+    fontSize: 10,
+    color: "#1f2937",
+  },
+  classCell: {
+    width: "25%",
+    fontSize: 9,
+    color: "#4b5563",
+  },
+  rollCell: {
+    width: "20%",
+    fontSize: 9,
+    color: "#4b5563",
+  },
+  scoreCell: {
+    width: "13%",
+    fontSize: 11,
+    fontWeight: "bold",
+    color: "#1e40af",
+    textAlign: "right",
+  },
+  // Rank badges - orange theme
+  rankBadge: {
+    padding: "4 8",
+    borderRadius: 4,
+    fontSize: 9,
+    fontWeight: "bold",
+    width: "50%",
+  },
+  rankBadge1: {
+    backgroundColor: "#f97316", // orange-500 - darkest for rank 1
+    color: "#ffffff",
+  },
+  rankBadge2: {
+    backgroundColor: "#fb923c", // orange-400 - medium for rank 2
+    color: "#ffffff",
+  },
+  rankBadge3: {
+    backgroundColor: "#fdba74", // orange-300 - lightest for rank 3
+    color: "#ffffff",
+  },
+  rankBadgeDefault: {
+    color: "#4b5563",
+  },
+  footer: {
+    position: "absolute",
+    bottom: 30,
+    left: 30,
+    right: 30,
+    textAlign: "center",
+    fontSize: 8,
+    color: "#9ca3af",
+    borderTop: "1 solid #e5e7eb",
+    paddingTop: 10,
+  },
+  pageNumber: {
+    position: "absolute",
+    bottom: 15,
+    right: 30,
+    fontSize: 10,
+    color: "#6b7280",
+  },
+});
+
+// Helper function to get row style based on rank
+const getRowStyle = (rank: number, index: number) => {
+  if (rank === 1) {
+    return [styles.tableRow, styles.tableRowRank1];
+  } else if (rank === 2) {
+    return [styles.tableRow, styles.tableRowRank2];
+  } else if (rank === 3) {
+    return [styles.tableRow, styles.tableRowRank3];
+  } else if (index % 2 === 1) {
+    return [styles.tableRow, styles.tableRowAlt];
+  }
+  return styles.tableRow;
+};
+
+// Helper function to get rank badge style
+const getRankBadgeStyle = (rank: number) => {
+  if (rank === 1) {
+    return [styles.rankBadge, styles.rankBadge1];
+  } else if (rank === 2) {
+    return [styles.rankBadge, styles.rankBadge2];
+  } else if (rank === 3) {
+    return [styles.rankBadge, styles.rankBadge3];
+  }
+  return [styles.rankBadge, styles.rankBadgeDefault];
+};
+
+// PDF Document Component with multi-page support
+const MeritListPDF = ({ exam, meritList }: any) => {
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  // Split merit list into pages (approximately 20 entries per page to be safe)
+  const ENTRIES_PER_PAGE = 20;
+  const totalPages = Math.ceil(meritList.length / ENTRIES_PER_PAGE);
+
+  const pages = Array.from({ length: totalPages }, (_, pageIndex) => {
+    const startIndex = pageIndex * ENTRIES_PER_PAGE;
+    const endIndex = Math.min(startIndex + ENTRIES_PER_PAGE, meritList.length);
+    return meritList.slice(startIndex, endIndex);
+  });
+
+  return (
+    <Document>
+      {pages.map((pageEntries, pageIndex) => (
+        <Page key={pageIndex} size="A4" style={styles.page}>
+          {/* Header - only on first page or repeated on all pages */}
+          <View style={styles.header}>
+            <View style={styles.brandingContainer}>
+              <View style={{ width: "100%" }}>
+                <Text style={styles.institutionName}>Mr. Dr.</Text>
+                <Text style={styles.institutionTagline}>
+                  Academic & Admission Care
+                </Text>
+              </View>
+            </View>
+            <Text style={styles.title}>{exam.title}</Text>
+            <Text style={styles.subtitle}>Merit List - {currentDate}</Text>
+          </View>
+
+          {/* Table Header */}
+          <View style={styles.table}>
+            <View style={styles.tableHeader}>
+              <Text
+                style={[
+                  styles.tableHeaderText,
+                  styles.rankCell,
+                  styles.headerText,
+                ]}
+              >
+                Rank
+              </Text>
+              <Text
+                style={[
+                  styles.tableHeaderText,
+                  styles.nameCell,
+                  styles.headerText,
+                ]}
+              >
+                Name
+              </Text>
+              <Text
+                style={[
+                  styles.tableHeaderText,
+                  styles.classCell,
+                  styles.headerText,
+                ]}
+              >
+                Class
+              </Text>
+              <Text
+                style={[
+                  styles.tableHeaderText,
+                  styles.scoreCell,
+                  styles.headerText,
+                ]}
+              >
+                Marks
+              </Text>
+            </View>
+
+            {/* Table Rows */}
+            {pageEntries.map((entry: any, index: number) => {
+              const globalIndex = pageIndex * ENTRIES_PER_PAGE + index;
+              return (
+                <View
+                  key={entry.id}
+                  style={getRowStyle(entry.rank, globalIndex)}
+                >
+                  <View style={styles.rankCell}>
+                    {entry.rank <= 3 ? (
+                      <Text style={getRankBadgeStyle(entry.rank)}>
+                        #{entry.rank}
+                      </Text>
+                    ) : (
+                      <Text style={{ fontSize: 10, color: "#4b5563" }}>
+                        #{entry.rank}
+                      </Text>
+                    )}
+                  </View>
+                  <Text style={styles.nameCell}>{entry.name}</Text>
+                  <Text style={styles.classCell}>{entry.className}</Text>
+                  <Text style={styles.scoreCell}>{entry.score}</Text>
+                </View>
+              );
+            })}
+          </View>
+
+          {/* Page Number */}
+          <Text style={styles.pageNumber}>
+            Page {pageIndex + 1} of {totalPages}
+          </Text>
+
+          {/* Footer - only on last page */}
+          {pageIndex === totalPages - 1 && (
+            <View style={styles.footer}>
+              <Text>
+                This is an official document generated by the examination
+                system.
+              </Text>
+              <Text>
+                © {new Date().getFullYear()} Mr. Dr. - Academic & Admission
+                Care. All rights reserved.
+              </Text>
+            </View>
+          )}
+        </Page>
+      ))}
+    </Document>
+  );
+};
+
 export const MeritView = ({ examId }: MeritViewProps) => {
   const router = useRouter();
   const trpc = useTRPC();
+  const [isClient, setIsClient] = useState(false);
 
   // Fetch merit list data
   const { data } = useSuspenseQuery(
@@ -35,6 +358,11 @@ export const MeritView = ({ examId }: MeritViewProps) => {
   );
 
   const { exam, meritList } = data;
+
+  // Ensure we're on client side for PDF generation
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -62,12 +390,6 @@ export const MeritView = ({ examId }: MeritViewProps) => {
     }
   };
 
-  const getScoreColor = (percentage: number) => {
-    if (percentage >= 80) return "text-success";
-    if (percentage >= 60) return "text-warning";
-    return "text-destructive";
-  };
-
   // Top 3 for podium
   const topThree = meritList.slice(0, 3);
 
@@ -89,10 +411,32 @@ export const MeritView = ({ examId }: MeritViewProps) => {
               </p>
             </div>
           </div>
-          <Badge variant="outline" className="hidden sm:flex gap-1">
-            <Trophy className="w-3.5 h-3.5" />
-            {exam.totalStudents} Students
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="hidden sm:flex gap-1">
+              <Trophy className="w-3.5 h-3.5" />
+              {exam.totalStudents} Students
+            </Badge>
+            {isClient && (
+              <PDFDownloadLink
+                document={<MeritListPDF exam={exam} meritList={meritList} />}
+                fileName={`merit-list-${exam.title.replace(/\s+/g, "-").toLowerCase()}-${new Date().toISOString().split("T")[0]}.pdf`}
+              >
+                {({ loading }) => (
+                  <Button
+                    variant="default"
+                    size="sm"
+                    disabled={loading}
+                    className="gap-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span className="hidden sm:inline">
+                      {loading ? "Generating..." : "Export PDF"}
+                    </span>
+                  </Button>
+                )}
+              </PDFDownloadLink>
+            )}
+          </div>
         </div>
       </header>
 
@@ -106,10 +450,6 @@ export const MeritView = ({ examId }: MeritViewProps) => {
             <div className="flex items-center gap-1.5">
               <Target className="w-4 h-4" />
               <span>Total Marks: {exam.total}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4" />
-              <span>Avg Score: {exam.avgScore}%</span>
             </div>
           </div>
         </Card>
@@ -135,7 +475,7 @@ export const MeritView = ({ examId }: MeritViewProps) => {
                   {topThree[1]?.name}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {topThree[1]?.percentage.toFixed(0)}%
+                  {topThree[1]?.score}
                 </p>
                 <div className="w-full h-20 lg:h-24 bg-gradient-to-t from-gray-300 to-gray-200 rounded-t-lg mt-2" />
               </div>
@@ -153,7 +493,7 @@ export const MeritView = ({ examId }: MeritViewProps) => {
                   {topThree[0]?.name}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {topThree[0]?.percentage.toFixed(0)}%
+                  {topThree[0]?.score}
                 </p>
                 <div className="w-full h-28 lg:h-32 bg-gradient-to-t from-yellow-400 to-yellow-300 rounded-t-lg mt-2" />
               </div>
@@ -171,7 +511,7 @@ export const MeritView = ({ examId }: MeritViewProps) => {
                   {topThree[2]?.name}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {topThree[2]?.percentage.toFixed(0)}%
+                  {topThree[2]?.score}
                 </p>
                 <div className="w-full h-16 lg:h-20 bg-gradient-to-t from-amber-400 to-amber-300 rounded-t-lg mt-2" />
               </div>
@@ -222,7 +562,8 @@ export const MeritView = ({ examId }: MeritViewProps) => {
                       </p>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      {entry.className} • Roll: {entry.studentId}
+                      {entry.className}
+                      {entry.roll && ` • Roll: ${entry.roll}`}
                     </p>
                   </div>
 
@@ -230,14 +571,10 @@ export const MeritView = ({ examId }: MeritViewProps) => {
                   <div className="text-right">
                     <p
                       className={cn(
-                        "text-lg lg:text-xl font-bold",
-                        getScoreColor(entry.percentage)
+                        "text-lg lg:text-xl font-bold text-primary"
                       )}
                     >
-                      {entry.percentage.toFixed(0)}%
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {entry.score}/{entry.total}
+                      {entry.score}
                     </p>
                   </div>
                 </div>

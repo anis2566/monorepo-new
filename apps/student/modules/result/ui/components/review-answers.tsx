@@ -69,9 +69,6 @@ export const ReviewAnswersSection = ({
       {/* Section Header */}
       <div>
         <h2 className="text-2xl font-bold mb-2">Review Answers</h2>
-        <p className="text-muted-foreground">
-          Review all your answers with detailed explanations
-        </p>
       </div>
 
       {/* Filter Tabs */}

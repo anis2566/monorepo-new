@@ -48,6 +48,8 @@ import {
   AlertTriangle,
   ShieldCheck,
   RefreshCw,
+  AlertCircle,
+  AlertTriangleIcon,
 } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -57,6 +59,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select";
+import { Checkbox } from "@workspace/ui/components/checkbox";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -81,10 +84,16 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
   const [otpSent, setOtpSent] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const [showInstructionsModal, setShowInstructionsModal] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [tempFormData, setTempFormData] = useState<z.infer<
     typeof formSchema
   > | null>(null);
   const [otpValue, setOtpValue] = useState("");
+  const [registrationResult, setRegistrationResult] = useState<{
+    attemptId: string;
+    participantId: string;
+  } | null>(null);
 
   const { data: classes } = useQuery(
     trpc.admin.class.forSelect.queryOptions({ search: "" })
@@ -144,23 +153,6 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
       }
       return;
     }
-
-    try {
-      const result = await registerMutation.mutateAsync({
-        examId: id,
-        ...values,
-      });
-      toast.success("Registration successful! Redirecting to exam...");
-      router.push(
-        `/public/exams/${id}/take/${result.attemptId}?participantId=${result.participantId}`
-      );
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Something went wrong! Maybe you have already attempted this exam.";
-      toast.error(errorMessage);
-    }
   }
 
   const handleModalSubmit = async () => {
@@ -177,17 +169,31 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
         otpCode: otpValue,
       });
 
+      setRegistrationResult(result);
       setShowOtpModal(false);
-      toast.success("Registration successful! Redirecting to exam...");
-      router.push(
-        `/public/exams/${id}/take/${result.attemptId}?participantId=${result.participantId}`
-      );
+      setShowInstructionsModal(true);
+      toast.success("OTP verified successfully!");
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error
           ? error.message
           : "Invalid OTP or registration failed.";
       toast.error(errorMessage);
+    }
+  };
+
+  const handleStartExam = () => {
+    if (!acceptedTerms) {
+      toast.error("Please accept the terms and conditions to continue");
+      return;
+    }
+
+    if (registrationResult) {
+      setShowInstructionsModal(false);
+      toast.success("Starting exam...");
+      router.push(
+        `/public/exams/${id}/take/${registrationResult.attemptId}?participantId=${registrationResult.participantId}`
+      );
     }
   };
 
@@ -198,7 +204,6 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
       return false;
     }
 
-    // Capture current form values if we don't have them yet
     if (!tempFormData) {
       setTempFormData(form.getValues());
     }
@@ -271,22 +276,6 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
               )}
             </CardContent>
           </Card>
-
-          <Card className="border-none shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-lg">Instructions</CardTitle>
-            </CardHeader>
-            <CardContent className="text-sm space-y-2 text-muted-foreground">
-              <p>• Make sure you have a stable internet connection.</p>
-              <p>
-                • Do not switch tabs or minimize the browser during the exam.
-              </p>
-              <p>• The exam will be auto-submitted when the time is up.</p>
-              <p>
-                • You can only attempt this exam once with your phone number.
-              </p>
-            </CardContent>
-          </Card>
         </div>
 
         {/* Registration Form */}
@@ -312,11 +301,7 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
                       <FormControl>
                         <div className="relative">
                           <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                          <Input
-                            placeholder="John Doe"
-                            className="pl-10"
-                            {...field}
-                          />
+                          <Input className="pl-10" {...field} />
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -330,7 +315,7 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
                     name="class"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Class/Level</FormLabel>
+                        <FormLabel>Class</FormLabel>
                         <FormControl>
                           <div className="relative">
                             <GraduationCap className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground z-10" />
@@ -370,7 +355,6 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
                             <div className="relative flex-1">
                               <Phone className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                               <Input
-                                placeholder="017XXXXXXXX"
                                 className="pl-10"
                                 disabled={otpSent || sendOtpMutation.isPending}
                                 {...field}
@@ -389,15 +373,11 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
                   name="college"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>College/Institution</FormLabel>
+                      <FormLabel>College Name</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                          <Input
-                            placeholder="Dhaka College"
-                            className="pl-10"
-                            {...field}
-                          />
+                          <Input className="pl-10" {...field} />
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -422,6 +402,7 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
         </Card>
       </div>
 
+      {/* OTP Verification Modal */}
       <Dialog open={showOtpModal} onOpenChange={setShowOtpModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -482,7 +463,111 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
             >
               {registerMutation.isPending
                 ? "Verifying..."
-                : "Verify & Start Exam"}
+                : "Verify & Continue"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Instructions Modal */}
+      <Dialog
+        open={showInstructionsModal}
+        onOpenChange={setShowInstructionsModal}
+      >
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <AlertCircle className="h-6 w-6 text-primary" />
+              Exam Instructions
+            </DialogTitle>
+            <DialogDescription>
+              Read these instructions carefully before starting the exam
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            {/* Instructions List */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <AlertTriangleIcon className="h-6 w-6 text-red-500" />
+                <h3 className="font-semibold text-red-500">Warnings</h3>
+              </div>
+              <ul className="space-y-2.5 text-sm">
+                <li className="flex gap-3">
+                  <span className="text-primary font-bold">1.</span>
+                  <span>
+                    Do{" "}
+                    <strong>
+                      not switch tabs, minimize the browser, or leave the exam
+                      page
+                    </strong>
+                    . This may result in automatic submission.
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-primary font-bold">2.</span>
+                  <span>
+                    The timer will start as soon as you begin the exam and{" "}
+                    <strong>cannot be paused</strong>.
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-primary font-bold">3.</span>
+                  <span>
+                    The exam will be{" "}
+                    <strong>auto-submitted when time expires</strong>. Make sure
+                    to answer all questions before time runs out.
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-primary font-bold">4.</span>
+                  <span>
+                    You can <strong>only attempt this exam once</strong> with
+                    your registered phone number.
+                  </span>
+                </li>
+                {exam.hasNegativeMark && (
+                  <li className="flex gap-3 text-destructive">
+                    <span className="font-bold">⚠️</span>
+                    <span>
+                      <strong>Negative marking is enabled.</strong> Each
+                      incorrect answer will deduct {exam.negativeMark} marks.
+                    </span>
+                  </li>
+                )}
+              </ul>
+            </div>
+
+            {/* Terms Acceptance */}
+            <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 p-4 rounded-lg">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="terms"
+                  checked={acceptedTerms}
+                  onCheckedChange={(checked) =>
+                    setAcceptedTerms(checked as boolean)
+                  }
+                  className="mt-1"
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-sm cursor-pointer leading-relaxed"
+                >
+                  I have read and understood all the instructions. I agree to
+                  follow the exam rules and understand that any violation may
+                  result in disqualification.
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              className="w-full h-12 text-lg"
+              onClick={handleStartExam}
+              disabled={!acceptedTerms}
+            >
+              I Understand, Start Exam
             </Button>
           </DialogFooter>
         </DialogContent>

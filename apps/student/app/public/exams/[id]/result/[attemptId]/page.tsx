@@ -124,17 +124,6 @@ export default function PublicResultPage({ params }: PublicResultPageProps) {
                   </span>{" "}
                   entrance exam. Below is your detailed performance analysis.
                 </p>
-                <div className="flex flex-wrap gap-4 pt-4 justify-center md:justify-start">
-                  <Button
-                    variant="secondary"
-                    size="lg"
-                    className="font-bold"
-                    onClick={() => router.push(`/public/exams/${id}/merit`)}
-                  >
-                    <ListOrdered className="w-5 h-5 mr-2" />
-                    View Merit List
-                  </Button>
-                </div>
               </div>
 
               {/* Score Display */}
@@ -190,14 +179,8 @@ export default function PublicResultPage({ params }: PublicResultPageProps) {
 
         {/* Detailed Review Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          <Card className="lg:col-span-2 border-none shadow-sm h-full">
-            <CardHeader className="border-b bg-muted/10">
-              <CardTitle className="flex items-center gap-2">
-                <Target className="w-5 h-5 text-primary" />
-                Review Your Answers
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
+          <Card className="lg:col-span-2 border-none shadow-sm h-full pt-4">
+            <CardContent>
               <ReviewAnswersSection
                 reviewQuestions={reviewQuestions}
                 correctCount={attempt.correctAnswers}

@@ -44,6 +44,7 @@ import {
 import { Pagination } from "./pagination";
 import { useDeleteModal } from "@/hooks/use-delete-modal";
 import { useEditChapter } from "@/hooks/use-chapter";
+import Link from "next/link";
 
 interface ChapterWithRelations extends Chapter {
   subject: {
@@ -175,6 +176,12 @@ export const ChapterList = ({ chapters, totalCount }: Props) => {
                           <Edit className="h-4 w-4 mr-2" />
                           Edit
                         </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href={`/chapters/${chapter.id}/new`}>
+                            <BookOpen className="h-4 w-4" />
+                            New MCQs
+                          </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-destructive"
                           onClick={() =>
@@ -238,6 +245,12 @@ export const ChapterList = ({ chapters, totalCount }: Props) => {
                     >
                       <Edit className="h-4 w-4 mr-2" />
                       Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href={`/chapters/${chapter.id}/new`}>
+                        <BookOpen className="h-4 w-4" />
+                        New MCQs
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="text-destructive"

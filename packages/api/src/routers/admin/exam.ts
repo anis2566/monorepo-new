@@ -944,6 +944,7 @@ export const examRouter = {
           title: true,
           total: true,
           status: true,
+          isPublic: true,
         },
       });
 
@@ -954,64 +955,129 @@ export const examRouter = {
         });
       }
 
-      // Get all attempts for this exam with student details
-      const attempts = await ctx.db.examAttempt.findMany({
-        where: {
-          examId,
-          status: "Submitted",
-        },
-        select: {
-          id: true,
-          score: true,
-          student: {
-            select: {
-              id: true,
-              studentId: true,
-              name: true,
-              imageUrl: true,
-              roll: true,
-              className: {
-                select: {
-                  name: true,
+      let meritList: Array<{
+        id: string;
+        studentId: string;
+        name: string;
+        imageUrl: string | null;
+        className: string;
+        roll?: string;
+        score: number;
+        total: number;
+        percentage: number;
+        rank: number;
+        percentile: number;
+        examId: string;
+      }>;
+
+      // Handle public vs non-public exams differently
+      if (exam.isPublic) {
+        // For public exams, use PublicExamAttempt
+        const publicAttempts = await ctx.db.publicExamAttempt.findMany({
+          where: {
+            examId,
+            status: { in: ["Submitted", "Auto-TimeUp", "Auto-Submitted"] },
+          },
+          select: {
+            id: true,
+            score: true,
+            participant: {
+              select: {
+                id: true,
+                name: true,
+                class: true,
+                college: true,
+                phone: true,
+              },
+            },
+          },
+          orderBy: {
+            score: "desc",
+          },
+        });
+
+        const totalAttempts = publicAttempts.length;
+        meritList = publicAttempts.map((attempt, index) => {
+          const percentage = (attempt.score / exam.total) * 100;
+          const rank = index + 1;
+
+          const studentsBelow = totalAttempts - rank;
+          const percentile =
+            totalAttempts > 1
+              ? Math.round((studentsBelow / (totalAttempts - 1)) * 100)
+              : 100;
+
+          return {
+            id: attempt.id,
+            studentId: attempt.participant.phone, // Use phone as identifier for public participants
+            name: attempt.participant.name,
+            imageUrl: null, // Public participants don't have images
+            className: `${attempt.participant.class} - ${attempt.participant.college}`,
+            score: attempt.score,
+            total: exam.total,
+            percentage: parseFloat(percentage.toFixed(2)),
+            rank,
+            percentile,
+            examId: exam.id,
+          };
+        });
+      } else {
+        // For non-public exams, use ExamAttempt
+        const attempts = await ctx.db.examAttempt.findMany({
+          where: {
+            examId,
+            status: { in: ["Submitted", "Auto-TimeUp", "Auto-Submitted"] },
+          },
+          select: {
+            id: true,
+            score: true,
+            student: {
+              select: {
+                id: true,
+                studentId: true,
+                name: true,
+                imageUrl: true,
+                roll: true,
+                className: {
+                  select: {
+                    name: true,
+                  },
                 },
               },
             },
           },
-        },
-        orderBy: {
-          score: "desc",
-        },
-      });
+          orderBy: {
+            score: "desc",
+          },
+        });
 
-      // Calculate percentages and rankings
-      const totalAttempts = attempts.length;
-      const meritList = attempts.map((attempt, index) => {
-        const percentage = (attempt.score / exam.total) * 100;
-        const rank = index + 1;
+        const totalAttempts = attempts.length;
+        meritList = attempts.map((attempt, index) => {
+          const percentage = (attempt.score / exam.total) * 100;
+          const rank = index + 1;
 
-        // Calculate percentile (higher is better)
-        // Percentile = (Number of students scoring less than this student / Total students) * 100
-        const studentsBelow = totalAttempts - rank;
-        const percentile =
-          totalAttempts > 1
-            ? Math.round((studentsBelow / (totalAttempts - 1)) * 100)
-            : 100;
+          const studentsBelow = totalAttempts - rank;
+          const percentile =
+            totalAttempts > 1
+              ? Math.round((studentsBelow / (totalAttempts - 1)) * 100)
+              : 100;
 
-        return {
-          id: attempt.id,
-          studentId: attempt.student.studentId,
-          name: attempt.student.name,
-          imageUrl: attempt.student.imageUrl || null,
-          className: attempt.student.className.name,
-          roll: attempt.student.roll,
-          score: attempt.score,
-          total: exam.total,
-          percentage: parseFloat(percentage.toFixed(2)),
-          rank,
-          percentile,
-          examId: exam.id,
-        };
-      });
+          return {
+            id: attempt.id,
+            studentId: attempt.student.studentId,
+            name: attempt.student.name,
+            imageUrl: attempt.student.imageUrl || null,
+            className: attempt.student.className.name,
+            roll: attempt.student.roll,
+            score: attempt.score,
+            total: exam.total,
+            percentage: parseFloat(percentage.toFixed(2)),
+            rank,
+            percentile,
+            examId: exam.id,
+          };
+        });
+      }
 
       // Calculate average score
       const avgScore =
@@ -1028,6 +1094,7 @@ export const examRouter = {
           status: exam.status,
           avgScore: parseFloat(avgScore.toFixed(1)),
           totalStudents: meritList.length,
+          isPublic: exam.isPublic,
         },
         meritList,
       };
