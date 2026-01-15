@@ -61,6 +61,7 @@ export const dashboardRouter = {
         where: {
           status: { in: [EXAM_STATUS.Ongoing] },
           students: { some: { studentId: ctx.studentId } },
+          isPublic: false,
         },
         include: {
           subjects: {
@@ -88,6 +89,7 @@ export const dashboardRouter = {
         where: {
           status: { in: [EXAM_STATUS.Upcoming] },
           students: { some: { studentId: ctx.studentId } },
+          isPublic: false,
         },
         include: {
           subjects: {

@@ -686,6 +686,7 @@ export const examRouter = {
         },
         ...(search && { title: { contains: search, mode: "insensitive" } }),
         ...(status && status !== "all" && { status }),
+        isPublic: false,
       };
 
       const [totalExam, upcomingExam, activeExam, completedExam, exams] =

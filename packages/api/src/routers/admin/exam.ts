@@ -639,6 +639,70 @@ export const examRouter = {
     .query(async ({ ctx, input }) => {
       const { examId, page, limit } = input;
 
+      // First, check if the exam is public
+      const exam = await ctx.db.exam.findUnique({
+        where: { id: examId },
+        select: { isPublic: true },
+      });
+
+      if (!exam) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Exam not found",
+        });
+      }
+
+      // Handle public exams differently
+      if (exam.isPublic) {
+        const [publicAttempts, totalCount] = await Promise.all([
+          ctx.db.publicExamAttempt.findMany({
+            where: { examId },
+            include: {
+              participant: {
+                select: {
+                  id: true,
+                  name: true,
+                  class: true,
+                  phone: true,
+                  college: true,
+                },
+              },
+            },
+            orderBy: { createdAt: "desc" },
+            skip: (page - 1) * limit,
+            take: limit,
+          }),
+          ctx.db.publicExamAttempt.count({ where: { examId } }),
+        ]);
+
+        return {
+          attempts: publicAttempts.map((attempt) => ({
+            id: attempt.id,
+            studentId: attempt.participant.phone, // Use phone as identifier
+            studentName: attempt.participant.name,
+            status: attempt.status,
+            score: attempt.score,
+            totalQuestions: attempt.totalQuestions,
+            percentage: parseFloat(
+              ((attempt.score / attempt.totalQuestions) * 100).toFixed(1)
+            ),
+            correctAnswers: attempt.correctAnswers,
+            wrongAnswers: attempt.wrongAnswers,
+            skippedQuestions: attempt.skippedQuestions,
+            duration: Math.round((attempt.duration || 0) / 60), // Convert to minutes
+            tabSwitches: attempt.tabSwitches,
+            submissionType: attempt.submissionType,
+            startTime: attempt.startTime?.toISOString() || null,
+            endTime: attempt.endTime?.toISOString() || null,
+            createdAt: attempt.createdAt.toISOString(),
+          })),
+          totalCount,
+          currentPage: page,
+          totalPages: Math.ceil(totalCount / limit),
+        };
+      }
+
+      // Handle regular (non-public) exams
       const [attempts, totalCount] = await Promise.all([
         ctx.db.examAttempt.findMany({
           where: { examId },
@@ -737,16 +801,40 @@ export const examRouter = {
     .query(async ({ ctx, input }) => {
       const { examId } = input;
 
-      const attempts = await ctx.db.examAttempt.findMany({
-        where: {
-          examId,
-          status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
-        },
-        select: {
-          score: true,
-          totalQuestions: true,
-        },
+      // Check if exam is public
+      const exam = await ctx.db.exam.findUnique({
+        where: { id: examId },
+        select: { isPublic: true },
       });
+
+      if (!exam) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Exam not found",
+        });
+      }
+
+      const attempts = exam.isPublic
+        ? await ctx.db.publicExamAttempt.findMany({
+            where: {
+              examId,
+              status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
+            },
+            select: {
+              score: true,
+              totalQuestions: true,
+            },
+          })
+        : await ctx.db.examAttempt.findMany({
+            where: {
+              examId,
+              status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
+            },
+            select: {
+              score: true,
+              totalQuestions: true,
+            },
+          });
 
       const ranges = [
         { range: "0-20%", min: 0, max: 20 },
@@ -776,17 +864,42 @@ export const examRouter = {
     .query(async ({ ctx, input }) => {
       const { examId } = input;
 
-      const attempts = await ctx.db.examAttempt.findMany({
-        where: {
-          examId,
-          status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
-        },
-        select: {
-          correctAnswers: true,
-          wrongAnswers: true,
-          skippedQuestions: true,
-        },
+      // Check if exam is public
+      const exam = await ctx.db.exam.findUnique({
+        where: { id: examId },
+        select: { isPublic: true },
       });
+
+      if (!exam) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Exam not found",
+        });
+      }
+
+      const attempts = exam.isPublic
+        ? await ctx.db.publicExamAttempt.findMany({
+            where: {
+              examId,
+              status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
+            },
+            select: {
+              correctAnswers: true,
+              wrongAnswers: true,
+              skippedQuestions: true,
+            },
+          })
+        : await ctx.db.examAttempt.findMany({
+            where: {
+              examId,
+              status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
+            },
+            select: {
+              correctAnswers: true,
+              wrongAnswers: true,
+              skippedQuestions: true,
+            },
+          });
 
       const totalCorrect = attempts.reduce(
         (sum, a) => sum + a.correctAnswers,
@@ -810,22 +923,10 @@ export const examRouter = {
     .query(async ({ ctx, input }) => {
       const { examId } = input;
 
-      const [exam, attempts] = await Promise.all([
-        ctx.db.exam.findUnique({
-          where: { id: examId },
-          select: { duration: true },
-        }),
-        ctx.db.examAttempt.findMany({
-          where: {
-            examId,
-            status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
-            duration: { not: null },
-          },
-          select: {
-            duration: true,
-          },
-        }),
-      ]);
+      const exam = await ctx.db.exam.findUnique({
+        where: { id: examId },
+        select: { duration: true, isPublic: true },
+      });
 
       if (!exam) {
         throw new TRPCError({
@@ -833,6 +934,28 @@ export const examRouter = {
           message: "Exam not found",
         });
       }
+
+      const attempts = exam.isPublic
+        ? await ctx.db.publicExamAttempt.findMany({
+            where: {
+              examId,
+              status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
+              duration: { not: null },
+            },
+            select: {
+              duration: true,
+            },
+          })
+        : await ctx.db.examAttempt.findMany({
+            where: {
+              examId,
+              status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
+              duration: { not: null },
+            },
+            select: {
+              duration: true,
+            },
+          });
 
       const maxDuration = exam.duration * 60; // Convert to seconds
       const ranges = [
@@ -862,13 +985,34 @@ export const examRouter = {
     .query(async ({ ctx, input }) => {
       const { examId } = input;
 
-      const attempts = await ctx.db.examAttempt.findMany({
-        where: { examId },
-        select: {
-          tabSwitches: true,
-          submissionType: true,
-        },
+      // Check if exam is public
+      const exam = await ctx.db.exam.findUnique({
+        where: { id: examId },
+        select: { isPublic: true },
       });
+
+      if (!exam) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Exam not found",
+        });
+      }
+
+      const attempts = exam.isPublic
+        ? await ctx.db.publicExamAttempt.findMany({
+            where: { examId },
+            select: {
+              tabSwitches: true,
+              submissionType: true,
+            },
+          })
+        : await ctx.db.examAttempt.findMany({
+            where: { examId },
+            select: {
+              tabSwitches: true,
+              submissionType: true,
+            },
+          });
 
       const totalTabSwitches = attempts.reduce(
         (sum, a) => sum + a.tabSwitches,
@@ -893,17 +1037,42 @@ export const examRouter = {
     .query(async ({ ctx, input }) => {
       const { examId } = input;
 
-      const attempts = await ctx.db.examAttempt.findMany({
-        where: {
-          examId,
-          status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
-        },
-        select: {
-          score: true,
-          totalQuestions: true,
-          tabSwitches: true,
-        },
+      // Check if exam is public
+      const exam = await ctx.db.exam.findUnique({
+        where: { id: examId },
+        select: { isPublic: true },
       });
+
+      if (!exam) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Exam not found",
+        });
+      }
+
+      const attempts = exam.isPublic
+        ? await ctx.db.publicExamAttempt.findMany({
+            where: {
+              examId,
+              status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
+            },
+            select: {
+              score: true,
+              totalQuestions: true,
+              tabSwitches: true,
+            },
+          })
+        : await ctx.db.examAttempt.findMany({
+            where: {
+              examId,
+              status: { in: ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"] },
+            },
+            select: {
+              score: true,
+              totalQuestions: true,
+              tabSwitches: true,
+            },
+          });
 
       if (attempts.length === 0) {
         return {
