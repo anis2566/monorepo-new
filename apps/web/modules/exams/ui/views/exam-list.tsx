@@ -121,7 +121,7 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const handleCopyPublicLink = (examId: string) => {
-    const publicUrl = `${window.location.origin}/public/exams/${examId}`;
+    const publicUrl = `https://student.mrdr.education/public/exams/${examId}`;
     navigator.clipboard.writeText(publicUrl);
     setCopiedId(examId);
     toast.success("Public link copied to clipboard!");

@@ -1,5 +1,8 @@
+"use client";
+
 import { GraduationCap, Award, BookOpen } from "lucide-react";
 import Image from "next/image";
+import Autoplay from "embla-carousel-autoplay";
 
 import {
   Carousel,
@@ -125,6 +128,11 @@ export const TeachersSection = () => {
               loop: true,
             }}
             className="w-full"
+            plugins={[
+              Autoplay({
+                delay: 3000,
+              }),
+            ]}
           >
             <CarouselContent className="-ml-2 md:-ml-4">
               {teachers.map((teacher) => (
