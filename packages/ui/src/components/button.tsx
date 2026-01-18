@@ -23,6 +23,7 @@ const buttonVariants = cva(
           "gradient-accent text-accent-foreground shadow-md hover:shadow-lg hover:opacity-90",
         success:
           "bg-success text-success-foreground shadow-sm hover:bg-success/90",
+        white: "bg-white text-orange-600 hover:bg-white/90 shadow-sm",
       },
       size: {
         default: "h-11 px-5 py-2",

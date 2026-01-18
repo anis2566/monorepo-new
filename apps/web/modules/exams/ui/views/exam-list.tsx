@@ -104,7 +104,7 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
           queryKey: trpc.admin.exam.getMany.queryKey(),
         });
       },
-    })
+    }),
   );
 
   const handleDeleteExam = (examId: string, examName: string) => {
@@ -121,7 +121,7 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const handleCopyPublicLink = (examId: string) => {
-    const publicUrl = `https://mrdr.education/public/exams/${examId}`;
+    const publicUrl = `${window.location.origin}/public/exams/${examId}`;
     navigator.clipboard.writeText(publicUrl);
     setCopiedId(examId);
     toast.success("Public link copied to clipboard!");
