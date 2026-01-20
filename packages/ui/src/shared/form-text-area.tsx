@@ -6,6 +6,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
+  FormDescription,
 } from "../components/form";
 import { Textarea } from "../components/textarea";
 
@@ -15,6 +16,7 @@ interface FormInputProps<T extends FieldValues> {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  description?: string;
 }
 
 export function FormTextArea<T extends FieldValues>({
@@ -23,6 +25,7 @@ export function FormTextArea<T extends FieldValues>({
   placeholder,
   disabled = false,
   className,
+  description,
 }: FormInputProps<T>) {
   const { control } = useFormContext<T>();
 
@@ -41,6 +44,7 @@ export function FormTextArea<T extends FieldValues>({
               className={className}
             />
           </FormControl>
+          {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
         </FormItem>
       )}

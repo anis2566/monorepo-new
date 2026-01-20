@@ -65,7 +65,7 @@ export const VideoTestimonials = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <FadeUp className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-red-500/10 text-red-600 px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4">
             <Play className="h-4 w-4" />
             <span>ভিডিও টেস্টিমোনিয়াল</span>
           </div>
@@ -107,7 +107,7 @@ export const VideoTestimonials = () => {
                           onClick={() => setActiveVideo(testimonial.id)}
                           size="lg"
                           variant="secondary"
-                          className="rounded-full h-16 w-16 bg-red-700 hover:bg-red-700 hover:scale-110 transition-all shadow-xl"
+                          className="rounded-full h-16 w-16 bg-primary hover:bg-primary hover:scale-110 transition-all shadow-xl"
                         >
                           <Play className="h-7 w-7 fill-white text-white" />
                         </Button>
@@ -115,7 +115,7 @@ export const VideoTestimonials = () => {
                       {/* Quote Badge */}
                       <div className="absolute bottom-3 left-3 right-3">
                         <div className="bg-white/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
-                          <Quote className="h-4 w-4 text-red-700 mb-1" />
+                          <Quote className="h-4 w-4 text-primary mb-1" />
                           <p className="text-sm text-foreground font-medium line-clamp-1">
                             &quot;{testimonial.quote}&quot;
                           </p>
@@ -128,14 +128,14 @@ export const VideoTestimonials = () => {
                 {/* Student Info */}
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-red-700 to-red-700/70 flex items-center justify-center text-white font-bold text-lg shadow-md">
+                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-white font-bold text-lg shadow-md">
                       {testimonial.name.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-foreground truncate">
                         {testimonial.name}
                       </h3>
-                      <div className="flex items-center gap-1.5 text-sm text-red-700">
+                      <div className="flex items-center gap-1.5 text-sm text-primary">
                         <GraduationCap className="h-4 w-4" />
                         <span className="truncate">{testimonial.college}</span>
                       </div>
@@ -155,7 +155,7 @@ export const VideoTestimonials = () => {
           <Button
             variant="outline"
             size="lg"
-            className="gap-2 border-red-700 hover:bg-red-700 text-red-700 hover:text-white"
+            className="gap-2 border-primary hover:bg-primary text-primary hover:text-white"
           >
             <Play className="h-4 w-4" />
             আরও ভিডিও দেখুন

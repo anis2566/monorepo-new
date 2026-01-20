@@ -1,50 +1,52 @@
-import { Stethoscope } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@workspace/ui/components/button";
 
 import { MobileNavDrawer } from "./mobile-nav-drawer";
+import Image from "next/image";
 
 export const Header = () => {
   return (
-    <header className="sticky top-0 z-50 bg-red-700 text-white">
+    <header className="sticky top-0 z-50 bg-primary text-primary-foreground">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur">
-              <Stethoscope className="h-6 w-6" />
+          <Link href="/" className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center bg-white/20 backdrop-blur">
+              <Image src="/logo.jpg" alt="Logo" width={50} height={50} />
             </div>
             <div>
               <h1 className="text-xl font-bold">Mr. Dr.</h1>
-              <p className="text-xs text-white/80">মেডিকেল অ্যাডমিশন কোচিং</p>
+              <p className="text-xs text-primary-foreground/80">
+                SSC | HSC | Admission
+              </p>
             </div>
-          </div>
+          </Link>
 
           <nav className="hidden md:flex items-center gap-6">
-            <a
-              href="#courses"
-              className="text-sm font-medium text-white/80 hover:text-white transition-colors"
+            <Link
+              href="/courses"
+              className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground transition-colors"
             >
               কোর্সসমূহ
-            </a>
-            <a
-              href="#about"
-              className="text-sm font-medium text-white/80 hover:text-white transition-colors"
+            </Link>
+            <Link
+              href="/about"
+              className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground transition-colors"
             >
               আমাদের সম্পর্কে
-            </a>
-            <a
-              href="#success"
-              className="text-sm font-medium text-white/80 hover:text-white transition-colors"
+            </Link>
+            <Link
+              href="/success-stories"
+              className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground transition-colors"
             >
               সাফল্য
-            </a>
-            <a
-              href="#contact"
-              className="text-sm font-medium text-white/80 hover:text-white transition-colors"
+            </Link>
+            <Link
+              href="/contact"
+              className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground transition-colors"
             >
               যোগাযোগ
-            </a>
+            </Link>
           </nav>
 
           <div className="flex items-center gap-3">

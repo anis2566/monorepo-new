@@ -75,7 +75,7 @@ export const FAQSection = () => {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-red-500/10 text-red-500 px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4">
             <HelpCircle className="h-4 w-4" />
             সাধারণ জিজ্ঞাসা
           </div>
@@ -95,11 +95,11 @@ export const FAQSection = () => {
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
-                className="border border-border rounded-xl px-6 bg-card shadow-sm hover:shadow-md transition-shadow data-[state=open]:shadow-md data-[state=open]:border-red-700/30"
+                className="border border-border rounded-xl px-6 bg-card shadow-sm hover:shadow-md transition-shadow data-[state=open]:shadow-md data-[state=open]:border-primary/30"
               >
                 <AccordionTrigger className="text-left hover:no-underline py-5">
                   <div className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-red-700/10 text-red-700 flex items-center justify-center text-sm font-semibold">
+                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-semibold">
                       {index + 1}
                     </span>
                     <span className="font-medium text-foreground text-base md:text-lg">
@@ -122,7 +122,7 @@ export const FAQSection = () => {
           </p>
           <a
             href="#contact"
-            className="inline-flex items-center gap-2 text-red-700 font-semibold hover:underline"
+            className="inline-flex items-center gap-2 text-primary font-semibold hover:underline"
           >
             <HelpCircle className="h-4 w-4" />
             আমাদের সাথে যোগাযোগ করুন

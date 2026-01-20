@@ -698,14 +698,6 @@ export type ExamScalarRelationFilter = {
   isNot?: Prisma.ExamWhereInput
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type FloatFieldUpdateOperationsInput = {
   set?: number
   increment?: number

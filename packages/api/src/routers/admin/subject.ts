@@ -54,7 +54,7 @@ export const subjectRouter = createTRPCRouter({
       z.object({
         ...SubjectSchema.shape,
         id: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { id, ...data } = input;
@@ -99,7 +99,7 @@ export const subjectRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { id } = input;
@@ -140,7 +140,7 @@ export const subjectRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { id } = input;
@@ -163,7 +163,7 @@ export const subjectRouter = createTRPCRouter({
     .input(
       z.object({
         search: z.string().optional(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { search } = input;
@@ -206,6 +206,32 @@ export const subjectRouter = createTRPCRouter({
       return subjects;
     }),
 
+  getByClassNameIds: adminProcedure
+    .input(z.array(z.string()).optional())
+    .query(async ({ ctx, input }) => {
+      if (!input) {
+        return [];
+      }
+
+      const classNames = await ctx.db.className.findMany({
+        where: { id: { in: input } },
+      });
+
+      if (!classNames) {
+        return [];
+      }
+
+      const level = classNames.some((c) => c.name.startsWith("H"))
+        ? LEVEL.HSC
+        : LEVEL.SSC;
+
+      const subjects = await ctx.db.subject.findMany({
+        where: { level },
+      });
+
+      return subjects;
+    }),
+
   getMany: adminProcedure
     .input(
       z.object({
@@ -214,7 +240,7 @@ export const subjectRouter = createTRPCRouter({
         sort: z.string().optional(),
         search: z.string().optional(),
         level: z.string().optional(),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const { page, limit, sort, search, level } = input;

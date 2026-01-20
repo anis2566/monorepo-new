@@ -5,7 +5,7 @@ import { Button } from "@workspace/ui/components/button";
 
 export const CtaSection = () => {
   return (
-    <section className="py-16 bg-red-700 text-primary-foreground">
+    <section className="py-16 bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 text-center">
         <ScaleUp>
           <Award className="h-16 w-16 mx-auto mb-6 opacity-80" />

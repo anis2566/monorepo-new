@@ -118,7 +118,7 @@ export const PricingSection = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <FadeUp className="text-center mb-12">
-          <Badge className="bg-red-700/10 text-red-700 border-0 mb-4 px-4 py-2">
+          <Badge className="bg-primary/10 text-primary border-0 mb-4 px-4 py-2">
             প্যাকেজ সমূহ
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -138,13 +138,13 @@ export const PricingSection = () => {
               <Card
                 className={`relative overflow-hidden h-full transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 ${
                   plan.popular
-                    ? "ring-2 ring-red-700 shadow-xl scale-[1.02]"
+                    ? "ring-2 ring-primary shadow-xl scale-[1.02]"
                     : "border shadow-lg"
                 }`}
                 key={plan.id}
               >
                 {plan.popular && (
-                  <div className="absolute top-0 left-0 right-0 bg-red-700 text-white text-center text-sm font-medium py-1.5">
+                  <div className="absolute top-0 left-0 right-0 bg-primary/10 text-primary text-center text-sm font-medium py-1.5">
                     ⭐ সবচেয়ে জনপ্রিয়
                   </div>
                 )}
@@ -182,8 +182,8 @@ export const PricingSection = () => {
                   <ul className="space-y-3 mb-6">
                     {plan.features.map((feature, index) => (
                       <li key={index} className="flex items-center gap-3">
-                        <div className="h-5 w-5 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
-                          <Check className="h-3 w-3 text-green-600" />
+                        <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                          <Check className="h-3 w-3 text-primary" />
                         </div>
                         <span className="text-sm text-foreground">
                           {feature}
@@ -193,7 +193,7 @@ export const PricingSection = () => {
                   </ul>
 
                   <Button
-                    className={`w-full bg-red-700 text-white ${plan.popular ? "" : "bg-red-700 hover:bg-red-700/90 hover:text-white"}`}
+                    className={`w-full bg-primary text-white ${plan.popular ? "" : "bg-primary hover:bg-primary/90 hover:text-white"}`}
                     size="lg"
                     variant="secondary"
                   >
@@ -222,7 +222,7 @@ export const PricingSection = () => {
                     <th className="text-center p-4 font-semibold text-foreground border-b">
                       বেসিক
                     </th>
-                    <th className="text-center p-4 font-semibold text-red-700 border-b bg-red-700/5">
+                    <th className="text-center p-4 font-semibold text-primary border-b bg-primary/5">
                       স্ট্যান্ডার্ড
                     </th>
                     <th className="text-center p-4 font-semibold text-foreground border-b">
@@ -242,7 +242,7 @@ export const PricingSection = () => {
                       <td className="p-4 text-center">
                         {renderFeatureValue(feature.basic)}
                       </td>
-                      <td className="p-4 text-center text-red-700 bg-red-700/5">
+                      <td className="p-4 text-center text-primary bg-primary/5">
                         {renderFeatureValue(feature.standard)}
                       </td>
                       <td className="p-4 text-center">
@@ -264,7 +264,7 @@ export const PricingSection = () => {
           <Button
             variant="outline"
             size="lg"
-            className="border-red-700 text-red-700 hover:bg-red-700/90"
+            className="border-primary text-primary hover:bg-primary/90"
           >
             ফ্রি কনসালটেশন নিন
           </Button>

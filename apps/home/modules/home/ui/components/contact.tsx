@@ -17,7 +17,10 @@ export const Contact = () => {
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12">
           <div>
-            <Badge variant="outline" className="mb-4">
+            <Badge
+              variant="outline"
+              className="mb-4 text-primary border-primary bg-primary/10"
+            >
               যোগাযোগ
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
@@ -26,8 +29,8 @@ export const Contact = () => {
 
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="h-12 w-12 rounded-xl bg-red-700/10 flex items-center justify-center">
-                  <MapPin className="h-6 w-6 text-red-700" />
+                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <MapPin className="h-6 w-6 text-primary" />
                 </div>
                 <div>
                   <p className="font-semibold text-foreground">ঠিকানা</p>
@@ -37,8 +40,8 @@ export const Contact = () => {
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="h-12 w-12 rounded-xl bg-red-700/10 flex items-center justify-center">
-                  <Phone className="h-6 w-6 text-red-700" />
+                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Phone className="h-6 w-6 text-primary" />
                 </div>
                 <div>
                   <p className="font-semibold text-foreground">ফোন</p>
@@ -48,8 +51,8 @@ export const Contact = () => {
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="h-12 w-12 rounded-xl bg-red-700/10 flex items-center justify-center">
-                  <Mail className="h-6 w-6 text-red-700" />
+                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Mail className="h-6 w-6 text-primary" />
                 </div>
                 <div>
                   <p className="font-semibold text-foreground">ইমেইল</p>
@@ -61,19 +64,19 @@ export const Contact = () => {
             <div className="flex gap-4 mt-8">
               <a
                 href="#"
-                className="h-12 w-12 rounded-xl bg-blue-600 flex items-center justify-center text-white hover:opacity-90 transition-opacity"
+                className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-white hover:opacity-90 transition-opacity"
               >
                 <Facebook className="h-6 w-6" />
               </a>
               <a
                 href="#"
-                className="h-12 w-12 rounded-xl bg-red-600 flex items-center justify-center text-white hover:opacity-90 transition-opacity"
+                className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-white hover:opacity-90 transition-opacity"
               >
                 <Youtube className="h-6 w-6" />
               </a>
               <a
                 href="#"
-                className="h-12 w-12 rounded-xl bg-green-600 flex items-center justify-center text-white hover:opacity-90 transition-opacity"
+                className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-white hover:opacity-90 transition-opacity"
               >
                 <MessageCircle className="h-6 w-6" />
               </a>
@@ -129,7 +132,7 @@ export const Contact = () => {
                   />
                 </div>
                 <Button
-                  className="w-full bg-red-700 hover:bg-red-600 text-white"
+                  className="w-full bg-primary hover:bg-primary/80 text-white"
                   size="lg"
                   variant="secondary"
                 >

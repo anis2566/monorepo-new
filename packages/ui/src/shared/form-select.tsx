@@ -6,6 +6,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
+  FormDescription,
 } from "../components/form";
 import {
   Select,
@@ -32,6 +33,7 @@ interface FormSelectProps<T extends FieldValues> {
   triggerClassName?: string;
   contentClassName?: string;
   onClick?: (value: string) => void;
+  description?: string;
 }
 
 export function FormSelect<T extends FieldValues>({
@@ -45,6 +47,7 @@ export function FormSelect<T extends FieldValues>({
   triggerClassName,
   contentClassName,
   onClick,
+  description,
 }: FormSelectProps<T>) {
   const { control } = useFormContext<T>();
 
@@ -70,7 +73,7 @@ export function FormSelect<T extends FieldValues>({
                 <SelectTrigger
                   className={cn(
                     "w-full rounded-xs shadow-none",
-                    triggerClassName
+                    triggerClassName,
                   )}
                 >
                   <SelectValue placeholder={placeholder} />
@@ -88,6 +91,7 @@ export function FormSelect<T extends FieldValues>({
                 ))}
               </SelectContent>
             </Select>
+            {description && <FormDescription>{description}</FormDescription>}
             <FormMessage />
           </FormItem>
         );

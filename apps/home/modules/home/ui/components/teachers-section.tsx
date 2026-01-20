@@ -14,7 +14,11 @@ import {
 import { Card, CardContent } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 
-import { FadeUp } from "@/components/scroll-animation";
+import {
+  FadeUp,
+  StaggerContainer,
+  StaggerItem,
+} from "@/components/scroll-animation";
 
 const teachers = [
   {
@@ -105,18 +109,17 @@ export const TeachersSection = () => {
           <div className="text-center mb-12">
             <Badge
               variant="outline"
-              className="mb-4 text-red-700 border-red-700"
+              className="mb-4 text-primary border-primary"
             >
               <GraduationCap className="w-4 h-4 mr-2" />
               আমাদের শিক্ষকমণ্ডলী
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              অভিজ্ঞ ও দক্ষ শিক্ষকদের সাথে পড়ুন
+              SSC থেকে Medical - অভিজ্ঞ শিক্ষকদের সাথে পড়ুন
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              আমাদের শিক্ষকরা বিভিন্ন মেডিকেল কলেজ ও বিশ্ববিদ্যালয় থেকে এসেছেন
-              এবং মেডিকেল ভর্তি পরীক্ষায় সাফল্য অর্জনে শিক্ষার্থীদের সহায়তা
-              করছেন
+              SSC Foundation, HSC একাডেমিক এবং Medical Admission - সব পর্যায়ে
+              আমাদের অভিজ্ঞ শিক্ষকরা শিক্ষার্থীদের সাফল্যের পথে সঙ্গী হচ্ছেন
             </p>
           </div>
         </FadeUp>
@@ -153,7 +156,7 @@ export const TeachersSection = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                         <div className="absolute bottom-4 left-4 right-4">
-                          <Badge className="bg-red-700 text-white mb-2">
+                          <Badge className="bg-primary text-white mb-2">
                             {teacher.subject}
                           </Badge>
                           <h3 className="text-xl font-bold text-white">
@@ -168,7 +171,7 @@ export const TeachersSection = () => {
                       {/* Details Section */}
                       <div className="p-5 space-y-4">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-red-700">
+                          <span className="text-sm font-medium text-primary">
                             {teacher.designation}
                           </span>
                           <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
@@ -178,11 +181,11 @@ export const TeachersSection = () => {
 
                         <div className="space-y-2">
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Award className="w-4 h-4 text-red-700" />
+                            <Award className="w-4 h-4 text-primary" />
                             <span>{teacher.qualification}</span>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <BookOpen className="w-4 h-4 text-red-700" />
+                            <BookOpen className="w-4 h-4 text-primary" />
                             <span>{teacher.specialization}</span>
                           </div>
                         </div>
@@ -221,6 +224,38 @@ export const TeachersSection = () => {
             </span>
           </div>
         </div>
+
+        {/* Stats */}
+        {/* Program Badges */}
+        <div className="flex flex-wrap justify-center gap-3 mt-10 mb-8">
+          <Badge className="bg-green-500/10 text-green-600 border-green-500/30 px-4 py-2 text-sm">
+            🎯 SSC Foundation
+          </Badge>
+          <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/30 px-4 py-2 text-sm">
+            📚 HSC Academic
+          </Badge>
+          <Badge className="bg-primary/10 text-primary border-primary/30 px-4 py-2 text-sm">
+            🩺 Medical Admission
+          </Badge>
+        </div>
+
+        <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { value: "২৫+", label: "অভিজ্ঞ শিক্ষক" },
+            { value: "৩টি", label: "একাডেমিক প্রোগ্রাম" },
+            { value: "১০০%", label: "সাফল্যের হার" },
+            { value: "৫০০০+", label: "সফল শিক্ষার্থী" },
+          ].map((stat, index) => (
+            <StaggerItem key={index}>
+              <div className="text-center p-4 rounded-lg bg-card border border-border/50">
+                <p className="text-2xl md:text-3xl font-bold text-primary">
+                  {stat.value}
+                </p>
+                <p className="text-sm text-muted-foreground">{stat.label}</p>
+              </div>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
       </div>
     </section>
   );

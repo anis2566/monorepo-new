@@ -102,7 +102,7 @@ export const NoticeBoard = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-red-700/10 text-red-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4">
             <Bell className="h-4 w-4" />
             <span>নোটিশ বোর্ড</span>
           </div>
@@ -126,12 +126,12 @@ export const NoticeBoard = () => {
                 key={notice.id}
                 className={`group relative overflow-hidden border-l-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
                   notice.isPinned
-                    ? "border-l-red-700"
+                    ? "border-l-primary"
                     : "border-l-muted-foreground/20"
                 }`}
               >
                 {notice.isPinned && (
-                  <div className="absolute top-0 right-0 bg-red-700 text-white text-xs px-2 py-1 rounded-bl-lg font-medium">
+                  <div className="absolute top-0 right-0 bg-primary text-white text-xs px-2 py-1 rounded-bl-lg font-medium">
                     📌 পিন করা
                   </div>
                 )}
@@ -191,7 +191,7 @@ export const NoticeBoard = () => {
 
         {/* View All Link */}
         <div className="text-center mt-10">
-          <button className="inline-flex items-center gap-2 text-red-700 hover:text-red-700/80 font-medium transition-colors group">
+          <button className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors group">
             <span>সকল বিজ্ঞপ্তি দেখুন</span>
             <AlertCircle className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
           </button>

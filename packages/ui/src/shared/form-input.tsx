@@ -6,6 +6,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
+  FormDescription,
 } from "../components/form";
 import { Input } from "../components/input";
 
@@ -16,6 +17,7 @@ interface FormInputProps<T extends FieldValues> {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  description?: string;
 }
 
 export function FormInput<T extends FieldValues>({
@@ -25,6 +27,7 @@ export function FormInput<T extends FieldValues>({
   placeholder,
   disabled = false,
   className,
+  description,
 }: FormInputProps<T>) {
   const { control } = useFormContext<T>();
 
@@ -44,6 +47,7 @@ export function FormInput<T extends FieldValues>({
               className={className}
             />
           </FormControl>
+          {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
         </FormItem>
       )}

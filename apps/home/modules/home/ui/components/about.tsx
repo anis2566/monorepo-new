@@ -15,7 +15,10 @@ export const About = () => {
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <SlideLeft>
-            <Badge variant="outline" className="mb-4">
+            <Badge
+              variant="outline"
+              className="mb-4 bg-primary/10 text-primary border-primary/30"
+            >
               আমাদের সম্পর্কে
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
@@ -34,18 +37,18 @@ export const About = () => {
             </p>
 
             <StaggerContainer className="grid grid-cols-3 gap-4">
-              <StaggerItem className="text-center p-4 rounded-xl bg-red-700/5">
-                <GraduationCap className="h-8 w-8 mx-auto mb-2 text-red-700" />
+              <StaggerItem className="text-center p-4 rounded-xl bg-primary/5">
+                <GraduationCap className="h-8 w-8 mx-auto mb-2 text-primary" />
                 <p className="text-2xl font-bold text-foreground">১০+</p>
                 <p className="text-xs text-muted-foreground">অভিজ্ঞ শিক্ষক</p>
               </StaggerItem>
-              <StaggerItem className="text-center p-4 rounded-xl bg-red-700/5">
-                <Users className="h-8 w-8 mx-auto mb-2 text-red-700" />
+              <StaggerItem className="text-center p-4 rounded-xl bg-primary/5">
+                <Users className="h-8 w-8 mx-auto mb-2 text-primary" />
                 <p className="text-2xl font-bold text-foreground">৫০০০+</p>
                 <p className="text-xs text-muted-foreground">শিক্ষার্থী</p>
               </StaggerItem>
-              <StaggerItem className="text-center p-4 rounded-xl bg-red-700/5">
-                <BookOpen className="h-8 w-8 mx-auto mb-2 text-red-700" />
+              <StaggerItem className="text-center p-4 rounded-xl bg-primary/5">
+                <BookOpen className="h-8 w-8 mx-auto mb-2 text-primary" />
                 <p className="text-2xl font-bold text-foreground">২০+</p>
                 <p className="text-xs text-muted-foreground">কোর্স</p>
               </StaggerItem>

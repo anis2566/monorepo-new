@@ -7,7 +7,7 @@ import { HeroText } from "@/components/scroll-animation";
 
 export const HeroBanner = () => {
   return (
-    <section className="relative bg-gradient-to-b from-red-700 to-red-700/90 text-white overflow-hidden">
+    <section className="relative bg-gradient-to-b from-primary to-primary/90 text-primary-foreground overflow-hidden">
       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1920&h=600&fit=crop')] bg-cover bg-center opacity-10" />
       <div className="container mx-auto px-4 py-16 md:py-24 relative">
         <div className="max-w-3xl mx-auto text-center">
@@ -27,8 +27,8 @@ export const HeroBanner = () => {
 
           <HeroText delay={0.4}>
             <p className="text-lg md:text-xl text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
-              বাংলাদেশের সেরা মেডিকেল অ্যাডমিশন কোচিং। HSC থেকে মেডিকেল -
-              সম্পূর্ণ গাইডেন্স একসাথে।
+              SSC Foundation থেকে HSC Academic এবং Medical Admission পর্যন্ত -
+              সম্পূর্ণ একাডেমিক গাইডেন্স একসাথে।
             </p>
           </HeroText>
 
@@ -37,14 +37,14 @@ export const HeroBanner = () => {
               <Button
                 size="lg"
                 variant="secondary"
-                className="gap-2 text-lg px-8 hover:scale-105 transition-all"
+                className="gap-2 text-lg px-8"
               >
                 <Play className="h-5 w-5" /> ফ্রি ক্লাস দেখুন
               </Button>
               <Button
                 size="lg"
-                variant="white"
-                className="gap-2 text-base px-8 font-bold hover:scale-105 transition-all w-full sm:w-auto ring-2 ring-white/30 hover:ring-white/50"
+                variant="default"
+                className="gap-2 text-base px-8 font-bold hover:scale-105 transition-all w-full sm:w-auto ring-2 ring-primary/30 hover:ring-primary/50"
               >
                 এখনই ভর্তি হন{" "}
                 <ArrowRight className="h-5 w-5 font-bold stroke-[2.5]" />

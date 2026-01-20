@@ -40,7 +40,10 @@ export const Features = () => {
     <section className="py-16">
       <div className="container mx-auto px-4">
         <FadeUp className="text-center mb-12">
-          <Badge variant="outline" className="mb-4">
+          <Badge
+            variant="outline"
+            className="mb-4 bg-primary/10 text-primary border-primary/30"
+          >
             কেন Mr. Dr.?
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">

@@ -37,10 +37,10 @@ const testimonials = [
 
 export const SuccessStories = () => {
   return (
-    <section id="success" className="py-16 bg-red-700/5">
+    <section id="success" className="py-16 bg-primary/5">
       <div className="container mx-auto px-4">
         <FadeUp className="text-center mb-12">
-          <Badge variant="outline" className="mb-4 border-red-700 text-red-700">
+          <Badge variant="outline" className="mb-4 border-primary text-primary">
             সাফল্যের গল্প
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -52,7 +52,7 @@ export const SuccessStories = () => {
           {testimonials.map((testimonial, index) => (
             <StaggerItem key={index}>
               <Card className="border-0 shadow-lg overflow-hidden h-full">
-                <div className="h-2 bg-red-700" />
+                <div className="h-2 bg-primary" />
                 <CardContent className="p-6">
                   <div className="flex items-center gap-1 mb-4">
                     {[...Array(5)].map((_, i) => (
@@ -66,14 +66,14 @@ export const SuccessStories = () => {
                     &quot;{testimonial.content}&quot;
                   </p>
                   <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-full bg-red-700 flex items-center justify-center text-lg font-bold text-primary-foreground">
+                    <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-lg font-bold text-primary-foreground">
                       {testimonial.avatar}
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">
                         {testimonial.name}
                       </p>
-                      <p className="text-sm text-red-700 font-medium">
+                      <p className="text-sm text-primary font-medium">
                         {testimonial.role}
                       </p>
                       <p className="text-xs text-muted-foreground">
