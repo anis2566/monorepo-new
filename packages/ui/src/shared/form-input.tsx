@@ -18,6 +18,7 @@ interface FormInputProps<T extends FieldValues> {
   disabled?: boolean;
   className?: string;
   description?: string;
+  onChange?: (value: string) => void;
 }
 
 export function FormInput<T extends FieldValues>({
@@ -28,6 +29,7 @@ export function FormInput<T extends FieldValues>({
   disabled = false,
   className,
   description,
+  onChange,
 }: FormInputProps<T>) {
   const { control } = useFormContext<T>();
 
@@ -41,6 +43,10 @@ export function FormInput<T extends FieldValues>({
           <FormControl>
             <Input
               {...field}
+              onChange={(e) => {
+                field.onChange(e);
+                onChange?.(e.target.value);
+              }}
               type={type}
               placeholder={placeholder}
               disabled={disabled}

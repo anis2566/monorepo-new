@@ -2,11 +2,10 @@
 
 import { useTRPC } from "@/trpc/react";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "@workspace/ui/components/button";
+import z from "zod";
 import {
   BookOpen,
   Brain,
-  Clock,
   FileText,
   GraduationCap,
   LucideIcon,
@@ -18,25 +17,42 @@ import {
   Microscope,
   FlaskConical,
   Zap,
-  CheckCircle2,
+  Phone,
   Star,
-  Atom,
-  TestTube,
+  CheckCircle2,
 } from "lucide-react";
-import { monthsToDuration } from "@workspace/utils";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import { Button } from "@workspace/ui/components/button";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@workspace/ui/components/tabs";
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useForm,
+  zodResolver,
+} from "@workspace/ui/components/form";
+import { Input } from "@workspace/ui/components/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@workspace/ui/components/accordion";
+
+import { monthsToDuration } from "@workspace/utils";
 
 interface HscCourseViewProps {
   courseId: string;
@@ -84,134 +100,58 @@ const medicalTopics = [
   { title: "MCQ Strategy", desc: "নেগেটিভ মার্কিং এড়ানোর কৌশল", icon: Target },
 ];
 
-const syllabus = [
-  {
-    subject: "পদার্থবিজ্ঞান",
-    icon: Atom,
-    color: "bg-orange-500",
-    chapters: [
-      { name: "ভেক্টর", topics: "স্কেলার ও ভেক্টর রাশি, যোগ-বিয়োগ, গুণন" },
-      {
-        name: "গতিবিদ্যা",
-        topics: "সরল রৈখিক গতি, প্রাসঙ্গিক গতি, আপেক্ষিক বেগ",
-      },
-      { name: "নিউটনের গতিসূত্র", topics: "বল, ভরবেগ, সংরক্ষণ সূত্র" },
-      {
-        name: "কাজ, শক্তি ও ক্ষমতা",
-        topics: "গতিশক্তি, বিভবশক্তি, শক্তির রূপান্তর",
-      },
-      { name: "মহাকর্ষ", topics: "নিউটনের মহাকর্ষ সূত্র, কেপলারের সূত্র" },
-      { name: "তাপগতিবিদ্যা", topics: "তাপ, তাপমাত্রা, তাপগতিবিদ্যার সূত্র" },
-      {
-        name: "তরঙ্গ ও শব্দ",
-        topics: "তরঙ্গের বৈশিষ্ট্য, শব্দের বেগ, ডপলার ক্রিয়া",
-      },
-      { name: "আলোকবিজ্ঞান", topics: "প্রতিফলন, প্রতিসরণ, লেন্স, আয়না" },
-    ],
-  },
-  {
-    subject: "রসায়ন",
-    icon: TestTube,
-    color: "bg-blue-500",
-    chapters: [
-      { name: "পরমাণুর গঠন", topics: "ইলেকট্রন বিন্যাস, কোয়ান্টাম সংখ্যা" },
-      { name: "রাসায়নিক বন্ধন", topics: "আয়নিক, সমযোজী, ধাতব বন্ধন" },
-      { name: "রাসায়নিক বিক্রিয়া", topics: "সাম্যাবস্থা, বিক্রিয়ার হার" },
-      {
-        name: "জারণ-বিজারণ",
-        topics: "ইলেকট্রোকেমিস্ট্রি, তড়িৎ রাসায়নিক কোষ",
-      },
-      { name: "জৈব রসায়ন", topics: "হাইড্রোকার্বন, অ্যালকোহল, অ্যালডিহাইড" },
-      { name: "অজৈব রসায়ন", topics: "পর্যায় সারণি, ধাতু ও অধাতু" },
-      { name: "পরিবেশ রসায়ন", topics: "দূষণ, গ্রিনহাউস গ্যাস" },
-    ],
-  },
-  {
-    subject: "জীববিজ্ঞান",
-    icon: Microscope,
-    color: "bg-green-500",
-    chapters: [
-      { name: "কোষ বিভাজন", topics: "মাইটোসিস, মিয়োসিস, কোষ চক্র" },
-      {
-        name: "জেনেটিক্স",
-        topics: "মেন্ডেলের সূত্র, DNA, RNA, প্রোটিন সংশ্লেষ",
-      },
-      { name: "মানব শারীরবিদ্যা", topics: "পরিপাক, শ্বসন, রক্ত সংবহন, রেচন" },
-      { name: "উদ্ভিদ শারীরবিদ্যা", topics: "সালোকসংশ্লেষণ, শ্বসন, পরিবহন" },
-      {
-        name: "প্রাণী বৈচিত্র্য",
-        topics: "শ্রেণিবিন্যাস, অমেরুদণ্ডী, মেরুদণ্ডী",
-      },
-      {
-        name: "উদ্ভিদ বৈচিত্র্য",
-        topics: "শৈবাল, ছত্রাক, ব্রায়োফাইটা, টেরিডোফাইটা",
-      },
-      {
-        name: "বাস্তুবিদ্যা",
-        topics: "ইকোসিস্টেম, খাদ্য শৃঙ্খল, জীববৈচিত্র্য",
-      },
-      { name: "বিবর্তন", topics: "ডারউইনের তত্ত্ব, প্রাকৃতিক নির্বাচন" },
-    ],
-  },
-];
-
-const schedule = [
-  {
-    day: "শনিবার",
-    time: "৯:০০ - ১১:৩০ AM",
-    subject: "পদার্থবিজ্ঞান",
-    type: "লাইভ ক্লাস",
-  },
-  {
-    day: "রবিবার",
-    time: "৯:০০ - ১১:৩০ AM",
-    subject: "রসায়ন",
-    type: "লাইভ ক্লাস",
-  },
-  {
-    day: "সোমবার",
-    time: "৫:০০ - ৭:৩০ PM",
-    subject: "জীববিজ্ঞান ১ম পত্র",
-    type: "লাইভ ক্লাস",
-  },
-  {
-    day: "মঙ্গলবার",
-    time: "৫:০০ - ৭:৩০ PM",
-    subject: "জীববিজ্ঞান ২য় পত্র",
-    type: "লাইভ ক্লাস",
-  },
-  {
-    day: "বুধবার",
-    time: "৬:০০ - ৮:০০ PM",
-    subject: "MCQ Practice",
-    type: "সন্দেহ নিরসন",
-  },
-  {
-    day: "বৃহস্পতিবার",
-    time: "৯:০০ - ১১:০০ AM",
-    subject: "সকল বিষয়",
-    type: "সাপ্তাহিক পরীক্ষা",
-  },
-  {
-    day: "শুক্রবার",
-    time: "১০:০০ AM - ১২:০০ PM",
-    subject: "CQ Practice",
-    type: "প্র্যাকটিস সেশন",
-  },
-];
-
 const batches = [
   { id: "morning", name: "মর্নিং ব্যাচ (৯:০০ AM - ১২:০০ PM)", seats: 30 },
   { id: "evening", name: "ইভনিং ব্যাচ (৫:০০ PM - ৮:০০ PM)", seats: 35 },
   { id: "weekend", name: "উইকেন্ড ব্যাচ (শুক্র-শনি)", seats: 25 },
 ];
 
+const enrollmentSchema = z.object({
+  studentName: z
+    .string()
+    .min(1, "নাম আবশ্যক")
+    .max(100, "নাম ১০০ অক্ষরের কম হতে হবে"),
+  guardianName: z.string().min(1, "অভিভাবকের নাম আবশ্যক").max(100),
+  phone: z.string().min(11, "সঠিক ফোন নম্বর দিন").max(15),
+  email: z.string().email("সঠিক ইমেইল দিন").optional().or(z.literal("")),
+  currentClass: z.string().min(1, "বর্তমান শ্রেণী নির্বাচন করুন"),
+  college: z.string().min(1, "কলেজের নাম আবশ্যক").max(150),
+  sscResult: z.string().min(1, "SSC ফলাফল আবশ্যক"),
+  batch: z.string().min(1, "ব্যাচ নির্বাচন করুন"),
+});
+
+type EnrollmentFormData = z.infer<typeof enrollmentSchema>;
+
 export const HscCourseView = ({ courseId }: HscCourseViewProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const trpc = useTRPC();
 
   const { data } = useQuery(
-    trpc.home.program.getOneProgram.queryOptions({ id: courseId }),
+    trpc.home.course.getOneCourse.queryOptions({ id: courseId }),
   );
+
+  const form = useForm<EnrollmentFormData>({
+    resolver: zodResolver(enrollmentSchema),
+    defaultValues: {
+      studentName: "",
+      guardianName: "",
+      phone: "",
+      email: "",
+      currentClass: "",
+      college: "",
+      sscResult: "",
+      batch: "",
+    },
+  });
+
+  const onSubmit = async (data: EnrollmentFormData) => {
+    setIsSubmitting(true);
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setIsSubmitting(false);
+    toast.success("আবেদন সফলভাবে জমা হয়েছে! আমরা শীঘ্রই যোগাযোগ করব।");
+    form.reset();
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -254,15 +194,6 @@ export const HscCourseView = ({ courseId }: HscCourseViewProps) => {
                   এখনই ভর্তি হন
                 </a>
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white/10"
-              >
-                <a href="#syllabus" className="flex items-center gap-2">
-                  সিলেবাস দেখুন
-                </a>
-              </Button>
             </div>
           </div>
         </div>
@@ -295,10 +226,10 @@ export const HscCourseView = ({ courseId }: HscCourseViewProps) => {
       </section>
 
       {/* Medical Focus Section */}
-      <section className="py-12 bg-gradient-to-r from-primary/5 to-blue-500/5">
+      <section className="py-12 bg-gradient-to-r from-red-700/5 to-red-500/5">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <Badge className="mb-4 bg-primary/10 text-primary border-primary/30">
+            <Badge className="mb-4 bg-red-500/10 text-red-600 border-red-500/30">
               <Stethoscope className="h-4 w-4 mr-2" />
               Medical Admission Ready
             </Badge>
@@ -310,10 +241,10 @@ export const HscCourseView = ({ courseId }: HscCourseViewProps) => {
             {medicalTopics.map((topic, index) => (
               <Card
                 key={index}
-                className="border-primary/20 hover:border-primary/40 transition-colors"
+                className="border-red-500/20 hover:border-red-500/40 transition-colors"
               >
                 <CardContent className="pt-6">
-                  <topic.icon className="h-8 w-8 text-primary mb-3" />
+                  <topic.icon className="h-8 w-8 text-red-600 mb-3" />
                   <h3 className="font-semibold text-foreground mb-1">
                     {topic.title}
                   </h3>
@@ -325,320 +256,349 @@ export const HscCourseView = ({ courseId }: HscCourseViewProps) => {
         </div>
       </section>
 
-      {/* Main Content */}
+      {/* Special Benefits */}
+      <Card className="mt-8 bg-blue-50 dark:bg-blue-950/20 border-blue-200">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="h-12 w-12 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
+              <Star className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h3 className="font-bold text-foreground mb-2">বিশেষ সুবিধা</h3>
+              <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-blue-500" />
+                  HSC বোর্ড প্রশ্ন বিশ্লেষণ
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-blue-500" />
+                  Medical MCQ Practice
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-blue-500" />
+                  CQ লেখার কৌশল
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-blue-500" />
+                  Chapter-wise Test
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-blue-500" />
+                  রেকর্ডেড ক্লাস অ্যাক্সেস
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-blue-500" />
+                  PDF নোটস ও শীট
+                </li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Enrollment Form */}
+      <section id="enrollment" className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-10">
+              <Badge className="mb-4 bg-blue-500/10 text-blue-600 border-blue-500/30">
+                ভর্তি ফর্ম
+              </Badge>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                HSC Academic-এ ভর্তি হন
+              </h2>
+              <p className="text-muted-foreground">
+                নিচের ফর্মটি পূরণ করুন, আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব
+              </p>
+            </div>
+
+            <Card>
+              <CardContent className="p-6 md:p-8">
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-6"
+                  >
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="studentName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>শিক্ষার্থীর নাম *</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="সম্পূর্ণ নাম লিখুন"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="guardianName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>অভিভাবকের নাম *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="অভিভাবকের নাম" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>মোবাইল নম্বর *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="০১XXXXXXXXX" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>ইমেইল (ঐচ্ছিক)</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="email"
+                                placeholder="email@example.com"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="currentClass"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>বর্তমান শ্রেণী *</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="শ্রেণী নির্বাচন করুন" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="10">
+                                  দশম শ্রেণী (SSC পরীক্ষার্থী)
+                                </SelectItem>
+                                <SelectItem value="11">একাদশ শ্রেণী</SelectItem>
+                                <SelectItem value="12">
+                                  দ্বাদশ শ্রেণী
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="sscResult"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>SSC ফলাফল/প্রত্যাশিত *</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="ফলাফল নির্বাচন করুন" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="gpa5">GPA 5.00</SelectItem>
+                                <SelectItem value="gpa4.5+">
+                                  GPA 4.50+
+                                </SelectItem>
+                                <SelectItem value="gpa4+">GPA 4.00+</SelectItem>
+                                <SelectItem value="appearing">
+                                  পরীক্ষা দেব
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="college"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>কলেজের নাম *</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="বর্তমান/ভর্তি হতে চান এমন কলেজ"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="batch"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>পছন্দের ব্যাচ *</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="ব্যাচ নির্বাচন করুন" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {batches.map((batch) => (
+                                  <SelectItem key={batch.id} value={batch.id}>
+                                    {batch.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <Button
+                      type="submit"
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                      size="lg"
+                      variant="ghost"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "জমা হচ্ছে..." : "আবেদন জমা দিন"}
+                    </Button>
+
+                    <p className="text-center text-sm text-muted-foreground">
+                      ফর্ম জমা দেওয়ার পর আমাদের টিম ২৪ ঘণ্টার মধ্যে যোগাযোগ
+                      করবে
+                    </p>
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <Tabs defaultValue="syllabus" className="w-full">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-8">
-              <TabsTrigger value="syllabus">সিলেবাস</TabsTrigger>
-              <TabsTrigger value="schedule">সময়সূচী</TabsTrigger>
-              <TabsTrigger value="pricing">মূল্য</TabsTrigger>
-            </TabsList>
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-10">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                সাধারণ প্রশ্নাবলী
+              </h2>
+            </div>
 
-            {/* Syllabus Tab */}
-            <TabsContent value="syllabus" id="syllabus">
-              <div className="max-w-5xl mx-auto">
-                <div className="text-center mb-10">
-                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                    বিস্তারিত সিলেবাস - বিজ্ঞান বিভাগ
-                  </h2>
-                  <p className="text-muted-foreground">
-                    NCTB সিলেবাস + Medical Admission এর জন্য অতিরিক্ত প্রস্তুতি
-                  </p>
-                </div>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>
+                  HSC এবং Medical একসাথে প্রস্তুতি কীভাবে সম্ভব?
+                </AccordionTrigger>
+                <AccordionContent>
+                  আমাদের সিলেবাস এমনভাবে সাজানো যে HSC পড়তে পড়তেই Medical এর
+                  সিলেবাস কভার হয়ে যায়। বিশেষ করে Biology, Chemistry, Physics
+                  - এই তিনটি বিষয়ে গভীরভাবে পড়ানো হয় যা Medical Admission এ
+                  সরাসরি কাজে লাগে।
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2">
+                <AccordionTrigger>
+                  SSC পাস করার আগেই কি ভর্তি হতে পারব?
+                </AccordionTrigger>
+                <AccordionContent>
+                  হ্যাঁ, দশম শ্রেণীতে পড়ার সময়ই ভর্তি হতে পারবেন। SSC পরীক্ষার
+                  পর থেকে মূল ক্লাস শুরু হবে। তবে SSC এর আগে থেকেই Foundation
+                  Building শুরু করতে পারবেন।
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3">
+                <AccordionTrigger>
+                  কোন কলেজে পড়লে এই কোর্সে ভর্তি হতে পারব?
+                </AccordionTrigger>
+                <AccordionContent>
+                  যেকোনো কলেজে বিজ্ঞান বিভাগে পড়লে এই কোর্সে ভর্তি হতে পারবেন।
+                  আমাদের অনলাইন ক্লাস সব জায়গা থেকে অ্যাক্সেস করা যায়।
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-4">
+                <AccordionTrigger>
+                  Medical না হলে কি কোর্সের টাকা ফেরত পাব?
+                </AccordionTrigger>
+                <AccordionContent>
+                  আমরা ১০০% সাফল্যের গ্যারান্টি দিতে পারি না, তবে আমাদের ৯৫%+
+                  শিক্ষার্থী Medical বা Dental এ চান্স পায়। কোর্স ফি ফেরত পলিসি
+                  নেই, তবে পরের বছর বিনামূল্যে রিপিট করার সুযোগ আছে।
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        </div>
+      </section>
 
-                <div className="space-y-6">
-                  {syllabus.map((subject, index) => (
-                    <Card key={index} className="overflow-hidden">
-                      <CardHeader className={`${subject.color} text-white`}>
-                        <div className="flex items-center gap-3">
-                          <subject.icon className="h-8 w-8" />
-                          <div>
-                            <CardTitle className="text-xl">
-                              {subject.subject}
-                            </CardTitle>
-                            <p className="text-white/80 text-sm">
-                              {subject.chapters.length} টি অধ্যায়
-                            </p>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-4">
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                          {subject.chapters.map((chapter, idx) => (
-                            <div
-                              key={idx}
-                              className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
-                            >
-                              <h4 className="font-medium text-foreground text-sm mb-1">
-                                {chapter.name}
-                              </h4>
-                              <p className="text-xs text-muted-foreground">
-                                {chapter.topics}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-
-                <Card className="mt-8 bg-blue-50 dark:bg-blue-950/20 border-blue-200">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="h-12 w-12 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
-                        <Star className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-foreground mb-2">
-                          বিশেষ সুবিধা
-                        </h3>
-                        <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm text-muted-foreground">
-                          <li className="flex items-center gap-2">
-                            <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                            HSC বোর্ড প্রশ্ন বিশ্লেষণ
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                            Medical MCQ Practice
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                            CQ লেখার কৌশল
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                            Chapter-wise Test
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                            রেকর্ডেড ক্লাস অ্যাক্সেস
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                            PDF নোটস ও শীট
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            {/* Schedule Tab */}
-            <TabsContent value="schedule">
-              <div className="max-w-3xl mx-auto">
-                <div className="text-center mb-10">
-                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                    সাপ্তাহিক সময়সূচী
-                  </h2>
-                  <p className="text-muted-foreground">
-                    ইভনিং ব্যাচের নমুনা সময়সূচী
-                  </p>
-                </div>
-
-                <Card>
-                  <CardContent className="p-0">
-                    <div className="overflow-x-auto">
-                      <table className="w-full">
-                        <thead>
-                          <tr className="border-b bg-muted/50">
-                            <th className="text-left p-4 font-semibold">দিন</th>
-                            <th className="text-left p-4 font-semibold">
-                              সময়
-                            </th>
-                            <th className="text-left p-4 font-semibold">
-                              বিষয়
-                            </th>
-                            <th className="text-left p-4 font-semibold">ধরন</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {schedule.map((item, index) => (
-                            <tr
-                              key={index}
-                              className="border-b last:border-0 hover:bg-muted/30"
-                            >
-                              <td className="p-4 font-medium">{item.day}</td>
-                              <td className="p-4 text-muted-foreground">
-                                {item.time}
-                              </td>
-                              <td className="p-4">{item.subject}</td>
-                              <td className="p-4">
-                                <Badge
-                                  variant={
-                                    item.type === "সাপ্তাহিক পরীক্ষা"
-                                      ? "default"
-                                      : "secondary"
-                                  }
-                                >
-                                  {item.type}
-                                </Badge>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <div className="grid sm:grid-cols-3 gap-4 mt-8">
-                  {batches.map((batch) => (
-                    <Card key={batch.id} className="text-center">
-                      <CardContent className="pt-6">
-                        <h3 className="font-semibold mb-2">
-                          {batch.name.split("(")[0]}
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-2">
-                          {batch.name.match(/\(([^)]+)\)/)?.[1]}
-                        </p>
-                        <Badge
-                          variant="outline"
-                          className="text-blue-600 border-blue-300"
-                        >
-                          {batch.seats} সিট বাকি
-                        </Badge>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </TabsContent>
-
-            {/* Pricing Tab */}
-            <TabsContent value="pricing">
-              <div className="max-w-4xl mx-auto">
-                <div className="text-center mb-10">
-                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                    কোর্স প্যাকেজ
-                  </h2>
-                  <p className="text-muted-foreground">
-                    আপনার প্রয়োজন অনুযায়ী প্যাকেজ বেছে নিন
-                  </p>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  {/* HSC Only */}
-                  <Card className="overflow-hidden border-2 border-border">
-                    <CardHeader className="bg-muted text-center">
-                      <CardTitle className="text-xl">HSC Academic</CardTitle>
-                      <p className="text-muted-foreground">
-                        শুধু বোর্ড পরীক্ষার প্রস্তুতি
-                      </p>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <div className="text-center mb-6">
-                        <div className="flex items-center justify-center gap-2 mb-2">
-                          <span className="text-3xl font-bold text-foreground">
-                            ৳ ১০,০০০
-                          </span>
-                          <span className="text-lg text-muted-foreground line-through">
-                            ৳ ১২,০০০
-                          </span>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          প্রতি বছর
-                        </p>
-                      </div>
-
-                      <ul className="space-y-2 mb-6">
-                        {[
-                          "২০০+ লাইভ ক্লাস",
-                          "সাপ্তাহিক পরীক্ষা",
-                          "PDF নোটস",
-                          "CQ Practice",
-                          "রেকর্ডেড ক্লাস",
-                          "সন্দেহ নিরসন সেশন",
-                        ].map((item, index) => (
-                          <li
-                            key={index}
-                            className="flex items-center gap-2 text-sm"
-                          >
-                            <CheckCircle2 className="h-4 w-4 text-green-500" />
-                            <span className="text-muted-foreground">
-                              {item}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      <Button className="w-full" variant="outline" size="lg">
-                        <a href="#enrollment">এই প্যাকেজ নিন</a>
-                      </Button>
-                    </CardContent>
-                  </Card>
-
-                  {/* HSC + Medical */}
-                  <Card className="overflow-hidden border-2 border-primary relative">
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-primary">সেরা মূল্য</Badge>
-                    </div>
-                    <CardHeader className="bg-primary text-primary-foreground text-center">
-                      <CardTitle className="text-xl">
-                        HSC + Medical Combo
-                      </CardTitle>
-                      <p className="text-primary-foreground/80">
-                        বোর্ড + ভর্তি পরীক্ষা একসাথে
-                      </p>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <div className="text-center mb-6">
-                        <div className="flex items-center justify-center gap-2 mb-2">
-                          <span className="text-3xl font-bold text-foreground">
-                            ৳ ১৫,০০০
-                          </span>
-                          <span className="text-lg text-muted-foreground line-through">
-                            ৳ ২০,০০০
-                          </span>
-                        </div>
-                        <Badge variant="secondary" className="text-primary">
-                          ২৫% ছাড়
-                        </Badge>
-                      </div>
-
-                      <ul className="space-y-2 mb-6">
-                        {[
-                          "৩০০+ লাইভ ক্লাস",
-                          "সাপ্তাহিক পরীক্ষা + মক টেস্ট",
-                          "PDF নোটস + Question Bank",
-                          "CQ + MCQ Practice",
-                          "Medical Admission Focus",
-                          "রেকর্ডেড ক্লাস",
-                          "২৪/৭ সন্দেহ নিরসন",
-                          "মাসিক প্রগ্রেস রিপোর্ট",
-                          "Admission পর্যন্ত সার্ভিস",
-                        ].map((item, index) => (
-                          <li
-                            key={index}
-                            className="flex items-center gap-2 text-sm"
-                          >
-                            <CheckCircle2 className="h-4 w-4 text-green-500" />
-                            <span className="text-muted-foreground">
-                              {item}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      <Button
-                        className="w-full bg-primary hover:bg-primary/90"
-                        size="lg"
-                      >
-                        <a href="#enrollment">এই প্যাকেজ নিন</a>
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <p className="text-center text-sm text-muted-foreground mt-6">
-                  * সকল প্যাকেজে কিস্তিতে পেমেন্টের সুবিধা আছে
-                </p>
-              </div>
-            </TabsContent>
-          </Tabs>
+      {/* CTA */}
+      <section className="py-12 bg-primary text-primary-foreground">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">
+            HSC থেকে Medical - সম্পূর্ণ যাত্রায় আমরা আছি
+          </h2>
+          <p className="text-primary-foreground/80 mb-6 max-w-xl mx-auto">
+            বিজ্ঞান বিষয়ে দক্ষতা অর্জন করুন এবং স্বপ্নের Medical College-এ
+            চান্স পান
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              size="lg"
+              variant="white"
+              className="bg-white text-orange-500 gap-2"
+            >
+              <a href="#enrollment" className="flex items-center gap-2">
+                এখনই ভর্তি হন
+              </a>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white text-white hover:bg-white/10"
+            >
+              <Phone className="h-4 w-4 mr-2" />
+              কল করুন
+            </Button>
+          </div>
         </div>
       </section>
     </div>

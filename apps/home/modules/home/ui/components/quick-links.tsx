@@ -1,13 +1,27 @@
-import { BookMarked, FileText, FlaskConical, Zap } from "lucide-react";
+import {
+  BookMarked,
+  BookOpen,
+  Calculator,
+  Cpu,
+  Dna,
+  FileText,
+  FlaskConical,
+  Languages,
+  Zap,
+} from "lucide-react";
 
 import { StaggerContainer, StaggerItem } from "@/components/scroll-animation";
 import { Card, CardContent } from "@workspace/ui/components/card";
 
 const quickLinks = [
-  { icon: BookMarked, label: "জীববিজ্ঞান", color: "bg-green-500" },
-  { icon: FlaskConical, label: "রসায়ন", color: "bg-blue-500" },
-  { icon: Zap, label: "পদার্থবিজ্ঞান", color: "bg-orange-500" },
-  { icon: FileText, label: "মডেল টেস্ট", color: "bg-purple-500" },
+  { icon: Dna, label: "জীববিজ্ঞান", color: "bg-green-500" }, // Biology - DNA
+  { icon: FlaskConical, label: "রসায়ন", color: "bg-orange-500" }, // Chemistry - Flask
+  { icon: Zap, label: "পদার্থবিজ্ঞান", color: "bg-blue-500" }, // Physics - Lightning/Energy
+  { icon: Calculator, label: "উচ্চতর গণিত", color: "bg-purple-500" }, // Higher Math - Calculator
+  { icon: Cpu, label: "আইসিটি", color: "bg-yellow-500" }, // ICT - CPU/Computer
+  { icon: Languages, label: "বাংলা", color: "bg-pink-500" }, // Bangla - Languages
+  { icon: BookOpen, label: "ইংরেজি", color: "bg-red-500" }, // English - Book
+  { icon: FileText, label: "মডেল টেস্ট", color: "bg-cyan-500" }, // Model Test - Document
 ];
 
 export const QuickLinks = () => {

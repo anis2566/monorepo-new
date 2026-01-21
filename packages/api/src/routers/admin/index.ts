@@ -10,7 +10,7 @@ import { examRouter } from "./exam";
 import { userRouter } from "./user";
 import { resultRouter } from "./result";
 import { dashboardRouter } from "./dashboard";
-import { programRouter } from "./program";
+import { courseRouter } from "./course";
 
 export const adminRouter = createTRPCRouter({
   class: classRouter,
@@ -24,5 +24,5 @@ export const adminRouter = createTRPCRouter({
   user: userRouter,
   result: resultRouter,
   dashboard: dashboardRouter,
-  program: programRouter,
+  course: courseRouter,
 });

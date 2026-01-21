@@ -63,19 +63,9 @@ export const ModelName = {
   Subject: 'Subject',
   Chapter: 'Chapter',
   Mcq: 'Mcq',
-  Program: 'Program',
-  ProgramSyllabus: 'ProgramSyllabus',
-  ProgramChapter: 'ProgramChapter',
-  ProgramSchedule: 'ProgramSchedule',
-  MockTestPlan: 'MockTestPlan',
-  ExamStrategy: 'ExamStrategy',
-  MedicalTopic: 'MedicalTopic',
-  SpecialBenefit: 'SpecialBenefit',
-  ProgramFAQ: 'ProgramFAQ',
-  ProgramClass: 'ProgramClass',
-  ProgramSubject: 'ProgramSubject',
-  Package: 'Package',
-  ProgramBatch: 'ProgramBatch',
+  Course: 'Course',
+  CourseClass: 'CourseClass',
+  CourseSubject: 'CourseSubject',
   Batch: 'Batch',
   Exam: 'Exam',
   ExamChapter: 'ExamChapter',
@@ -299,7 +289,7 @@ export const McqScalarFieldEnum = {
 export type McqScalarFieldEnum = (typeof McqScalarFieldEnum)[keyof typeof McqScalarFieldEnum]
 
 
-export const ProgramScalarFieldEnum = {
+export const CourseScalarFieldEnum = {
   id: 'id',
   name: 'name',
   type: 'type',
@@ -312,148 +302,36 @@ export const ProgramScalarFieldEnum = {
   endDate: 'endDate',
   imageUrl: 'imageUrl',
   features: 'features',
+  price: 'price',
+  originalPrice: 'originalPrice',
+  discount: 'discount',
+  pricingLifeCycle: 'pricingLifeCycle',
   heroTitle: 'heroTitle',
   heroDescription: 'heroDescription',
   tagline: 'tagline',
   urgencyMessage: 'urgencyMessage',
-  hasNegativeMarking: 'hasNegativeMarking',
-  negativeMarks: 'negativeMarks',
-  examDuration: 'examDuration',
-  totalMarks: 'totalMarks',
-  totalQuestions: 'totalQuestions',
+  specialBenefits: 'specialBenefits',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type ProgramScalarFieldEnum = (typeof ProgramScalarFieldEnum)[keyof typeof ProgramScalarFieldEnum]
+export type CourseScalarFieldEnum = (typeof CourseScalarFieldEnum)[keyof typeof CourseScalarFieldEnum]
 
 
-export const ProgramSyllabusScalarFieldEnum = {
+export const CourseClassScalarFieldEnum = {
   id: 'id',
-  programId: 'programId',
-  subjectId: 'subjectId',
-  orderIndex: 'orderIndex',
-  subjectWeight: 'subjectWeight',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ProgramSyllabusScalarFieldEnum = (typeof ProgramSyllabusScalarFieldEnum)[keyof typeof ProgramSyllabusScalarFieldEnum]
-
-
-export const ProgramChapterScalarFieldEnum = {
-  id: 'id',
-  syllabusId: 'syllabusId',
-  name: 'name',
-  topics: 'topics',
-  orderIndex: 'orderIndex',
-  marks: 'marks',
-  priority: 'priority',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ProgramChapterScalarFieldEnum = (typeof ProgramChapterScalarFieldEnum)[keyof typeof ProgramChapterScalarFieldEnum]
-
-
-export const ProgramScheduleScalarFieldEnum = {
-  id: 'id',
-  programId: 'programId',
-  day: 'day',
-  time: 'time',
-  subject: 'subject',
-  type: 'type',
-  orderIndex: 'orderIndex',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ProgramScheduleScalarFieldEnum = (typeof ProgramScheduleScalarFieldEnum)[keyof typeof ProgramScheduleScalarFieldEnum]
-
-
-export const MockTestPlanScalarFieldEnum = {
-  id: 'id',
-  programId: 'programId',
-  weekRange: 'weekRange',
-  focus: 'focus',
-  testsCount: 'testsCount',
-  testType: 'testType',
-  orderIndex: 'orderIndex',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type MockTestPlanScalarFieldEnum = (typeof MockTestPlanScalarFieldEnum)[keyof typeof MockTestPlanScalarFieldEnum]
-
-
-export const ExamStrategyScalarFieldEnum = {
-  id: 'id',
-  programId: 'programId',
-  title: 'title',
-  description: 'description',
-  iconName: 'iconName',
-  orderIndex: 'orderIndex',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ExamStrategyScalarFieldEnum = (typeof ExamStrategyScalarFieldEnum)[keyof typeof ExamStrategyScalarFieldEnum]
-
-
-export const MedicalTopicScalarFieldEnum = {
-  id: 'id',
-  programId: 'programId',
-  title: 'title',
-  description: 'description',
-  iconName: 'iconName',
-  orderIndex: 'orderIndex',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type MedicalTopicScalarFieldEnum = (typeof MedicalTopicScalarFieldEnum)[keyof typeof MedicalTopicScalarFieldEnum]
-
-
-export const SpecialBenefitScalarFieldEnum = {
-  id: 'id',
-  programId: 'programId',
-  title: 'title',
-  iconName: 'iconName',
-  orderIndex: 'orderIndex',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type SpecialBenefitScalarFieldEnum = (typeof SpecialBenefitScalarFieldEnum)[keyof typeof SpecialBenefitScalarFieldEnum]
-
-
-export const ProgramFAQScalarFieldEnum = {
-  id: 'id',
-  programId: 'programId',
-  question: 'question',
-  answer: 'answer',
-  orderIndex: 'orderIndex',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ProgramFAQScalarFieldEnum = (typeof ProgramFAQScalarFieldEnum)[keyof typeof ProgramFAQScalarFieldEnum]
-
-
-export const ProgramClassScalarFieldEnum = {
-  id: 'id',
-  programId: 'programId',
+  courseId: 'courseId',
   classId: 'classId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type ProgramClassScalarFieldEnum = (typeof ProgramClassScalarFieldEnum)[keyof typeof ProgramClassScalarFieldEnum]
+export type CourseClassScalarFieldEnum = (typeof CourseClassScalarFieldEnum)[keyof typeof CourseClassScalarFieldEnum]
 
 
-export const ProgramSubjectScalarFieldEnum = {
+export const CourseSubjectScalarFieldEnum = {
   id: 'id',
-  programId: 'programId',
+  courseId: 'courseId',
   subjectId: 'subjectId',
   weight: 'weight',
   totalClasses: 'totalClasses',
@@ -461,44 +339,7 @@ export const ProgramSubjectScalarFieldEnum = {
   updatedAt: 'updatedAt'
 } as const
 
-export type ProgramSubjectScalarFieldEnum = (typeof ProgramSubjectScalarFieldEnum)[keyof typeof ProgramSubjectScalarFieldEnum]
-
-
-export const PackageScalarFieldEnum = {
-  id: 'id',
-  programId: 'programId',
-  name: 'name',
-  description: 'description',
-  price: 'price',
-  originalPrice: 'originalPrice',
-  discount: 'discount',
-  features: 'features',
-  isActive: 'isActive',
-  isRecommended: 'isRecommended',
-  displayBadge: 'displayBadge',
-  headerColor: 'headerColor',
-  badgeColor: 'badgeColor',
-  headerTextColor: 'headerTextColor',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type PackageScalarFieldEnum = (typeof PackageScalarFieldEnum)[keyof typeof PackageScalarFieldEnum]
-
-
-export const ProgramBatchScalarFieldEnum = {
-  id: 'id',
-  programId: 'programId',
-  batchId: 'batchId',
-  displayName: 'displayName',
-  seatsTotal: 'seatsTotal',
-  seatsRemaining: 'seatsRemaining',
-  startDate: 'startDate',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ProgramBatchScalarFieldEnum = (typeof ProgramBatchScalarFieldEnum)[keyof typeof ProgramBatchScalarFieldEnum]
+export type CourseSubjectScalarFieldEnum = (typeof CourseSubjectScalarFieldEnum)[keyof typeof CourseSubjectScalarFieldEnum]
 
 
 export const BatchScalarFieldEnum = {

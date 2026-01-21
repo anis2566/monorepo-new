@@ -185,7 +185,6 @@ export type BatchWhereInput = {
   className?: Prisma.XOR<Prisma.ClassNameScalarRelationFilter, Prisma.ClassNameWhereInput>
   students?: Prisma.StudentListRelationFilter
   exams?: Prisma.ExamBatchListRelationFilter
-  programs?: Prisma.ProgramBatchListRelationFilter
 }
 
 export type BatchOrderByWithRelationInput = {
@@ -197,7 +196,6 @@ export type BatchOrderByWithRelationInput = {
   className?: Prisma.ClassNameOrderByWithRelationInput
   students?: Prisma.StudentOrderByRelationAggregateInput
   exams?: Prisma.ExamBatchOrderByRelationAggregateInput
-  programs?: Prisma.ProgramBatchOrderByRelationAggregateInput
 }
 
 export type BatchWhereUniqueInput = Prisma.AtLeast<{
@@ -213,7 +211,6 @@ export type BatchWhereUniqueInput = Prisma.AtLeast<{
   className?: Prisma.XOR<Prisma.ClassNameScalarRelationFilter, Prisma.ClassNameWhereInput>
   students?: Prisma.StudentListRelationFilter
   exams?: Prisma.ExamBatchListRelationFilter
-  programs?: Prisma.ProgramBatchListRelationFilter
 }, "id" | "classNameId_name">
 
 export type BatchOrderByWithAggregationInput = {
@@ -246,7 +243,6 @@ export type BatchCreateInput = {
   className: Prisma.ClassNameCreateNestedOneWithoutBatchesInput
   students?: Prisma.StudentCreateNestedManyWithoutBatchInput
   exams?: Prisma.ExamBatchCreateNestedManyWithoutBatchInput
-  programs?: Prisma.ProgramBatchCreateNestedManyWithoutBatchInput
 }
 
 export type BatchUncheckedCreateInput = {
@@ -257,7 +253,6 @@ export type BatchUncheckedCreateInput = {
   classNameId: string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutBatchInput
   exams?: Prisma.ExamBatchUncheckedCreateNestedManyWithoutBatchInput
-  programs?: Prisma.ProgramBatchUncheckedCreateNestedManyWithoutBatchInput
 }
 
 export type BatchUpdateInput = {
@@ -268,7 +263,6 @@ export type BatchUpdateInput = {
   className?: Prisma.ClassNameUpdateOneRequiredWithoutBatchesNestedInput
   students?: Prisma.StudentUpdateManyWithoutBatchNestedInput
   exams?: Prisma.ExamBatchUpdateManyWithoutBatchNestedInput
-  programs?: Prisma.ProgramBatchUpdateManyWithoutBatchNestedInput
 }
 
 export type BatchUncheckedUpdateInput = {
@@ -279,7 +273,6 @@ export type BatchUncheckedUpdateInput = {
   classNameId?: Prisma.StringFieldUpdateOperationsInput | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutBatchNestedInput
   exams?: Prisma.ExamBatchUncheckedUpdateManyWithoutBatchNestedInput
-  programs?: Prisma.ProgramBatchUncheckedUpdateManyWithoutBatchNestedInput
 }
 
 export type BatchCreateManyInput = {
@@ -320,11 +313,6 @@ export type BatchNullableScalarRelationFilter = {
   isNot?: Prisma.BatchWhereInput | null
 }
 
-export type BatchScalarRelationFilter = {
-  is?: Prisma.BatchWhereInput
-  isNot?: Prisma.BatchWhereInput
-}
-
 export type BatchClassNameIdNameCompoundUniqueInput = {
   classNameId: string
   name: string
@@ -352,6 +340,11 @@ export type BatchMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   classNameId?: Prisma.SortOrder
+}
+
+export type BatchScalarRelationFilter = {
+  is?: Prisma.BatchWhereInput
+  isNot?: Prisma.BatchWhereInput
 }
 
 export type BatchCreateNestedManyWithoutClassNameInput = {
@@ -412,20 +405,6 @@ export type BatchUpdateOneWithoutStudentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BatchUpdateToOneWithWhereWithoutStudentsInput, Prisma.BatchUpdateWithoutStudentsInput>, Prisma.BatchUncheckedUpdateWithoutStudentsInput>
 }
 
-export type BatchCreateNestedOneWithoutProgramsInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutProgramsInput, Prisma.BatchUncheckedCreateWithoutProgramsInput>
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutProgramsInput
-  connect?: Prisma.BatchWhereUniqueInput
-}
-
-export type BatchUpdateOneRequiredWithoutProgramsNestedInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutProgramsInput, Prisma.BatchUncheckedCreateWithoutProgramsInput>
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutProgramsInput
-  upsert?: Prisma.BatchUpsertWithoutProgramsInput
-  connect?: Prisma.BatchWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.BatchUpdateToOneWithWhereWithoutProgramsInput, Prisma.BatchUpdateWithoutProgramsInput>, Prisma.BatchUncheckedUpdateWithoutProgramsInput>
-}
-
 export type BatchCreateNestedOneWithoutExamsInput = {
   create?: Prisma.XOR<Prisma.BatchCreateWithoutExamsInput, Prisma.BatchUncheckedCreateWithoutExamsInput>
   connectOrCreate?: Prisma.BatchCreateOrConnectWithoutExamsInput
@@ -447,7 +426,6 @@ export type BatchCreateWithoutClassNameInput = {
   updatedAt?: Date | string
   students?: Prisma.StudentCreateNestedManyWithoutBatchInput
   exams?: Prisma.ExamBatchCreateNestedManyWithoutBatchInput
-  programs?: Prisma.ProgramBatchCreateNestedManyWithoutBatchInput
 }
 
 export type BatchUncheckedCreateWithoutClassNameInput = {
@@ -457,7 +435,6 @@ export type BatchUncheckedCreateWithoutClassNameInput = {
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutBatchInput
   exams?: Prisma.ExamBatchUncheckedCreateNestedManyWithoutBatchInput
-  programs?: Prisma.ProgramBatchUncheckedCreateNestedManyWithoutBatchInput
 }
 
 export type BatchCreateOrConnectWithoutClassNameInput = {
@@ -504,7 +481,6 @@ export type BatchCreateWithoutStudentsInput = {
   updatedAt?: Date | string
   className: Prisma.ClassNameCreateNestedOneWithoutBatchesInput
   exams?: Prisma.ExamBatchCreateNestedManyWithoutBatchInput
-  programs?: Prisma.ProgramBatchCreateNestedManyWithoutBatchInput
 }
 
 export type BatchUncheckedCreateWithoutStudentsInput = {
@@ -514,7 +490,6 @@ export type BatchUncheckedCreateWithoutStudentsInput = {
   updatedAt?: Date | string
   classNameId: string
   exams?: Prisma.ExamBatchUncheckedCreateNestedManyWithoutBatchInput
-  programs?: Prisma.ProgramBatchUncheckedCreateNestedManyWithoutBatchInput
 }
 
 export type BatchCreateOrConnectWithoutStudentsInput = {
@@ -540,7 +515,6 @@ export type BatchUpdateWithoutStudentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   className?: Prisma.ClassNameUpdateOneRequiredWithoutBatchesNestedInput
   exams?: Prisma.ExamBatchUpdateManyWithoutBatchNestedInput
-  programs?: Prisma.ProgramBatchUpdateManyWithoutBatchNestedInput
 }
 
 export type BatchUncheckedUpdateWithoutStudentsInput = {
@@ -549,63 +523,6 @@ export type BatchUncheckedUpdateWithoutStudentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classNameId?: Prisma.StringFieldUpdateOperationsInput | string
-  exams?: Prisma.ExamBatchUncheckedUpdateManyWithoutBatchNestedInput
-  programs?: Prisma.ProgramBatchUncheckedUpdateManyWithoutBatchNestedInput
-}
-
-export type BatchCreateWithoutProgramsInput = {
-  id?: string
-  name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  className: Prisma.ClassNameCreateNestedOneWithoutBatchesInput
-  students?: Prisma.StudentCreateNestedManyWithoutBatchInput
-  exams?: Prisma.ExamBatchCreateNestedManyWithoutBatchInput
-}
-
-export type BatchUncheckedCreateWithoutProgramsInput = {
-  id?: string
-  name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  classNameId: string
-  students?: Prisma.StudentUncheckedCreateNestedManyWithoutBatchInput
-  exams?: Prisma.ExamBatchUncheckedCreateNestedManyWithoutBatchInput
-}
-
-export type BatchCreateOrConnectWithoutProgramsInput = {
-  where: Prisma.BatchWhereUniqueInput
-  create: Prisma.XOR<Prisma.BatchCreateWithoutProgramsInput, Prisma.BatchUncheckedCreateWithoutProgramsInput>
-}
-
-export type BatchUpsertWithoutProgramsInput = {
-  update: Prisma.XOR<Prisma.BatchUpdateWithoutProgramsInput, Prisma.BatchUncheckedUpdateWithoutProgramsInput>
-  create: Prisma.XOR<Prisma.BatchCreateWithoutProgramsInput, Prisma.BatchUncheckedCreateWithoutProgramsInput>
-  where?: Prisma.BatchWhereInput
-}
-
-export type BatchUpdateToOneWithWhereWithoutProgramsInput = {
-  where?: Prisma.BatchWhereInput
-  data: Prisma.XOR<Prisma.BatchUpdateWithoutProgramsInput, Prisma.BatchUncheckedUpdateWithoutProgramsInput>
-}
-
-export type BatchUpdateWithoutProgramsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  className?: Prisma.ClassNameUpdateOneRequiredWithoutBatchesNestedInput
-  students?: Prisma.StudentUpdateManyWithoutBatchNestedInput
-  exams?: Prisma.ExamBatchUpdateManyWithoutBatchNestedInput
-}
-
-export type BatchUncheckedUpdateWithoutProgramsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  classNameId?: Prisma.StringFieldUpdateOperationsInput | string
-  students?: Prisma.StudentUncheckedUpdateManyWithoutBatchNestedInput
   exams?: Prisma.ExamBatchUncheckedUpdateManyWithoutBatchNestedInput
 }
 
@@ -616,7 +533,6 @@ export type BatchCreateWithoutExamsInput = {
   updatedAt?: Date | string
   className: Prisma.ClassNameCreateNestedOneWithoutBatchesInput
   students?: Prisma.StudentCreateNestedManyWithoutBatchInput
-  programs?: Prisma.ProgramBatchCreateNestedManyWithoutBatchInput
 }
 
 export type BatchUncheckedCreateWithoutExamsInput = {
@@ -626,7 +542,6 @@ export type BatchUncheckedCreateWithoutExamsInput = {
   updatedAt?: Date | string
   classNameId: string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutBatchInput
-  programs?: Prisma.ProgramBatchUncheckedCreateNestedManyWithoutBatchInput
 }
 
 export type BatchCreateOrConnectWithoutExamsInput = {
@@ -652,7 +567,6 @@ export type BatchUpdateWithoutExamsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   className?: Prisma.ClassNameUpdateOneRequiredWithoutBatchesNestedInput
   students?: Prisma.StudentUpdateManyWithoutBatchNestedInput
-  programs?: Prisma.ProgramBatchUpdateManyWithoutBatchNestedInput
 }
 
 export type BatchUncheckedUpdateWithoutExamsInput = {
@@ -662,7 +576,6 @@ export type BatchUncheckedUpdateWithoutExamsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classNameId?: Prisma.StringFieldUpdateOperationsInput | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutBatchNestedInput
-  programs?: Prisma.ProgramBatchUncheckedUpdateManyWithoutBatchNestedInput
 }
 
 export type BatchCreateManyClassNameInput = {
@@ -679,7 +592,6 @@ export type BatchUpdateWithoutClassNameInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUpdateManyWithoutBatchNestedInput
   exams?: Prisma.ExamBatchUpdateManyWithoutBatchNestedInput
-  programs?: Prisma.ProgramBatchUpdateManyWithoutBatchNestedInput
 }
 
 export type BatchUncheckedUpdateWithoutClassNameInput = {
@@ -689,7 +601,6 @@ export type BatchUncheckedUpdateWithoutClassNameInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutBatchNestedInput
   exams?: Prisma.ExamBatchUncheckedUpdateManyWithoutBatchNestedInput
-  programs?: Prisma.ProgramBatchUncheckedUpdateManyWithoutBatchNestedInput
 }
 
 export type BatchUncheckedUpdateManyWithoutClassNameInput = {
@@ -707,13 +618,11 @@ export type BatchUncheckedUpdateManyWithoutClassNameInput = {
 export type BatchCountOutputType = {
   students: number
   exams: number
-  programs: number
 }
 
 export type BatchCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   students?: boolean | BatchCountOutputTypeCountStudentsArgs
   exams?: boolean | BatchCountOutputTypeCountExamsArgs
-  programs?: boolean | BatchCountOutputTypeCountProgramsArgs
 }
 
 /**
@@ -740,13 +649,6 @@ export type BatchCountOutputTypeCountExamsArgs<ExtArgs extends runtime.Types.Ext
   where?: Prisma.ExamBatchWhereInput
 }
 
-/**
- * BatchCountOutputType without action
- */
-export type BatchCountOutputTypeCountProgramsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProgramBatchWhereInput
-}
-
 
 export type BatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -757,7 +659,6 @@ export type BatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   className?: boolean | Prisma.ClassNameDefaultArgs<ExtArgs>
   students?: boolean | Prisma.Batch$studentsArgs<ExtArgs>
   exams?: boolean | Prisma.Batch$examsArgs<ExtArgs>
-  programs?: boolean | Prisma.Batch$programsArgs<ExtArgs>
   _count?: boolean | Prisma.BatchCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["batch"]>
 
@@ -792,7 +693,6 @@ export type BatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   className?: boolean | Prisma.ClassNameDefaultArgs<ExtArgs>
   students?: boolean | Prisma.Batch$studentsArgs<ExtArgs>
   exams?: boolean | Prisma.Batch$examsArgs<ExtArgs>
-  programs?: boolean | Prisma.Batch$programsArgs<ExtArgs>
   _count?: boolean | Prisma.BatchCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BatchIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -808,7 +708,6 @@ export type $BatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     className: Prisma.$ClassNamePayload<ExtArgs>
     students: Prisma.$StudentPayload<ExtArgs>[]
     exams: Prisma.$ExamBatchPayload<ExtArgs>[]
-    programs: Prisma.$ProgramBatchPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1213,7 +1112,6 @@ export interface Prisma__BatchClient<T, Null = never, ExtArgs extends runtime.Ty
   className<T extends Prisma.ClassNameDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClassNameDefaultArgs<ExtArgs>>): Prisma.Prisma__ClassNameClient<runtime.Types.Result.GetResult<Prisma.$ClassNamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   students<T extends Prisma.Batch$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   exams<T extends Prisma.Batch$examsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$examsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  programs<T extends Prisma.Batch$programsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$programsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgramBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1689,30 +1587,6 @@ export type Batch$examsArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.ExamBatchScalarFieldEnum | Prisma.ExamBatchScalarFieldEnum[]
-}
-
-/**
- * Batch.programs
- */
-export type Batch$programsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ProgramBatch
-   */
-  select?: Prisma.ProgramBatchSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ProgramBatch
-   */
-  omit?: Prisma.ProgramBatchOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProgramBatchInclude<ExtArgs> | null
-  where?: Prisma.ProgramBatchWhereInput
-  orderBy?: Prisma.ProgramBatchOrderByWithRelationInput | Prisma.ProgramBatchOrderByWithRelationInput[]
-  cursor?: Prisma.ProgramBatchWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ProgramBatchScalarFieldEnum | Prisma.ProgramBatchScalarFieldEnum[]
 }
 
 /**

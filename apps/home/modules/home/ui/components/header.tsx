@@ -50,12 +50,15 @@ export const Header = () => {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link href="/dashboard">
+            <Link href="https://student.mrdr.education" target="_blank">
               <Button variant="secondary" size="sm" className="hidden sm:flex">
                 স্টুডেন্ট পোর্টাল
               </Button>
             </Link>
-            <Link href="/admin">
+            <Link
+              href="https://student.mrdr.education/auth/sign-in"
+              target="_blank"
+            >
               <Button
                 size="sm"
                 variant="outline"

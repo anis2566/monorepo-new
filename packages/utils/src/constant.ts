@@ -138,6 +138,12 @@ export enum PROGRAM_TYPE {
   MEDICAL_ADMISSION = "Medical Admission",
 }
 
+export enum COURSE_TYPE {
+  SSC_FOUNDATION = "SSC Foundation",
+  HSC_ACADEMIC = "HSC Academic",
+  MEDICAL_ADMISSION = "Medical Admission",
+}
+
 export enum RESULT_STATUS {
   "In Progress" = "In Progress",
   "Submitted" = "Submitted",

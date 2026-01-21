@@ -115,7 +115,7 @@ model ClassName {
   students Student[]
   batches  Batch[]
   exams    ExamClassName[]
-  programs ProgramClass[]
+  courses  CourseClass[]
 }
 
 model Institute {
@@ -214,8 +214,7 @@ model Subject {
   chapters Chapter[]
   mcqs     Mcq[]
   exams    ExamSubject[]
-  programs ProgramSubject[]
-  syllabus ProgramSyllabus[]
+  courses  CourseSubject[]
 
   @@index([name])
   @@index([level])
@@ -280,7 +279,7 @@ model Mcq {
   @@index([type, session])
 }
 
-model Program {
+model Course {
   id          String  @id @default(cuid())
   name        String // e.g., "Medical Admission 2026"
   type        String
@@ -297,245 +296,55 @@ model Program {
   imageUrl String?
   features String[] // ["৪ মাসের Intensive", "১০০+ Mock Test"]
 
+  // Pricing
+  price            Decimal @default(0)
+  originalPrice    Decimal @default(0)
+  discount         Decimal @default(0)
+  pricingLifeCycle String  @default("MONTHLY")
+
   // UI-specific fields
   heroTitle       String? // "Medical Admission Crash Course"
   heroDescription String? // Long hero description
   tagline         String? // "Medical 2026 - সীমিত আসন"
   urgencyMessage  String? // "মার্চ ব্যাচে মাত্র ২৫টি সিট বাকি!"
 
-  // Medical Admission specific
-  hasNegativeMarking Boolean  @default(false)
-  negativeMarks      Decimal? @db.Decimal(3, 2) // 0.25
-  examDuration       Int? // in minutes (e.g., 60)
-  totalMarks         Int? // 100
-  totalQuestions     Int? // 100 MCQ
+  specialBenefits String[] // "HSC বোর্ড প্রশ্ন বিশ্লেষণ"
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  batches         ProgramBatch[]
-  packages        Package[]
-  subjects        ProgramSubject[]
-  classes         ProgramClass[]
-  syllabus        ProgramSyllabus[]
-  schedule        ProgramSchedule[]
-  mockTestPlan    MockTestPlan[]
-  examStrategies  ExamStrategy[]
-  medicalTopics   MedicalTopic[]
-  specialBenefits SpecialBenefit[]
-  faqs            ProgramFAQ[]
+  classes  CourseClass[]
+  subjects CourseSubject[]
 
   @@index([type])
   @@index([isActive])
   @@index([isPopular])
 }
 
-enum ProgramType {
-  SSC_FOUNDATION
-  HSC_ACADEMIC
-  MEDICAL_ADMISSION
-}
-
-// ============================================
-// SYLLABUS & CHAPTER MODELS
-// ============================================
-
-model ProgramSyllabus {
-  id        String  @id @default(cuid())
-  programId String
-  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
-
-  subjectId String
-  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-
-  orderIndex Int @default(0)
-
-  // Medical Admission specific
-  subjectWeight Int? // e.g., 50 for Biology
-
-  chapters ProgramChapter[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([programId, subjectId])
-  @@index([programId])
-  @@index([subjectId])
-}
-
-model ProgramChapter {
-  id         String          @id @default(cuid())
-  syllabusId String
-  syllabus   ProgramSyllabus @relation(fields: [syllabusId], references: [id], onDelete: Cascade)
-
-  name       String // "কোষ ও এর গঠন", "ভেক্টর"
-  topics     String? // "স্কেলার ও ভেক্টর রাশি, যোগ-বিয়োগ"
-  orderIndex Int     @default(0)
-
-  // Medical Admission specific
-  marks    Int? // 4 marks
-  priority Priority? // HIGH, MEDIUM, LOW
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([syllabusId])
-}
-
-enum Priority {
-  HIGH
-  MEDIUM
-  LOW
-}
-
-// ============================================
-// SCHEDULE MODELS
-// ============================================
-
-model ProgramSchedule {
-  id        String  @id @default(cuid())
-  programId String
-  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
-
-  day     String // "শনিবার", "রবিবার"
-  time    String // "৯:০০ AM - ১২:০০ PM"
-  subject String // "Biology (১ম পত্র)", "পদার্থবিজ্ঞান"
-  type    String // "ক্লাস + MCQ", "সন্দেহ নিরসন", "পরীক্ষা"
-
-  orderIndex Int @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([programId])
-}
-
-// ============================================
-// MOCK TEST PLAN (Medical Admission specific)
-// ============================================
-
-model MockTestPlan {
-  id        String  @id @default(cuid())
-  programId String
-  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
-
-  weekRange  String // "সপ্তাহ ১-২"
-  focus      String // "Biology 1st Paper"
-  testsCount Int // 4
-  testType   String // "Chapter Test", "Model Test", "Final Mock"
-
-  orderIndex Int @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([programId])
-}
-
-// ============================================
-// EXAM STRATEGY (Medical Admission specific)
-// ============================================
-
-model ExamStrategy {
-  id        String  @id @default(cuid())
-  programId String
-  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
-
-  title       String // "নেগেটিভ মার্কিং Strategy"
-  description String // "কোন প্রশ্ন ছাড়বেন, কোনটা গেস করবেন"
-  iconName    String // "Shield", "Timer", "BarChart3"
-
-  orderIndex Int @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([programId])
-}
-
-// ============================================
-// MEDICAL TOPICS (HSC Academic specific)
-// ============================================
-
-model MedicalTopic {
-  id        String  @id @default(cuid())
-  programId String
-  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
-
-  title       String // "Biology Mastery"
-  description String // "Medical এ ৫০% মার্কস Biology থেকে"
-  iconName    String // "Microscope", "FlaskConical"
-
-  orderIndex Int @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([programId])
-}
-
-// ============================================
-// SPECIAL BENEFITS
-// ============================================
-
-model SpecialBenefit {
-  id        String  @id @default(cuid())
-  programId String
-  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
-
-  title      String // "HSC বোর্ড প্রশ্ন বিশ্লেষণ"
-  iconName   String @default("CheckCircle2")
-  orderIndex Int    @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([programId])
-}
-
-// ============================================
-// FAQ
-// ============================================
-
-model ProgramFAQ {
-  id        String  @id @default(cuid())
-  programId String
-  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
-
-  question   String
-  answer     String
-  orderIndex Int    @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([programId])
-}
-
 // ============================================
 // PROGRAM ASSOCIATIONS
 // ============================================
 
-model ProgramClass {
+model CourseClass {
   id        String    @id @default(cuid())
-  programId String
-  program   Program   @relation(fields: [programId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
   classId   String
   className ClassName @relation(fields: [classId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([programId, classId])
-  @@index([programId])
+  @@unique([courseId, classId])
+  @@index([courseId])
   @@index([classId])
 }
 
-model ProgramSubject {
-  id        String  @id @default(cuid())
-  programId String
-  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+model CourseSubject {
+  id       String @id @default(cuid())
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   subjectId String
   subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
@@ -546,69 +355,9 @@ model ProgramSubject {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([programId, subjectId])
-  @@index([programId])
+  @@unique([courseId, subjectId])
+  @@index([courseId])
   @@index([subjectId])
-}
-
-// ============================================
-// PACKAGES
-// ============================================
-
-model Package {
-  id        String  @id @default(cuid())
-  programId String
-  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
-
-  name        String // "Basic", "Standard", "Premium"
-  description String? // "শুধু ক্লাস", "ক্লাস + Mock Test"
-
-  price         Decimal  @db.Decimal(10, 2)
-  originalPrice Decimal? @db.Decimal(10, 2)
-  discount      Int? // percentage
-
-  features String[] // ["১৫০+ লাইভ ক্লাস", "১০০+ Mock Test"]
-
-  isActive      Boolean @default(true)
-  isRecommended Boolean @default(false)
-
-  // Display options
-  displayBadge    String? // "সেরা মূল্য", "জনপ্রিয়", "Premium"
-  headerColor     String? // "bg-primary", "bg-muted", "bg-gradient-to-r from-orange-500 to-red-500"
-  badgeColor      String? // "bg-primary", "bg-orange-500"
-  headerTextColor String? // "text-primary-foreground", "text-white"
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([programId])
-  @@index([isRecommended])
-}
-
-// ============================================
-// BATCHES
-// ============================================
-
-model ProgramBatch {
-  id        String  @id @default(cuid())
-  programId String
-  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
-
-  batchId String
-  batch   Batch  @relation(fields: [batchId], references: [id], onDelete: Cascade)
-
-  // UI-specific
-  displayName    String? // "Intensive মর্নিং (৯ AM - ১২ PM)"
-  seatsTotal     Int?
-  seatsRemaining Int?
-  startDate      String? // "১ মার্চ"
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([programId, batchId])
-  @@index([programId])
-  @@index([batchId])
 }
 
 model Batch {
@@ -623,7 +372,6 @@ model Batch {
 
   students Student[]
   exams    ExamBatch[]
-  programs ProgramBatch[]
 
   @@unique([classNameId, name])
   @@index([classNameId])

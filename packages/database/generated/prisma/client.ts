@@ -100,70 +100,20 @@ export type Chapter = Prisma.ChapterModel
  */
 export type Mcq = Prisma.McqModel
 /**
- * Model Program
+ * Model Course
  * 
  */
-export type Program = Prisma.ProgramModel
+export type Course = Prisma.CourseModel
 /**
- * Model ProgramSyllabus
+ * Model CourseClass
  * 
  */
-export type ProgramSyllabus = Prisma.ProgramSyllabusModel
+export type CourseClass = Prisma.CourseClassModel
 /**
- * Model ProgramChapter
+ * Model CourseSubject
  * 
  */
-export type ProgramChapter = Prisma.ProgramChapterModel
-/**
- * Model ProgramSchedule
- * 
- */
-export type ProgramSchedule = Prisma.ProgramScheduleModel
-/**
- * Model MockTestPlan
- * 
- */
-export type MockTestPlan = Prisma.MockTestPlanModel
-/**
- * Model ExamStrategy
- * 
- */
-export type ExamStrategy = Prisma.ExamStrategyModel
-/**
- * Model MedicalTopic
- * 
- */
-export type MedicalTopic = Prisma.MedicalTopicModel
-/**
- * Model SpecialBenefit
- * 
- */
-export type SpecialBenefit = Prisma.SpecialBenefitModel
-/**
- * Model ProgramFAQ
- * 
- */
-export type ProgramFAQ = Prisma.ProgramFAQModel
-/**
- * Model ProgramClass
- * 
- */
-export type ProgramClass = Prisma.ProgramClassModel
-/**
- * Model ProgramSubject
- * 
- */
-export type ProgramSubject = Prisma.ProgramSubjectModel
-/**
- * Model Package
- * 
- */
-export type Package = Prisma.PackageModel
-/**
- * Model ProgramBatch
- * 
- */
-export type ProgramBatch = Prisma.ProgramBatchModel
+export type CourseSubject = Prisma.CourseSubjectModel
 /**
  * Model Batch
  * 

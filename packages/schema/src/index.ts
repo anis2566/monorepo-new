@@ -131,7 +131,7 @@ export const ExamSchema = z
 
 export type ExamSchemaType = z.infer<typeof ExamSchema>;
 
-export const ProgramFormSchema = z.object({
+export const CourseFormSchema = z.object({
   // Basic Info
   name: requiredString,
   type: requiredString,
@@ -144,134 +144,36 @@ export const ProgramFormSchema = z.object({
   endDate: z.string().optional(),
   imageUrl: z.string().optional(),
 
+  // Pricing
+  price: requiredString,
+  originalPrice: z.string().optional(),
+  discount: z.string().optional(),
+  pricingLifeCycle: z.string(),
+
   // Hero Section (for landing pages)
   heroTitle: z.string().optional(),
   heroDescription: z.string().optional(),
   tagline: z.string().optional(),
   urgencyMessage: z.string().optional(),
 
-  // Medical Admission specific
-  hasNegativeMarking: z.boolean(),
-  negativeMarks: z.string().optional(),
-  examDuration: z.string().optional(),
-  totalMarks: z.string().optional(),
-  totalQuestions: z.string().optional(),
-
-  // Features
+  // Features & Benefits
   features: z.array(z.string()),
+  specialBenefits: z.array(z.string()).optional(),
 
   // Associations
   classIds: z.array(z.string()),
-  batchIds: z.array(z.string()),
   subjectIds: z.array(z.string()),
 
-  // Packages
-  packages: z.array(
-    z.object({
-      name: z.string(),
-      price: z.string(),
-      originalPrice: z.string().optional(),
-      discount: z.string().optional(),
-      features: z.array(z.string()),
-      description: z.string().optional(),
-      isActive: z.boolean(),
-      isRecommended: z.boolean().optional(),
-      displayBadge: z.string().optional(),
-      headerColor: z.string().optional(),
-      badgeColor: z.string().optional(),
-      headerTextColor: z.string().optional(),
-    }),
-  ),
-
-  // Syllabus (optional for advanced setup)
-  syllabus: z
+  // Subject details (for weight configuration)
+  subjectDetails: z
     .array(
       z.object({
         subjectId: z.string(),
-        subjectWeight: z.string().optional(), // Medical: 50, 25, 25
-        chapters: z.array(
-          z.object({
-            name: z.string(),
-            topics: z.string().optional(),
-            marks: z.string().optional(), // Medical specific
-            priority: z.enum(["HIGH", "MEDIUM", "LOW"]).optional(), // Medical specific
-          }),
-        ),
-      }),
-    )
-    .optional(),
-
-  // Schedule (optional for advanced setup)
-  schedule: z
-    .array(
-      z.object({
-        day: z.string(),
-        time: z.string(),
-        subject: z.string(),
-        type: z.string(),
-      }),
-    )
-    .optional(),
-
-  // Mock Test Plan (Medical Admission specific)
-  mockTestPlan: z
-    .array(
-      z.object({
-        weekRange: z.string(),
-        focus: z.string(),
-        testsCount: z.string(),
-        testType: z.string(),
-      }),
-    )
-    .optional(),
-
-  // Exam Strategies (Medical Admission specific)
-  examStrategies: z
-    .array(
-      z.object({
-        title: z.string(),
-        description: z.string(),
-        iconName: z.string(),
-      }),
-    )
-    .optional(),
-
-  // Medical Topics (HSC Academic specific)
-  medicalTopics: z
-    .array(
-      z.object({
-        title: z.string(),
-        description: z.string(),
-        iconName: z.string(),
-      }),
-    )
-    .optional(),
-
-  // Special Benefits
-  specialBenefits: z.array(z.string()).optional(),
-
-  // FAQs
-  faqs: z
-    .array(
-      z.object({
-        question: z.string(),
-        answer: z.string(),
-      }),
-    )
-    .optional(),
-
-  // Batch specific fields
-  batchDetails: z
-    .array(
-      z.object({
-        batchId: z.string(),
-        displayName: z.string().optional(),
-        seatsTotal: z.string().optional(),
-        seatsRemaining: z.string().optional(),
-        startDate: z.string().optional(),
+        weight: z.string().optional(), // Medical: 50, 25, 25
+        totalClasses: z.string().optional(),
       }),
     )
     .optional(),
 });
 
-export type ProgramFormSchemaType = z.infer<typeof ProgramFormSchema>;
+export type CourseFormSchemaType = z.infer<typeof CourseFormSchema>;

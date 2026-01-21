@@ -79,7 +79,7 @@ const slideRightVariants: Variants = {
 
 // Stagger container
 const staggerContainerVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: {
@@ -192,9 +192,8 @@ export const StaggerContainer = ({
   className = "",
 }: Omit<AnimatedSectionProps, "delay">) => (
   <motion.div
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true, margin: "-50px" }}
+    initial="visible"
+    animate="visible"
     variants={staggerContainerVariants}
     className={className}
   >

@@ -96,7 +96,7 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
   } | null>(null);
 
   const { data: classes } = useQuery(
-    trpc.admin.class.forSelect.queryOptions({ search: "" })
+    trpc.admin.class.forSelect.queryOptions({ search: "" }),
   );
 
   useEffect(() => {
@@ -111,7 +111,7 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
     trpc.public?.exam?.getPublicExam.queryOptions({ id }) || {
       queryKey: ["publicExam", id],
       queryFn: async () => null,
-    }
+    },
   );
 
   const sendOtpMutation = useMutation(
@@ -119,7 +119,7 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
       mutationFn: async () => {
         throw new Error("sendPublicOtp not available");
       },
-    }
+    },
   );
 
   const registerMutation = useMutation(
@@ -127,7 +127,7 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
       mutationFn: async () => {
         throw new Error("Public router not available");
       },
-    }
+    },
   );
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -192,7 +192,7 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
       setShowInstructionsModal(false);
       toast.success("Starting exam...");
       router.push(
-        `/public/exams/${id}/take/${registrationResult.attemptId}?participantId=${registrationResult.participantId}`
+        `/public/exams/${id}/take/${registrationResult.attemptId}?participantId=${registrationResult.participantId}`,
       );
     }
   };
@@ -266,7 +266,7 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
               </div>
               <div className="flex items-center gap-3">
                 <Trophy className="w-5 h-5 opacity-80" />
-                <span>Total Marks: {exam.total}</span>
+                <span>Total Marks: {exam.total + 1}</span>
               </div>
               {exam.hasNegativeMark && (
                 <div className="flex items-center gap-3 text-red-100 bg-red-900/20 p-2 rounded">

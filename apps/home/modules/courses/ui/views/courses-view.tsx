@@ -16,9 +16,10 @@ import {
   Zap,
   Phone,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { format } from "date-fns";
 
 import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent } from "@workspace/ui/components/card";
@@ -30,230 +31,116 @@ import {
   StaggerContainer,
   StaggerItem,
 } from "@/components/scroll-animation";
+import { useGetCourses } from "../../filters/use-get-courses";
+import { useTRPC } from "@/trpc/react";
+import { useQuery } from "@tanstack/react-query";
+import { cn } from "@workspace/ui/lib/utils";
+import { COURSE_TYPE } from "@workspace/utils/constant";
+import { useDebounce } from "@/hooks/use-debounce";
+
+const TAB_OPTIONS = [
+  { id: "all", label: "সব কোর্স", icon: BookOpen, value: "all" },
+  {
+    id: "ssc",
+    label: "SSC Foundation",
+    icon: GraduationCap,
+    value: COURSE_TYPE.SSC_FOUNDATION,
+  },
+  {
+    id: "hsc",
+    label: "HSC Academic",
+    icon: Target,
+    value: COURSE_TYPE.HSC_ACADEMIC,
+  },
+  {
+    id: "medical",
+    label: "Medical Admission",
+    icon: Stethoscope,
+    value: COURSE_TYPE.MEDICAL_ADMISSION,
+  },
+];
 
 export const CoursesView = () => {
-  const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const trpc = useTRPC();
+  const [filters, setFilters] = useGetCourses();
+
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+  useEffect(() => {
+    setFilters({ ...filters, search: debouncedSearchQuery });
+  }, [debouncedSearchQuery, filters, setFilters]);
+
+  const { data } = useQuery(
+    trpc.home.course.getManyCourses.queryOptions(filters),
+  );
+
+  const { courses = [], totalCourse = 0, students = 0 } = data || {};
 
   const categories = [
     { id: "all", label: "সব কোর্স", icon: BookOpen },
     { id: "ssc", label: "SSC Foundation", icon: GraduationCap },
     { id: "hsc", label: "HSC Academic", icon: Target },
-    { id: "medical", label: "মেডিকেল", icon: Stethoscope },
-    { id: "crash", label: "ক্র্যাশ কোর্স", icon: Zap },
+    { id: "medical", label: "Medical Admission", icon: Stethoscope },
   ];
 
-  const allCourses = [
-    {
-      id: 1,
-      title: "SSC Foundation Batch 2028",
-      subtitle:
-        "ক্লাস ৯-১০ এর শিক্ষার্থীদের জন্য বিজ্ঞান বিভাগের ফাউন্ডেশন কোর্স",
-      category: "ssc",
-      image:
-        "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=250&fit=crop",
-      duration: "১২ মাস",
-      classes: "সপ্তাহে ৪টি",
-      students: "২৫০+",
-      rating: 4.8,
-      features: [
-        "পদার্থবিজ্ঞান, রসায়ন, জীববিজ্ঞান, গণিত",
-        "সাপ্তাহিক অ্যাসেসমেন্ট টেস্ট",
-        "অভিভাবক প্রগ্রেস রিপোর্ট",
-        "ডাউট ক্লিয়ারিং সেশন",
-      ],
-      price: "৳ ৮,০০০",
-      originalPrice: "৳ ১০,০০০",
-      discount: "20%",
-      popular: false,
-      link: "/ssc-foundation",
-      startDate: "১ ফেব্রুয়ারি ২০২৬",
-    },
-    {
-      id: 2,
-      title: "HSC Academic Batch 2027",
-      subtitle: "HSC বিজ্ঞান বিভাগের সম্পূর্ণ একাডেমিক প্রস্তুতি",
-      category: "hsc",
-      image:
-        "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=250&fit=crop",
-      duration: "২ বছর",
-      classes: "সপ্তাহে ৬টি",
-      students: "৫০০+",
-      rating: 4.9,
-      features: [
-        "বোর্ড পরীক্ষা + মেডিকেল প্রস্তুতি",
-        "৩০০+ লাইভ এক্সাম",
-        "CQ ও MCQ সাজেশন",
-        "২৪/৭ মেন্টর সাপোর্ট",
-      ],
-      price: "৳ ১২,০০০",
-      originalPrice: "৳ ১৫,০০০",
-      discount: "20%",
-      popular: true,
-      link: "/hsc-academic",
-      startDate: "১৫ জানুয়ারি ২০২৬",
-    },
-    {
-      id: 3,
-      title: "Medical Foundation Batch 2027",
-      subtitle: "HSC ১ম বর্ষ থেকে মেডিকেলের প্রস্তুতি শুরু করো",
-      category: "hsc",
-      image:
-        "https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=400&h=250&fit=crop",
-      duration: "১৮ মাস",
-      classes: "সপ্তাহে ৫টি",
-      students: "৩৫০+",
-      rating: 4.8,
-      features: [
-        "HSC + Medical Admission Combo",
-        "বায়োলজি স্পেশাল ফোকাস",
-        "মক অ্যাডমিশন টেস্ট",
-        "পার্সোনাল মেন্টরশিপ",
-      ],
-      price: "৳ ১৫,০০০",
-      originalPrice: "৳ ১৮,০০০",
-      discount: "17%",
-      popular: false,
-      link: "/hsc-academic",
-      startDate: "১ মার্চ ২০২৬",
-    },
-    {
-      id: 4,
-      title: "গোল ডিগার্স - Pre-Medical 2026",
-      subtitle: "মেডিকেল অ্যাডমিশনের সম্পূর্ণ প্রস্তুতি",
-      category: "medical",
-      image:
-        "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=250&fit=crop",
-      duration: "১০ মাস",
-      classes: "সপ্তাহে ৭টি",
-      students: "৮০০+",
-      rating: 4.9,
-      features: [
-        "২৫০+ লাইভ ক্লাস",
-        "কল ইউর মেন্টর ফিচার",
-        "ফাইনাল অ্যাডমিশন পর্যন্ত সার্ভিস",
-        "ফ্রি টেস্ট পেপার সলভ",
-      ],
-      price: "৳ ৮,০০০",
-      originalPrice: "৳ ১০,০০০",
-      discount: "20%",
-      popular: true,
-      link: "/medical-admission",
-      startDate: "এখনই শুরু করুন",
-    },
-    {
-      id: 5,
-      title: "Final Shot - Crash Course 2026",
-      subtitle: "শেষ মুহূর্তের সর্বোচ্চ প্রস্তুতি",
-      category: "crash",
-      image:
-        "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=400&h=250&fit=crop",
-      duration: "৩ মাস",
-      classes: "প্রতিদিন",
-      students: "৪০০+",
-      rating: 4.7,
-      features: [
-        "১৮০+ লাইভ ক্লাস",
-        "ডেইলি এক্সাম",
-        "ব্যক্তিগত মেন্টরিং",
-        "রিভিশন মেটেরিয়াল",
-      ],
-      price: "৳ ৫,০০০",
-      originalPrice: "৳ ৭,০০০",
-      discount: "29%",
-      popular: false,
-      link: "/medical-admission",
-      startDate: "১ এপ্রিল ২০২৬",
-    },
-    {
-      id: 6,
-      title: "Revision Master - Medical",
-      subtitle: "সিলেবাস শেষ? এবার রিভিশন করো",
-      category: "crash",
-      image:
-        "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&h=250&fit=crop",
-      duration: "২ মাস",
-      classes: "সপ্তাহে ৫টি",
-      students: "৩০০+",
-      rating: 4.6,
-      features: [
-        "সম্পূর্ণ সিলেবাস রিভিশন",
-        "১০০+ মক টেস্ট",
-        "শর্টকাট টেকনিক",
-        "ফাইনাল বুস্ট সেশন",
-      ],
-      price: "৳ ৩,৫০০",
-      originalPrice: "৳ ৫,০০০",
-      discount: "30%",
-      popular: false,
-      link: "/medical-admission",
-      startDate: "১ মে ২০২৬",
-    },
-    {
-      id: 7,
-      title: "Biology Olympiad Prep",
-      subtitle: "জীববিজ্ঞান অলিম্পিয়াডের জন্য বিশেষ কোর্স",
-      category: "ssc",
-      image:
-        "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=400&h=250&fit=crop",
-      duration: "৬ মাস",
-      classes: "সপ্তাহে ২টি",
-      students: "১০০+",
-      rating: 4.9,
-      features: [
-        "অলিম্পিয়াড লেভেল কন্টেন্ট",
-        "ইন্টারন্যাশনাল স্ট্যান্ডার্ড",
-        "প্র্যাকটিক্যাল সেশন",
-        "পাস্ট পেপার সল্ভ",
-      ],
-      price: "৳ ৬,০০০",
-      originalPrice: "৳ ৮,০০০",
-      discount: "25%",
-      popular: false,
-      link: "/ssc-foundation",
-      startDate: "১ ফেব্রুয়ারি ২০২৬",
-    },
-    {
-      id: 8,
-      title: "Physics Mastery - HSC",
-      subtitle: "পদার্থবিজ্ঞানে দুর্বল? এই কোর্স তোমার জন্য",
-      category: "hsc",
-      image:
-        "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=250&fit=crop",
-      duration: "৮ মাস",
-      classes: "সপ্তাহে ৩টি",
-      students: "২০০+",
-      rating: 4.8,
-      features: [
-        "কনসেপ্ট ক্লিয়ার ক্লাস",
-        "প্রব্লেম সলভিং টেকনিক",
-        "বোর্ড + অ্যাডমিশন ফোকাস",
-        "গাণিতিক সমস্যা সমাধান",
-      ],
-      price: "৳ ৪,৫০০",
-      originalPrice: "৳ ৬,০০০",
-      discount: "25%",
-      popular: false,
-      link: "/hsc-academic",
-      startDate: "১৫ ফেব্রুয়ারি ২০২৬",
-    },
-  ];
-
-  const filteredCourses = allCourses.filter((course) => {
-    const matchesCategory =
-      activeCategory === "all" || course.category === activeCategory;
-    const matchesSearch =
-      course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      course.subtitle.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const toBanglaNumber = (num: number | string): string => {
+    const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+    return num
+      .toString()
+      .split("")
+      .map((digit) =>
+        digit >= "0" && digit <= "9" ? banglaDigits[parseInt(digit)] : digit,
+      )
+      .join("");
+  };
 
   const stats = [
-    { value: "৮+", label: "কোর্স" },
-    { value: "২০০০+", label: "শিক্ষার্থী" },
+    { value: toBanglaNumber(totalCourse), label: "কোর্স" },
+    { value: toBanglaNumber(students), label: "শিক্ষার্থী" },
     { value: "৫০+", label: "শিক্ষক" },
     { value: "৯৫%", label: "সাফল্য" },
   ];
+
+  const redirectionLink = (id: string, type: string) => {
+    if (type === COURSE_TYPE.SSC_FOUNDATION) {
+      return `/courses/ssc/${id}`;
+    }
+    if (type === COURSE_TYPE.HSC_ACADEMIC) {
+      return `/courses/hsc/${id}`;
+    }
+    if (type === COURSE_TYPE.MEDICAL_ADMISSION) {
+      return `/courses/medical/${id}`;
+    }
+    return `/courses/${id}`;
+  };
+
+  const getBaseColor = (type: string) => {
+    if (type === COURSE_TYPE.SSC_FOUNDATION) {
+      return "text-green-500";
+    }
+    if (type === COURSE_TYPE.HSC_ACADEMIC) {
+      return "text-blue-500";
+    }
+    if (type === COURSE_TYPE.MEDICAL_ADMISSION) {
+      return "text-red-500";
+    }
+    return "text-primary";
+  };
+
+  const getBgColor = (type: string) => {
+    if (type === COURSE_TYPE.SSC_FOUNDATION) {
+      return "bg-green-500";
+    }
+    if (type === COURSE_TYPE.HSC_ACADEMIC) {
+      return "bg-blue-500";
+    }
+    if (type === COURSE_TYPE.MEDICAL_ADMISSION) {
+      return "bg-red-500";
+    }
+    return "bg-primary";
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -265,7 +152,7 @@ export const CoursesView = () => {
           <FadeUp className="max-w-3xl">
             <Badge className="bg-white/20 text-white border-0 mb-6">
               <BookOpen className="h-4 w-4 mr-2" />
-              ৮+ প্রফেশনাল কোর্স
+              {totalCourse}+ প্রফেশনাল কোর্স
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               তোমার স্বপ্নের কোর্স
@@ -299,7 +186,7 @@ export const CoursesView = () => {
           >
             <path
               d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
-              fill="hsl(var(--background))"
+              fill="white"
             />
           </svg>
         </div>
@@ -317,23 +204,22 @@ export const CoursesView = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
+                type="search"
               />
             </div>
 
             {/* Category Filters */}
             <div className="flex flex-wrap gap-2 justify-center">
-              {categories.map((category) => (
+              {TAB_OPTIONS.map((tab) => (
                 <Button
-                  key={category.id}
-                  variant={
-                    activeCategory === category.id ? "default" : "outline"
-                  }
+                  key={tab.id}
+                  variant={filters.type === tab.value ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setActiveCategory(category.id)}
+                  onClick={() => setFilters({ ...filters, type: tab.value })}
                   className="gap-2"
                 >
-                  <category.icon className="h-4 w-4" />
-                  {category.label}
+                  <tab.icon className="h-4 w-4" />
+                  {tab.label}
                 </Button>
               ))}
             </div>
@@ -347,17 +233,17 @@ export const CoursesView = () => {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl font-bold text-foreground">
-                {activeCategory === "all"
+                {filters.type === "all"
                   ? "সব কোর্স"
-                  : categories.find((c) => c.id === activeCategory)?.label}
+                  : categories.find((c) => c.id === filters.type)?.label}
               </h2>
               <p className="text-muted-foreground">
-                {filteredCourses.length}টি কোর্স পাওয়া গেছে
+                {courses?.length}টি কোর্স পাওয়া গেছে
               </p>
             </div>
           </div>
 
-          {filteredCourses.length === 0 ? (
+          {courses?.length === 0 ? (
             <div className="text-center py-16">
               <BookOpen className="h-16 w-16 text-muted-foreground/50 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-foreground mb-2">
@@ -368,28 +254,39 @@ export const CoursesView = () => {
               </p>
             </div>
           ) : (
-            <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredCourses.map((course) => (
+            <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {courses?.map((course) => (
                 <StaggerItem key={course.id}>
                   <Card
-                    className={`overflow-hidden hover:shadow-xl transition-all h-full flex flex-col ${course.popular ? "ring-2 ring-primary" : ""}`}
+                    className={cn(
+                      `overflow-hidden hover:shadow-xl transition-all h-full flex flex-col`,
+                      course.isPopular
+                        ? `ring-2 ${getBaseColor(course.type)}`
+                        : "",
+                    )}
                   >
                     <div className="relative">
                       <Image
-                        src={course.image}
-                        alt={course.title}
+                        src={course.imageUrl || ""}
+                        alt={course.name}
                         width={500}
                         height={500}
                         className="w-full h-48 object-cover"
                       />
-                      {course.popular && (
-                        <Badge className="absolute top-3 left-3 bg-primary">
+                      {course.isPopular && (
+                        <Badge className={cn("absolute top-3 right-3")}>
                           <Star className="h-3 w-3 mr-1 fill-current" />{" "}
                           জনপ্রিয়
                         </Badge>
                       )}
-                      <Badge className="absolute top-3 right-3 bg-green-600">
-                        {course.discount} ছাড়
+                      <Badge
+                        className={cn(
+                          "absolute top-3 right-3",
+                          getBgColor(course.type),
+                          course.isPopular && "hidden",
+                        )}
+                      >
+                        {Number(course.discount).toFixed(2)}% ছাড়
                       </Badge>
                     </div>
 
@@ -398,19 +295,19 @@ export const CoursesView = () => {
                         <div className="flex items-center text-yellow-500">
                           <Star className="h-4 w-4 fill-current" />
                           <span className="text-sm ml-1 text-foreground">
-                            {course.rating}
+                            {5}
                           </span>
                         </div>
                         <span className="text-xs text-muted-foreground">
-                          • {course.students} শিক্ষার্থী
+                          • {5} শিক্ষার্থী
                         </span>
                       </div>
 
                       <h3 className="font-bold text-lg text-foreground mb-1 line-clamp-2">
-                        {course.title}
+                        {course.name}
                       </h3>
                       <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                        {course.subtitle}
+                        {course.description}
                       </p>
 
                       <div className="flex flex-wrap gap-2 mb-4">
@@ -418,7 +315,8 @@ export const CoursesView = () => {
                           <Clock className="h-3 w-3 mr-1" /> {course.duration}
                         </Badge>
                         <Badge variant="secondary" className="text-xs">
-                          <Calendar className="h-3 w-3 mr-1" /> {course.classes}
+                          <Calendar className="h-3 w-3 mr-1" />{" "}
+                          {course.classes.length}
                         </Badge>
                       </div>
 
@@ -428,7 +326,12 @@ export const CoursesView = () => {
                             key={i}
                             className="text-sm text-muted-foreground flex items-start gap-2"
                           >
-                            <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
+                            <CheckCircle2
+                              className={cn(
+                                "h-4 w-4",
+                                getBaseColor(course.type),
+                              )}
+                            />
                             <span className="line-clamp-1">{feature}</span>
                           </li>
                         ))}
@@ -437,23 +340,40 @@ export const CoursesView = () => {
                       <div className="border-t pt-4 mt-auto">
                         <div className="flex items-center justify-between mb-3">
                           <div>
-                            <span className="text-2xl font-bold text-primary">
-                              {course.price}
+                            <span
+                              className={cn(
+                                "text-2xl font-bold",
+                                getBaseColor(course.type),
+                              )}
+                            >
+                              {Number(course.price).toFixed(2)}
                             </span>
                             <span className="text-sm text-muted-foreground line-through ml-2">
-                              {course.originalPrice}
+                              {Number(course.originalPrice).toFixed(2)}
                             </span>
                           </div>
                         </div>
                         <div className="text-xs text-muted-foreground mb-3 flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
-                          শুরু: {course.startDate}
+                          শুরু:{" "}
+                          {format(
+                            new Date(course.startDate || new Date()),
+                            "dd/MM/yyyy",
+                          )}
                         </div>
-                        <Link href={course.link} className="block">
-                          <Button className="w-full gap-2">
-                            বিস্তারিত দেখুন <ArrowRight className="h-4 w-4" />
-                          </Button>
-                        </Link>
+                        <Button
+                          size="sm"
+                          className={cn(
+                            "w-full text-white hover:bg-primary/80 hover:text-white/80 cursor-pointer transition-all",
+                            getBgColor(course.type),
+                          )}
+                          variant="secondary"
+                          asChild
+                        >
+                          <Link href={redirectionLink(course.id, course.type)}>
+                            বিস্তারিত
+                          </Link>
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -483,10 +403,7 @@ export const CoursesView = () => {
                   কাউন্সেলিং বুক করুন
                 </Button>
               </Link>
-              <Button
-                size="lg"
-                className="gap-2 bg-white text-primary hover:bg-white/90"
-              >
+              <Button size="lg" variant="white">
                 <Play className="h-5 w-5" />
                 ফ্রি ক্লাস দেখুন
               </Button>

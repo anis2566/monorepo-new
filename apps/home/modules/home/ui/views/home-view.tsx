@@ -24,17 +24,17 @@ export const HomeView = () => {
       {/* Quick Links */}
       <QuickLinks />
 
-      {/* Stats Banner */}
-      <StatsBanner />
+      {/* Teachers */}
+      <TeachersSection />
 
       {/* Courses */}
       <Courses />
 
+      {/* Stats Banner */}
+      {/* <StatsBanner /> */}
+
       {/* Program Pathway */}
       <ProgramPathway />
-
-      {/* Teachers */}
-      <TeachersSection />
 
       {/* Pricing Section */}
       <PricingSection />

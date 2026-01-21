@@ -1,6 +1,6 @@
 import { createTRPCRouter } from "../../trpc";
-import { programRouter } from "./program";
+import { courseRouter } from "./course";
 
 export const homeRouter = createTRPCRouter({
-  program: programRouter,
+  course: courseRouter,
 });

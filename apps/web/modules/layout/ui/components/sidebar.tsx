@@ -31,6 +31,7 @@ import Image from "next/image";
 
 const navItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard, exact: true },
+  { title: "Courses", url: "/courses", icon: BookOpen },
   { title: "Students", url: "/students", icon: GraduationCap },
   { title: "Exams", url: "/exams", icon: ClipboardList },
   { title: "Results", url: "/results", icon: BarChart3 },
@@ -39,7 +40,6 @@ const navItems = [
   { title: "Classes", url: "/classes", icon: School },
   { title: "Subjects", url: "/subjects", icon: BookOpen },
   { title: "Chapters", url: "/chapters", icon: Layers3 },
-  { title: "Programs", url: "/programs", icon: FileStack },
   { title: "Institutes", url: "/institutes", icon: Building2 },
   { title: "Users", url: "/users", icon: Users },
 ];

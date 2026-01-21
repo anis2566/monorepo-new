@@ -1,28 +1,30 @@
 "use client";
 
-import { ArrowRight, Check, Star } from "lucide-react";
+import { ArrowRight, BookOpen, CheckCircle2, Star } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { useTRPC } from "@/trpc/react";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent } from "@workspace/ui/components/card";
-import { cn } from "@workspace/ui/lib/utils";
-
 import {
   FadeUp,
   StaggerContainer,
   StaggerItem,
 } from "@/components/scroll-animation";
-import { useTRPC } from "@/trpc/react";
-import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
+import { cn } from "@workspace/ui/lib/utils";
 
-const tabs = [
+import { COURSE_TYPE } from "@workspace/utils/constant";
+
+const TAB_OPTIONS = [
   { id: "all", label: "সব কোর্স" },
-  { id: "hsc", label: "HSC ব্যাচ" },
-  { id: "medical", label: "মেডিকেল" },
-  { id: "crash", label: "ক্র্যাশ কোর্স" },
+  ...Object.values(COURSE_TYPE).map((type) => ({
+    id: type,
+    label: type,
+  })),
 ];
 
 export const Courses = () => {
@@ -30,32 +32,67 @@ export const Courses = () => {
 
   const trpc = useTRPC();
 
-  const { data: programs } = useQuery(
-    trpc.home.program.getProgramsForHome.queryOptions(),
+  const { data: courses } = useQuery(
+    trpc.home.course.getCoursesForHome.queryOptions({
+      type: activeTab,
+    }),
   );
+
+  const redirectionLink = (id: string, type: string) => {
+    if (type === COURSE_TYPE.SSC_FOUNDATION) {
+      return `/courses/ssc/${id}`;
+    }
+    if (type === COURSE_TYPE.HSC_ACADEMIC) {
+      return `/courses/hsc/${id}`;
+    }
+    if (type === COURSE_TYPE.MEDICAL_ADMISSION) {
+      return `/courses/medical/${id}`;
+    }
+    return `/courses/${id}`;
+  };
+
+  const getBaseColor = (type: string) => {
+    if (type === COURSE_TYPE.SSC_FOUNDATION) {
+      return "text-green-500";
+    }
+    if (type === COURSE_TYPE.HSC_ACADEMIC) {
+      return "text-blue-500";
+    }
+    if (type === COURSE_TYPE.MEDICAL_ADMISSION) {
+      return "text-red-500";
+    }
+    return "text-primary";
+  };
+
+  const getBgColor = (type: string) => {
+    if (type === COURSE_TYPE.SSC_FOUNDATION) {
+      return "bg-green-500";
+    }
+    if (type === COURSE_TYPE.HSC_ACADEMIC) {
+      return "bg-blue-500";
+    }
+    if (type === COURSE_TYPE.MEDICAL_ADMISSION) {
+      return "bg-red-500";
+    }
+    return "bg-primary";
+  };
 
   return (
     <section id="courses" className="py-16 bg-background">
       <div className="container mx-auto px-4">
-        <FadeUp className="text-center mb-10">
+        <FadeUp className="text-center mb-6">
           <Badge
             variant="outline"
-            className="mb-4 border-primary text-primary border-primary"
+            className="mb-4 text-primary border-primary text-xl"
           >
+            <BookOpen className="w-4 h-4 mr-2" />
             কোর্সসমূহ
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            তোমার জন্য সেরা কোর্স বেছে নাও
-          </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            SSC ফাউন্ডেশন, HSC একাডেমিক, মেডিকেল অ্যাডমিশন - সব ধরনের প্রস্তুতির
-            জন্য আমাদের কোর্স আছে
-          </p>
         </FadeUp>
 
         {/* Tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-8">
-          {tabs.map((tab) => (
+          {TAB_OPTIONS.map((tab) => (
             <Button
               key={tab.id}
               size="sm"
@@ -73,42 +110,50 @@ export const Courses = () => {
 
         {/* Course Cards */}
         <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {programs?.map((program) => (
-            <StaggerItem key={program.id}>
+          {courses?.map((course) => (
+            <StaggerItem key={course.id}>
               <Card
-                className={`overflow-hidden hover:shadow-xl transition-all h-full ${program.isPopular ? "ring-2 ring-primary" : ""}`}
+                className={cn(
+                  "overflow-hidden hover:shadow-xl transition-all h-full",
+                  course.isPopular ? `ring-2 ${getBaseColor(course.type)}` : "",
+                )}
               >
                 <div className="relative">
                   <Image
-                    src={
-                      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=250&fit=crop"
-                    }
-                    alt={program.name}
+                    src={course.imageUrl ?? ""}
+                    alt={course.name}
                     width={500}
                     height={500}
                     className="w-full h-48 object-cover"
                   />
-                  {program.isPopular && (
-                    <Badge className="absolute top-3 right-3 bg-primary">
+                  {course.isPopular && (
+                    <Badge
+                      className={cn(
+                        "absolute top-3 right-3",
+                        getBgColor(course.type),
+                      )}
+                    >
                       <Star className="h-3 w-3 mr-1 fill-current" /> জনপ্রিয়
                     </Badge>
                   )}
                 </div>
                 <CardContent className="p-5">
                   <h3 className="font-bold text-lg text-foreground mb-1">
-                    {program.name}
+                    {course.name}
                   </h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    {program.description}
+                    {course.description}
                   </p>
 
                   <ul className="space-y-2 mb-5">
-                    {program.features.map((feature, i) => (
+                    {course.features.map((feature, i) => (
                       <li
                         key={i}
                         className="text-sm text-muted-foreground flex items-center gap-2"
                       >
-                        <Check className="h-3 w-3 text-primary" />
+                        <CheckCircle2
+                          className={cn("h-4 w-4", getBaseColor(course.type))}
+                        />
                         {feature}
                       </li>
                     ))}
@@ -116,26 +161,33 @@ export const Courses = () => {
 
                   <div className="flex items-center justify-between pt-4 border-t">
                     <div>
-                      <span className="text-2xl font-bold text-primary">
-                        ৳{" "}
-                        {program.packages[0]?.price
-                          ? Number(program.packages[0].price).toFixed(2)
-                          : "০"}
+                      <span
+                        className={cn(
+                          "text-2xl font-bold",
+                          getBaseColor(course.type),
+                        )}
+                      >
+                        ৳ {Number(course.price).toFixed(2)}
                       </span>
                       <span className="text-sm text-muted-foreground line-through ml-2">
-                        ৳{" "}
-                        {program.packages[0]?.originalPrice
-                          ? Number(program.packages[0].originalPrice).toFixed(2)
-                          : "০"}
+                        ৳ {Number(course.originalPrice).toFixed(2)}
                       </span>
+                      <Badge className="block" variant="outline">
+                        {course.pricingLifeCycle}
+                      </Badge>
                     </div>
                     <Button
                       size="sm"
-                      className="bg-primary text-white hover:bg-primary/80 hover:text-white/80 cursor-pointer transition-all"
+                      className={cn(
+                        "text-white hover:bg-primary/80 hover:text-white/80 cursor-pointer transition-all",
+                        getBgColor(course.type),
+                      )}
                       variant="secondary"
                       asChild
                     >
-                      <Link href={`/courses/${program.id}`}>ভর্তি হন</Link>
+                      <Link href={redirectionLink(course.id, course.type)}>
+                        বিস্তারিত
+                      </Link>
                     </Button>
                   </div>
                 </CardContent>
@@ -149,8 +201,12 @@ export const Courses = () => {
             variant="outline"
             size="lg"
             className="gap-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer transition-all"
+            asChild
           >
-            সব কোর্স দেখুন <ArrowRight className="h-4 w-4" />
+            <Link href="/courses">
+              <span>সব কোর্স দেখুন</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </div>
