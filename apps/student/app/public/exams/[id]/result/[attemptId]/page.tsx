@@ -134,7 +134,7 @@ export default function PublicResultPage({ params }: PublicResultPageProps) {
                     {attempt.score}
                   </span>
                   <span className="text-sm md:text-base font-bold opacity-80 uppercase tracking-widest mt-1">
-                    Out of {attempt.exam.total + 1}
+                    Out of {attempt.exam.total}
                   </span>
                   <div className="absolute -bottom-2 bg-success text-success-foreground px-4 py-1 rounded-full text-sm font-black shadow-lg">
                     {percentage.toFixed(1)}% Score

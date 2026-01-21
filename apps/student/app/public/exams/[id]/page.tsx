@@ -266,7 +266,7 @@ export default function PublicExamPage({ params }: PublicExamPageProps) {
               </div>
               <div className="flex items-center gap-3">
                 <Trophy className="w-5 h-5 opacity-80" />
-                <span>Total Marks: {exam.total + 1}</span>
+                <span>Total Marks: {exam.total}</span>
               </div>
               {exam.hasNegativeMark && (
                 <div className="flex items-center gap-3 text-red-100 bg-red-900/20 p-2 rounded">
