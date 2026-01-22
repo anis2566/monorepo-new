@@ -17,6 +17,7 @@ import {
   School,
   Layers3,
   FileStack,
+  Target,
 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -40,6 +41,7 @@ const navItems = [
   { title: "Classes", url: "/classes", icon: School },
   { title: "Subjects", url: "/subjects", icon: BookOpen },
   { title: "Chapters", url: "/chapters", icon: Layers3 },
+  { title: "Topics", url: "/topics", icon: Target },
   { title: "Institutes", url: "/institutes", icon: Building2 },
   { title: "Users", url: "/users", icon: Users },
 ];

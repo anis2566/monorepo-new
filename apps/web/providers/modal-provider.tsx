@@ -10,6 +10,8 @@ import { ChangeUserRoleModal } from "@/modules/users/ui/modal/change-role-modal"
 import { CreateClassModal } from "@/modules/classes/ui/modal/create-class-modal";
 import { EditClassModal } from "@/modules/classes/ui/modal/edit-class-modal";
 import { CreateSubjectModal } from "@/modules/subjects/ui/modal/create-subject-modal";
+import { CreateTopicModal } from "@/modules/topic/ui/modal/create-topic-modal";
+import { EditTopicModal } from "@/modules/topic/ui/modal/edit-topic-modal";
 
 export const ModalProvider = () => {
   return (
@@ -26,6 +28,8 @@ export const ModalProvider = () => {
       <EditBatchModal />
       <DeleteConfirmModal />
       <ChangeUserRoleModal />
+      <CreateTopicModal />
+      <EditTopicModal />
     </>
   );
 };

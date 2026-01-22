@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { adminProcedure, createTRPCRouter } from "../../trpc";
+import { adminProcedure, createTRPCRouter, publicProcedure } from "../../trpc";
 import { SubjectSchema } from "@workspace/schema";
 import { TRPCError } from "@trpc/server";
 import { Prisma } from "@workspace/db";
@@ -9,7 +9,7 @@ export const subjectRouter = createTRPCRouter({
   createOne: adminProcedure
     .input(SubjectSchema)
     .mutation(async ({ ctx, input }) => {
-      const { name, level } = input;
+      const { name, level, position } = input;
 
       try {
         const existingSubject = await ctx.db.subject.findFirst({
@@ -30,6 +30,7 @@ export const subjectRouter = createTRPCRouter({
           data: {
             name,
             level,
+            position: parseInt(position),
           },
         });
 
@@ -76,6 +77,7 @@ export const subjectRouter = createTRPCRouter({
           data: {
             name: data.name,
             level: data.level,
+            position: parseInt(data.position),
           },
         });
 
@@ -177,6 +179,22 @@ export const subjectRouter = createTRPCRouter({
             },
           }),
         },
+      });
+
+      return subjects;
+    }),
+
+  getByLevel: publicProcedure
+    .input(
+      z.object({
+        level: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { level } = input;
+
+      const subjects = await ctx.db.subject.findMany({
+        where: { level },
       });
 
       return subjects;

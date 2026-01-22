@@ -4,7 +4,14 @@ import { useEffect } from "react";
 import { useTRPC } from "@/trpc/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Pencil, Sparkles, BookOpen, Loader2, Save } from "lucide-react";
+import {
+  Pencil,
+  Sparkles,
+  BookOpen,
+  Loader2,
+  Save,
+  ListOrdered,
+} from "lucide-react";
 
 import {
   Dialog,
@@ -43,7 +50,8 @@ const LEVEL_OPTIONS = Object.values(LEVEL).map((level) => ({
 }));
 
 export const EditSubjectModal = () => {
-  const { isOpen, onClose, subjectId, name, level } = useEditSubject();
+  const { isOpen, onClose, subjectId, name, level, position } =
+    useEditSubject();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
@@ -52,6 +60,7 @@ export const EditSubjectModal = () => {
     defaultValues: {
       name: "",
       level: "",
+      position: "",
     },
   });
 
@@ -59,15 +68,18 @@ export const EditSubjectModal = () => {
     formState: { isDirty },
   } = form;
 
+  const positionValue = form.watch("position");
+
   // Populate form when data changes
   useEffect(() => {
-    if (isOpen && name && level) {
+    if (isOpen && name && level && position) {
       form.reset({
         name,
         level,
+        position,
       });
     }
-  }, [isOpen, name, level, form]);
+  }, [isOpen, name, level, position, form]);
 
   const { mutate: updateSubject, isPending } = useMutation(
     trpc.admin.subject.updateOne.mutationOptions({
@@ -90,7 +102,7 @@ export const EditSubjectModal = () => {
           onClose();
         }, 500);
       },
-    })
+    }),
   );
 
   const onSubmit = async (values: SubjectSchemaType) => {
@@ -209,6 +221,46 @@ export const EditSubjectModal = () => {
                   </FormControl>
                   {fieldState.error && (
                     <FormMessage className="text-xs animate-fade-in" />
+                  )}
+                </FormItem>
+              )}
+            />
+
+            {/* Position Field */}
+            <FormField
+              control={form.control}
+              name="position"
+              render={({ field, fieldState }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-sm font-medium text-foreground flex items-center gap-2">
+                    <ListOrdered className="h-4 w-4 text-muted-foreground" />
+                    Position
+                    <span className="text-destructive">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        placeholder="e.g., 1"
+                        {...field}
+                        className={`
+                                                  h-12 pl-4 pr-4 bg-secondary/50 border-border/50
+                                                  focus:bg-background focus:border-primary/50
+                                                  transition-all duration-200
+                                                  ${fieldState.error ? "border-destructive focus:border-destructive" : ""}
+                                                `}
+                        disabled={isPending}
+                        min={0}
+                      />
+                      {positionValue && !fieldState.error && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <div className="w-2 h-2 bg-success rounded-full animate-scale-in" />
+                        </div>
+                      )}
+                    </div>
+                  </FormControl>
+                  {fieldState.error && (
+                    <FormMessage className="text-xs animate-slide-up" />
                   )}
                 </FormItem>
               )}

@@ -395,7 +395,11 @@ export const ModelName = {
   StudentStatus: 'StudentStatus',
   Subject: 'Subject',
   Chapter: 'Chapter',
+  Topic: 'Topic',
   Mcq: 'Mcq',
+  Cq: 'Cq',
+  Cognitive: 'Cognitive',
+  Perceptual: 'Perceptual',
   Course: 'Course',
   CourseClass: 'CourseClass',
   CourseSubject: 'CourseSubject',
@@ -427,7 +431,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "smsVerification" | "className" | "institute" | "student" | "studentStatus" | "subject" | "chapter" | "mcq" | "course" | "courseClass" | "courseSubject" | "batch" | "exam" | "examChapter" | "examBatch" | "examClassName" | "examStudent" | "examSubject" | "examMcq" | "examAttempt" | "answerHistory" | "publicExamParticipant" | "publicExamAttempt" | "publicAnswerHistory"
+    modelProps: "user" | "session" | "account" | "verification" | "smsVerification" | "className" | "institute" | "student" | "studentStatus" | "subject" | "chapter" | "topic" | "mcq" | "cq" | "cognitive" | "perceptual" | "course" | "courseClass" | "courseSubject" | "batch" | "exam" | "examChapter" | "examBatch" | "examClassName" | "examStudent" | "examSubject" | "examMcq" | "examAttempt" | "answerHistory" | "publicExamParticipant" | "publicExamAttempt" | "publicAnswerHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1245,6 +1249,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Topic: {
+      payload: Prisma.$TopicPayload<ExtArgs>
+      fields: Prisma.TopicFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TopicFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TopicFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicPayload>
+        }
+        findFirst: {
+          args: Prisma.TopicFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TopicFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicPayload>
+        }
+        findMany: {
+          args: Prisma.TopicFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicPayload>[]
+        }
+        create: {
+          args: Prisma.TopicCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicPayload>
+        }
+        createMany: {
+          args: Prisma.TopicCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TopicCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicPayload>[]
+        }
+        delete: {
+          args: Prisma.TopicDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicPayload>
+        }
+        update: {
+          args: Prisma.TopicUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicPayload>
+        }
+        deleteMany: {
+          args: Prisma.TopicDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TopicUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TopicUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicPayload>[]
+        }
+        upsert: {
+          args: Prisma.TopicUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicPayload>
+        }
+        aggregate: {
+          args: Prisma.TopicAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTopic>
+        }
+        groupBy: {
+          args: Prisma.TopicGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TopicGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TopicCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TopicCountAggregateOutputType> | number
+        }
+      }
+    }
     Mcq: {
       payload: Prisma.$McqPayload<ExtArgs>
       fields: Prisma.McqFieldRefs
@@ -1316,6 +1394,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.McqCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.McqCountAggregateOutputType> | number
+        }
+      }
+    }
+    Cq: {
+      payload: Prisma.$CqPayload<ExtArgs>
+      fields: Prisma.CqFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CqFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CqPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CqFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CqPayload>
+        }
+        findFirst: {
+          args: Prisma.CqFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CqPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CqFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CqPayload>
+        }
+        findMany: {
+          args: Prisma.CqFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CqPayload>[]
+        }
+        create: {
+          args: Prisma.CqCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CqPayload>
+        }
+        createMany: {
+          args: Prisma.CqCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CqCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CqPayload>[]
+        }
+        delete: {
+          args: Prisma.CqDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CqPayload>
+        }
+        update: {
+          args: Prisma.CqUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CqPayload>
+        }
+        deleteMany: {
+          args: Prisma.CqDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CqUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CqUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CqPayload>[]
+        }
+        upsert: {
+          args: Prisma.CqUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CqPayload>
+        }
+        aggregate: {
+          args: Prisma.CqAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCq>
+        }
+        groupBy: {
+          args: Prisma.CqGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CqGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CqCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CqCountAggregateOutputType> | number
+        }
+      }
+    }
+    Cognitive: {
+      payload: Prisma.$CognitivePayload<ExtArgs>
+      fields: Prisma.CognitiveFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CognitiveFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CognitivePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CognitiveFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CognitivePayload>
+        }
+        findFirst: {
+          args: Prisma.CognitiveFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CognitivePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CognitiveFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CognitivePayload>
+        }
+        findMany: {
+          args: Prisma.CognitiveFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CognitivePayload>[]
+        }
+        create: {
+          args: Prisma.CognitiveCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CognitivePayload>
+        }
+        createMany: {
+          args: Prisma.CognitiveCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CognitiveCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CognitivePayload>[]
+        }
+        delete: {
+          args: Prisma.CognitiveDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CognitivePayload>
+        }
+        update: {
+          args: Prisma.CognitiveUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CognitivePayload>
+        }
+        deleteMany: {
+          args: Prisma.CognitiveDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CognitiveUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CognitiveUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CognitivePayload>[]
+        }
+        upsert: {
+          args: Prisma.CognitiveUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CognitivePayload>
+        }
+        aggregate: {
+          args: Prisma.CognitiveAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCognitive>
+        }
+        groupBy: {
+          args: Prisma.CognitiveGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CognitiveGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CognitiveCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CognitiveCountAggregateOutputType> | number
+        }
+      }
+    }
+    Perceptual: {
+      payload: Prisma.$PerceptualPayload<ExtArgs>
+      fields: Prisma.PerceptualFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PerceptualFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerceptualPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PerceptualFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerceptualPayload>
+        }
+        findFirst: {
+          args: Prisma.PerceptualFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerceptualPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PerceptualFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerceptualPayload>
+        }
+        findMany: {
+          args: Prisma.PerceptualFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerceptualPayload>[]
+        }
+        create: {
+          args: Prisma.PerceptualCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerceptualPayload>
+        }
+        createMany: {
+          args: Prisma.PerceptualCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PerceptualCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerceptualPayload>[]
+        }
+        delete: {
+          args: Prisma.PerceptualDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerceptualPayload>
+        }
+        update: {
+          args: Prisma.PerceptualUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerceptualPayload>
+        }
+        deleteMany: {
+          args: Prisma.PerceptualDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PerceptualUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PerceptualUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerceptualPayload>[]
+        }
+        upsert: {
+          args: Prisma.PerceptualUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerceptualPayload>
+        }
+        aggregate: {
+          args: Prisma.PerceptualAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePerceptual>
+        }
+        groupBy: {
+          args: Prisma.PerceptualGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PerceptualGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PerceptualCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PerceptualCountAggregateOutputType> | number
         }
       }
     }
@@ -2691,6 +2991,7 @@ export const SubjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
   level: 'level',
+  position: 'position',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2710,6 +3011,19 @@ export const ChapterScalarFieldEnum = {
 export type ChapterScalarFieldEnum = (typeof ChapterScalarFieldEnum)[keyof typeof ChapterScalarFieldEnum]
 
 
+export const TopicScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  chapterId: 'chapterId',
+  subjectId: 'subjectId'
+} as const
+
+export type TopicScalarFieldEnum = (typeof TopicScalarFieldEnum)[keyof typeof TopicScalarFieldEnum]
+
+
 export const McqScalarFieldEnum = {
   id: 'id',
   question: 'question',
@@ -2727,11 +3041,62 @@ export const McqScalarFieldEnum = {
   contextUrl: 'contextUrl',
   subjectId: 'subjectId',
   chapterId: 'chapterId',
+  topicId: 'topicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type McqScalarFieldEnum = (typeof McqScalarFieldEnum)[keyof typeof McqScalarFieldEnum]
+
+
+export const CqScalarFieldEnum = {
+  id: 'id',
+  reference: 'reference',
+  isMath: 'isMath',
+  context: 'context',
+  contextUrl: 'contextUrl',
+  questionA: 'questionA',
+  questionB: 'questionB',
+  questionC: 'questionC',
+  questionD: 'questionD',
+  subjectId: 'subjectId',
+  chapterId: 'chapterId',
+  topicId: 'topicId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CqScalarFieldEnum = (typeof CqScalarFieldEnum)[keyof typeof CqScalarFieldEnum]
+
+
+export const CognitiveScalarFieldEnum = {
+  id: 'id',
+  reference: 'reference',
+  isMath: 'isMath',
+  answer: 'answer',
+  subjectId: 'subjectId',
+  chapterId: 'chapterId',
+  topicId: 'topicId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CognitiveScalarFieldEnum = (typeof CognitiveScalarFieldEnum)[keyof typeof CognitiveScalarFieldEnum]
+
+
+export const PerceptualScalarFieldEnum = {
+  id: 'id',
+  reference: 'reference',
+  isMath: 'isMath',
+  answer: 'answer',
+  subjectId: 'subjectId',
+  chapterId: 'chapterId',
+  topicId: 'topicId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PerceptualScalarFieldEnum = (typeof PerceptualScalarFieldEnum)[keyof typeof PerceptualScalarFieldEnum]
 
 
 export const CourseScalarFieldEnum = {
@@ -3238,7 +3603,11 @@ export type GlobalOmitConfig = {
   studentStatus?: Prisma.StudentStatusOmit
   subject?: Prisma.SubjectOmit
   chapter?: Prisma.ChapterOmit
+  topic?: Prisma.TopicOmit
   mcq?: Prisma.McqOmit
+  cq?: Prisma.CqOmit
+  cognitive?: Prisma.CognitiveOmit
+  perceptual?: Prisma.PerceptualOmit
   course?: Prisma.CourseOmit
   courseClass?: Prisma.CourseClassOmit
   courseSubject?: Prisma.CourseSubjectOmit

@@ -17,7 +17,13 @@ interface EditSubjectState {
   subjectId: string;
   name: string;
   level: string;
-  onOpen: (subjectId: string, name: string, level: string) => void;
+  position: string;
+  onOpen: (
+    subjectId: string,
+    name: string,
+    level: string,
+    position: string,
+  ) => void;
   onClose: () => void;
 }
 
@@ -26,8 +32,9 @@ export const useEditSubject = create<EditSubjectState>((set) => ({
   subjectId: "",
   name: "",
   level: "",
-  onOpen: (subjectId, name, level) =>
-    set({ isOpen: true, subjectId, name, level }),
+  position: "",
+  onOpen: (subjectId, name, level, position) =>
+    set({ isOpen: true, subjectId, name, level, position }),
   onClose: () =>
     set({
       isOpen: false,

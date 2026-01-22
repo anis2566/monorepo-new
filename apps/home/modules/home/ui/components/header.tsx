@@ -24,6 +24,12 @@ export const Header = () => {
 
           <nav className="hidden md:flex items-center gap-6">
             <Link
+              href="/"
+              className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+            >
+              হোম
+            </Link>
+            <Link
               href="/courses"
               className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground transition-colors"
             >

@@ -172,7 +172,10 @@ export const Courses = () => {
                       <span className="text-sm text-muted-foreground line-through ml-2">
                         ৳ {Number(course.originalPrice).toFixed(2)}
                       </span>
-                      <Badge className="block" variant="outline">
+                      <Badge
+                        className="w-full flex items-center justify-start"
+                        variant="outline"
+                      >
                         {course.pricingLifeCycle}
                       </Badge>
                     </div>

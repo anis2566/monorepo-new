@@ -11,6 +11,7 @@ import { userRouter } from "./user";
 import { resultRouter } from "./result";
 import { dashboardRouter } from "./dashboard";
 import { courseRouter } from "./course";
+import { topicRouter } from "./topic";
 
 export const adminRouter = createTRPCRouter({
   class: classRouter,
@@ -25,4 +26,5 @@ export const adminRouter = createTRPCRouter({
   result: resultRouter,
   dashboard: dashboardRouter,
   course: courseRouter,
+  topic: topicRouter,
 });

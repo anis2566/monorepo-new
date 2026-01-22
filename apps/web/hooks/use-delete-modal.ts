@@ -9,7 +9,9 @@ export type DeleteEntityType =
   | "subject"
   | "chapter"
   | "batch"
-  | "class";
+  | "class"
+  | "course"
+  | "topic";
 
 interface DeleteModalState {
   isOpen: boolean;

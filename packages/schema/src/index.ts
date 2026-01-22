@@ -50,6 +50,7 @@ export type StudentSchemaType = z.infer<typeof StudentSchema>;
 export const SubjectSchema = z.object({
   name: requiredString,
   level: requiredString,
+  position: requiredString,
 });
 
 export type SubjectSchemaType = z.infer<typeof SubjectSchema>;
@@ -75,6 +76,15 @@ const McqSchema = z.object({
   context: z.string().optional(),
   statements: z.array(z.string()).optional(),
 });
+
+export const TopicSchema = z.object({
+  name: requiredString,
+  position: requiredString,
+  chapterId: requiredString,
+  subjectId: requiredString,
+});
+
+export type TopicSchemaType = z.infer<typeof TopicSchema>;
 
 export const McqsSchema = z.array(McqSchema);
 

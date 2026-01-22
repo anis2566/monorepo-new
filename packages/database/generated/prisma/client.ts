@@ -95,10 +95,30 @@ export type Subject = Prisma.SubjectModel
  */
 export type Chapter = Prisma.ChapterModel
 /**
+ * Model Topic
+ * 
+ */
+export type Topic = Prisma.TopicModel
+/**
  * Model Mcq
  * 
  */
 export type Mcq = Prisma.McqModel
+/**
+ * Model Cq
+ * 
+ */
+export type Cq = Prisma.CqModel
+/**
+ * Model Cognitive
+ * 
+ */
+export type Cognitive = Prisma.CognitiveModel
+/**
+ * Model Perceptual
+ * 
+ */
+export type Perceptual = Prisma.PerceptualModel
 /**
  * Model Course
  * 

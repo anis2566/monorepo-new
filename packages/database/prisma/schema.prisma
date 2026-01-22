@@ -204,17 +204,22 @@ model StudentStatus {
 }
 
 model Subject {
-  id    String @id @default(uuid())
-  name  String
-  level String
+  id       String @id @default(uuid())
+  name     String
+  level    String
+  position Int    @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  chapters Chapter[]
-  mcqs     Mcq[]
-  exams    ExamSubject[]
-  courses  CourseSubject[]
+  chapters    Chapter[]
+  mcqs        Mcq[]
+  cqs         Cq[]
+  exams       ExamSubject[]
+  courses     CourseSubject[]
+  topics      Topic[]
+  cognitives  Cognitive[]
+  perceptuals Perceptual[]
 
   @@index([name])
   @@index([level])
@@ -231,12 +236,41 @@ model Chapter {
   subjectId String
   subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
 
-  mcqs  Mcq[]
-  exams ExamChapter[]
+  mcqs        Mcq[]
+  cqs         Cq[]
+  exams       ExamChapter[]
+  topics      Topic[]
+  cognitives  Cognitive[]
+  perceptuals Perceptual[]
 
   @@index([subjectId])
   @@index([name])
   @@index([subjectId, name])
+}
+
+model Topic {
+  id       String @id @default(uuid())
+  name     String
+  position Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Restrict)
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+
+  mcqs        Mcq[]
+  cqs         Cq[]
+  cognitives  Cognitive[]
+  perceptuals Perceptual[]
+
+  @@index([subjectId])
+  @@index([name])
+  @@index([subjectId, name])
+  @@index([chapterId])
 }
 
 model Mcq {
@@ -261,6 +295,9 @@ model Mcq {
   chapterId String
   chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Restrict)
 
+  topicId String?
+  topic   Topic?  @relation(fields: [topicId], references: [id], onDelete: SetNull)
+
   exams ExamMcq[]
 
   createdAt             DateTime              @default(now())
@@ -277,6 +314,83 @@ model Mcq {
   @@index([subjectId, type])
   @@index([chapterId, type])
   @@index([type, session])
+}
+
+model Cq {
+  id         String   @id @default(uuid())
+  reference  String[] @default([])
+  isMath     Boolean  @default(false)
+  context    String?
+  contextUrl String?
+  questionA  String
+  questionB  String
+  questionC  String
+  questionD  String
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Restrict)
+
+  topicId String?
+  topic   Topic?  @relation(fields: [topicId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([subjectId])
+  @@index([chapterId])
+  @@index([isMath])
+  @@index([subjectId, chapterId])
+}
+
+model Cognitive {
+  id        String   @id @default(uuid())
+  reference String[] @default([])
+  isMath    Boolean  @default(false)
+  answer    String
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Restrict)
+
+  topicId String?
+  topic   Topic?  @relation(fields: [topicId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([subjectId])
+  @@index([chapterId])
+  @@index([isMath])
+  @@index([subjectId, chapterId])
+}
+
+model Perceptual {
+  id        String   @id @default(uuid())
+  reference String[] @default([])
+  isMath    Boolean  @default(false)
+  answer    String
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Restrict)
+
+  topicId String?
+  topic   Topic?  @relation(fields: [topicId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([subjectId])
+  @@index([chapterId])
+  @@index([isMath])
+  @@index([subjectId, chapterId])
 }
 
 model Course {

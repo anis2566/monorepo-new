@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Sparkles, Send, Loader2 } from "lucide-react";
+import { BookOpen, Sparkles, Send, Loader2, ListOrdered } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/react";
@@ -39,6 +39,7 @@ import { SubjectSchema, SubjectSchemaType } from "@workspace/schema";
 const DEFAULT_VALUES: SubjectSchemaType = {
   name: "",
   level: "",
+  position: "",
 };
 
 const LEVEL_OPTIONS = Object.values(LEVEL).map((level) => ({
@@ -58,6 +59,7 @@ export const CreateSubjectModal = () => {
 
   const nameValue = form.watch("name");
   const levelValue = form.watch("level");
+  const positionValue = form.watch("position");
 
   const { mutate: createSubject, isPending } = useMutation(
     trpc.admin.subject.createOne.mutationOptions({
@@ -82,7 +84,7 @@ export const CreateSubjectModal = () => {
           onClose();
         }, 500);
       },
-    })
+    }),
   );
 
   const onSubmit = async (values: SubjectSchemaType) => {
@@ -210,6 +212,46 @@ export const CreateSubjectModal = () => {
                         disabled={isPending}
                       />
                       {nameValue && !fieldState.error && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <div className="w-2 h-2 bg-success rounded-full animate-scale-in" />
+                        </div>
+                      )}
+                    </div>
+                  </FormControl>
+                  {fieldState.error && (
+                    <FormMessage className="text-xs animate-slide-up" />
+                  )}
+                </FormItem>
+              )}
+            />
+
+            {/* Position Field */}
+            <FormField
+              control={form.control}
+              name="position"
+              render={({ field, fieldState }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-sm font-medium text-foreground flex items-center gap-2">
+                    <ListOrdered className="h-4 w-4 text-muted-foreground" />
+                    Position
+                    <span className="text-destructive">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        placeholder="e.g., 1"
+                        {...field}
+                        className={`
+                                      h-12 pl-4 pr-4 bg-secondary/50 border-border/50
+                                      focus:bg-background focus:border-primary/50
+                                      transition-all duration-200
+                                      ${fieldState.error ? "border-destructive focus:border-destructive" : ""}
+                                    `}
+                        disabled={isPending}
+                        min={0}
+                      />
+                      {positionValue && !fieldState.error && (
                         <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
                           <div className="w-2 h-2 bg-success rounded-full animate-scale-in" />
                         </div>

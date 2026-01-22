@@ -29,6 +29,8 @@ const entityLabels: Record<
   chapter: { singular: "Chapter", icon: "📖" },
   batch: { singular: "Batch", icon: "👥" },
   class: { singular: "Class", icon: "🏷️" },
+  course: { singular: "Course", icon: "🎓" },
+  topic: { singular: "Topic", icon: "🎓" },
 };
 
 export function DeleteConfirmModal() {
@@ -137,7 +139,7 @@ export function DeleteConfirmModal() {
             disabled={isDeleting}
             className={cn(
               "w-full order-1 sm:order-2 gap-2",
-              isDeleting && "opacity-80"
+              isDeleting && "opacity-80",
             )}
           >
             {isDeleting ? (

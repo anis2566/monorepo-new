@@ -62,7 +62,11 @@ export const ModelName = {
   StudentStatus: 'StudentStatus',
   Subject: 'Subject',
   Chapter: 'Chapter',
+  Topic: 'Topic',
   Mcq: 'Mcq',
+  Cq: 'Cq',
+  Cognitive: 'Cognitive',
+  Perceptual: 'Perceptual',
   Course: 'Course',
   CourseClass: 'CourseClass',
   CourseSubject: 'CourseSubject',
@@ -246,6 +250,7 @@ export const SubjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
   level: 'level',
+  position: 'position',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -265,6 +270,19 @@ export const ChapterScalarFieldEnum = {
 export type ChapterScalarFieldEnum = (typeof ChapterScalarFieldEnum)[keyof typeof ChapterScalarFieldEnum]
 
 
+export const TopicScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  chapterId: 'chapterId',
+  subjectId: 'subjectId'
+} as const
+
+export type TopicScalarFieldEnum = (typeof TopicScalarFieldEnum)[keyof typeof TopicScalarFieldEnum]
+
+
 export const McqScalarFieldEnum = {
   id: 'id',
   question: 'question',
@@ -282,11 +300,62 @@ export const McqScalarFieldEnum = {
   contextUrl: 'contextUrl',
   subjectId: 'subjectId',
   chapterId: 'chapterId',
+  topicId: 'topicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type McqScalarFieldEnum = (typeof McqScalarFieldEnum)[keyof typeof McqScalarFieldEnum]
+
+
+export const CqScalarFieldEnum = {
+  id: 'id',
+  reference: 'reference',
+  isMath: 'isMath',
+  context: 'context',
+  contextUrl: 'contextUrl',
+  questionA: 'questionA',
+  questionB: 'questionB',
+  questionC: 'questionC',
+  questionD: 'questionD',
+  subjectId: 'subjectId',
+  chapterId: 'chapterId',
+  topicId: 'topicId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CqScalarFieldEnum = (typeof CqScalarFieldEnum)[keyof typeof CqScalarFieldEnum]
+
+
+export const CognitiveScalarFieldEnum = {
+  id: 'id',
+  reference: 'reference',
+  isMath: 'isMath',
+  answer: 'answer',
+  subjectId: 'subjectId',
+  chapterId: 'chapterId',
+  topicId: 'topicId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CognitiveScalarFieldEnum = (typeof CognitiveScalarFieldEnum)[keyof typeof CognitiveScalarFieldEnum]
+
+
+export const PerceptualScalarFieldEnum = {
+  id: 'id',
+  reference: 'reference',
+  isMath: 'isMath',
+  answer: 'answer',
+  subjectId: 'subjectId',
+  chapterId: 'chapterId',
+  topicId: 'topicId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PerceptualScalarFieldEnum = (typeof PerceptualScalarFieldEnum)[keyof typeof PerceptualScalarFieldEnum]
 
 
 export const CourseScalarFieldEnum = {

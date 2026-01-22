@@ -7,10 +7,8 @@ import { Features } from "../components/features";
 import { HeroBanner } from "../components/hero-banner";
 import { MobileCTABar } from "../components/mobile-cta-bar";
 import { NoticeBoard } from "../components/notice-board";
-import { PricingSection } from "../components/pricing-section";
 import { ProgramPathway } from "../components/program-pathway";
-import { QuickLinks } from "../components/quick-links";
-import { StatsBanner } from "../components/stats-banner";
+import { QuickActionsBar } from "../components/quick-action-bar";
 import { SuccessStories } from "../components/success-stories";
 import { TeachersSection } from "../components/teachers-section";
 import { VideoTestimonials } from "../components/video-testimonials";
@@ -21,8 +19,8 @@ export const HomeView = () => {
       {/* Hero Banner */}
       <HeroBanner />
 
-      {/* Quick Links */}
-      <QuickLinks />
+      {/* Quick Action Bar */}
+      <QuickActionsBar />
 
       {/* Teachers */}
       <TeachersSection />
@@ -37,7 +35,7 @@ export const HomeView = () => {
       <ProgramPathway />
 
       {/* Pricing Section */}
-      <PricingSection />
+      {/* <PricingSection /> */}
 
       {/* Features */}
       <Features />

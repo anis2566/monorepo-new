@@ -312,7 +312,7 @@ export const courseRouter = {
     }),
 
   // Get course by ID (admin)
-  getById: adminProcedure
+  getOne: adminProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const course = await ctx.db.course.findUnique({
@@ -338,95 +338,213 @@ export const courseRouter = {
         });
       }
 
+      console.log(course);
+
       return course;
     }),
 
+  // Update course (admin)
   // Update course (admin)
   updateOne: adminProcedure
     .input(
       z.object({
         id: z.string(),
-        data: CourseFormSchema.partial(),
+        data: CourseFormSchema,
       }),
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const updateData: any = {};
+        // Parse and validate numeric fields
+        const duration = parseInt(input.data.duration);
+        const totalClasses = parseInt(input.data.totalClasses);
+        const price = parseFloat(input.data.price);
+        const originalPrice = input.data.originalPrice
+          ? parseFloat(input.data.originalPrice)
+          : 0;
+        const discount = input.data.discount
+          ? parseFloat(input.data.discount)
+          : 0;
 
-        // Parse numeric fields if provided
-        if (input.data.duration) {
-          updateData.duration = parseInt(input.data.duration);
-        }
-        if (input.data.totalClasses) {
-          updateData.totalClasses = parseInt(input.data.totalClasses);
-        }
-        if (input.data.price) {
-          updateData.price = parseFloat(input.data.price);
-        }
-        if (input.data.originalPrice) {
-          updateData.originalPrice = parseFloat(input.data.originalPrice);
-        }
-        if (input.data.discount) {
-          updateData.discount = parseFloat(input.data.discount);
-        }
-
-        // Parse dates if provided
-        if (input.data.startDate) {
-          updateData.startDate = new Date(input.data.startDate);
-        }
-        if (input.data.endDate) {
-          updateData.endDate = new Date(input.data.endDate);
+        if (isNaN(duration) || isNaN(totalClasses)) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Duration and total classes must be valid numbers",
+          });
         }
 
-        // Add other fields
-        const simpleFields = [
-          "name",
-          "type",
-          "description",
-          "isActive",
-          "isPopular",
-          "imageUrl",
-          "features",
-          "specialBenefits",
-          "pricingLifeCycle",
-          "heroTitle",
-          "heroDescription",
-          "tagline",
-          "urgencyMessage",
-        ] as const;
+        if (isNaN(price) || price < 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Price must be a valid positive number",
+          });
+        }
 
-        simpleFields.forEach((field) => {
-          if (input.data[field] !== undefined) {
-            updateData[field] = input.data[field];
+        // Parse dates
+        const startDate = input.data.startDate
+          ? new Date(input.data.startDate)
+          : null;
+        const endDate = input.data.endDate
+          ? new Date(input.data.endDate)
+          : null;
+
+        if (startDate && isNaN(startDate.getTime())) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Invalid start date",
+          });
+        }
+
+        if (endDate && isNaN(endDate.getTime())) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Invalid end date",
+          });
+        }
+
+        if (startDate && endDate && endDate <= startDate) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "End date must be after start date",
+          });
+        }
+
+        // Validate required fields
+        if (!input.data.classIds || input.data.classIds.length === 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "At least one class must be selected",
+          });
+        }
+
+        if (!input.data.subjectIds || input.data.subjectIds.length === 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "At least one subject must be selected",
+          });
+        }
+
+        // Update course with all relations in a transaction
+        const course = await ctx.db.$transaction(async (tx) => {
+          // 1. Update the main course
+          const updatedCourse = await tx.course.update({
+            where: { id: input.id },
+            data: {
+              name: input.data.name,
+              type: input.data.type,
+              description: input.data.description || null,
+              duration,
+              totalClasses,
+              isActive: input.data.isActive,
+              isPopular: input.data.isPopular || false,
+              startDate,
+              endDate,
+              imageUrl: input.data.imageUrl || null,
+              features: input.data.features,
+              specialBenefits: input.data.specialBenefits || [],
+
+              // Pricing
+              price,
+              originalPrice,
+              discount,
+              pricingLifeCycle: input.data.pricingLifeCycle || "MONTHLY",
+
+              // Hero section
+              heroTitle: input.data.heroTitle || null,
+              heroDescription: input.data.heroDescription || null,
+              tagline: input.data.tagline || null,
+              urgencyMessage: input.data.urgencyMessage || null,
+            },
+          });
+
+          // 2. Delete existing course-class associations
+          await tx.courseClass.deleteMany({
+            where: { courseId: input.id },
+          });
+
+          // 3. Create new course-class associations
+          if (input.data.classIds.length > 0) {
+            await tx.courseClass.createMany({
+              data: input.data.classIds.map((classId) => ({
+                courseId: updatedCourse.id,
+                classId,
+              })),
+            });
           }
-        });
 
-        const updatedCourse = await ctx.db.course.update({
-          where: { id: input.id },
-          data: updateData,
-          include: {
-            classes: {
-              include: {
-                className: true,
+          // 4. Delete existing course-subject associations
+          await tx.courseSubject.deleteMany({
+            where: { courseId: input.id },
+          });
+
+          // 5. Create new course-subject associations with weight and totalClasses
+          if (input.data.subjectIds.length > 0) {
+            const subjectDetails = input.data.subjectDetails || [];
+
+            for (const subjectId of input.data.subjectIds) {
+              const detail = subjectDetails.find(
+                (d) => d.subjectId === subjectId,
+              );
+              const weight = detail?.weight ? parseInt(detail.weight) : null;
+              const subjectTotalClasses = detail?.totalClasses
+                ? parseInt(detail.totalClasses)
+                : null;
+
+              await tx.courseSubject.create({
+                data: {
+                  courseId: updatedCourse.id,
+                  subjectId,
+                  weight,
+                  totalClasses: subjectTotalClasses,
+                },
+              });
+            }
+          }
+
+          // Return updated course with all relations
+          return tx.course.findUnique({
+            where: { id: updatedCourse.id },
+            include: {
+              classes: {
+                include: {
+                  className: true,
+                },
+              },
+              subjects: {
+                include: {
+                  subject: true,
+                },
               },
             },
-            subjects: {
-              include: {
-                subject: true,
-              },
-            },
-          },
+          });
         });
 
         return {
           success: true,
-          course: updatedCourse,
+          course,
         };
       } catch (error) {
+        // Handle Prisma unique constraint violations
+        if (error instanceof Error && "code" in error) {
+          if (error.code === "P2002") {
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: "A course with this name already exists",
+            });
+          }
+          if (error.code === "P2025") {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Course not found",
+            });
+          }
+        }
+
+        // Re-throw TRPCErrors
         if (error instanceof TRPCError) {
           throw error;
         }
 
+        // Handle unexpected errors
         console.error("Error updating course:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

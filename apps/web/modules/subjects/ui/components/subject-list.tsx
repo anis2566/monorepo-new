@@ -88,7 +88,7 @@ export const SubjectList = ({ subjects, totalCount }: SubjectListProps) => {
           queryKey: trpc.admin.subject.getMany.queryKey(),
         });
       },
-    })
+    }),
   );
 
   const handleDeleteSubject = (subjectId: string, subjectName: string) => {
@@ -121,6 +121,7 @@ export const SubjectList = ({ subjects, totalCount }: SubjectListProps) => {
                 <TableHead>Subject Name</TableHead>
                 <TableHead>Level</TableHead>
                 <TableHead>Chapters</TableHead>
+                <TableHead>Position</TableHead>
                 <TableHead>MCQs</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
@@ -152,6 +153,9 @@ export const SubjectList = ({ subjects, totalCount }: SubjectListProps) => {
                     </div>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
+                    {subject.position}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <FileQuestion className="h-3 w-3" />
                       {subject._count.mcqs}
@@ -170,7 +174,8 @@ export const SubjectList = ({ subjects, totalCount }: SubjectListProps) => {
                             openEditModal(
                               subject.id,
                               subject.name,
-                              subject.level
+                              subject.level,
+                              subject.position.toString(),
                             )
                           }
                         >
@@ -224,7 +229,12 @@ export const SubjectList = ({ subjects, totalCount }: SubjectListProps) => {
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem
                       onClick={() =>
-                        openEditModal(subject.id, subject.name, subject.level)
+                        openEditModal(
+                          subject.id,
+                          subject.name,
+                          subject.level,
+                          subject.position.toString(),
+                        )
                       }
                     >
                       <Edit className="h-4 w-4" />

@@ -40,6 +40,10 @@ import {
 } from "@workspace/ui/shared/mobile-data-card";
 import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
 import { Pagination } from "./pagination";
+import { useDeleteModal } from "@/hooks/use-delete-modal";
+import { useTRPC } from "@/trpc/react";
+import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface CourseWithRelations extends Course {
   subjects: {
@@ -62,6 +66,40 @@ interface CoursesProps {
 export const CoursesList = ({ courses, totalCount }: CoursesProps) => {
   const router = useRouter();
   const isMobile = useIsMobile();
+  const { openDeleteModal } = useDeleteModal();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteCourse } = useMutation(
+    trpc.admin.course.deleteOne.mutationOptions({
+      onError: (err) => {
+        toast.error(err.message);
+      },
+      onSuccess: async (data) => {
+        if (!data.success) {
+          toast.error("Failed to delete course");
+          return;
+        }
+
+        toast.success("Course deleted successfully");
+
+        await queryClient.invalidateQueries({
+          queryKey: trpc.admin.course.getMany.queryKey(),
+        });
+      },
+    }),
+  );
+
+  const handleDeleteCourse = (courseId: string, courseName: string) => {
+    openDeleteModal({
+      entityId: courseId,
+      entityType: "course",
+      entityName: courseName,
+      onConfirm: (id) => {
+        deleteCourse({ id });
+      },
+    });
+  };
 
   const formatPrice = (price: number) => {
     return `৳${price.toLocaleString()}`;
@@ -136,6 +174,7 @@ export const CoursesList = ({ courses, totalCount }: CoursesProps) => {
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
+              handleDeleteCourse(course.id, course.name);
             }}
             className="text-destructive hover:text-destructive"
           >
@@ -264,7 +303,7 @@ export const CoursesList = ({ courses, totalCount }: CoursesProps) => {
                             onClick={() => router.push(`/courses/${course.id}`)}
                           >
                             <Eye className="w-4 h-4 mr-2" />
-                            View Details
+                            View
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() =>
@@ -275,7 +314,9 @@ export const CoursesList = ({ courses, totalCount }: CoursesProps) => {
                             Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => {}}
+                            onClick={() =>
+                              handleDeleteCourse(course.id, course.name)
+                            }
                             className="text-destructive focus:text-destructive"
                           >
                             <Trash2 className="w-4 h-4 mr-2" />
