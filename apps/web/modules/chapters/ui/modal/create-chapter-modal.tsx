@@ -39,7 +39,7 @@ import { useCreateChapter } from "@/hooks/use-chapter";
 const DEFAULT_VALUES: ChapterSchemaType = {
   name: "",
   position: "",
-  subjectId: "",
+  subjectId: "e8281ebc-5763-47e9-aacd-021ffb03a6f2",
 };
 
 export const CreateChapterModal = () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
@@ -12,15 +12,11 @@ import {
   Play,
   ChevronDown,
   ChevronRight,
-  Dna,
-  Beaker,
-  Atom,
-  Calculator,
-  Globe,
   X,
   Settings2,
   Clock,
   HelpCircle,
+  Loader2,
 } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { Label } from "@workspace/ui/components/label";
@@ -33,91 +29,33 @@ import {
 } from "@workspace/ui/components/select";
 import { Switch } from "@workspace/ui/components/switch";
 import { getSubjectBgColor, getSubjectIcon } from "@workspace/utils";
+import { useTRPC } from "@/trpc/react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useRouter, useSearchParams } from "next/navigation";
+import TakeMcqPractice from "./take-mcq-practice-view";
+import PracticeResultView from "./practice-result-view";
 
-// Mock data
-const subjectsData = [
-  {
-    id: "biology",
-    name: "জীববিজ্ঞান",
-    chapters: [
-      {
-        id: "bio-ch1",
-        name: "কোষ ও কোষের গঠন",
-        topics: [
-          { id: "bio-ch1-t1", name: "কোষের আবিষ্কার", questionCount: 25 },
-          { id: "bio-ch1-t2", name: "কোষের গঠন", questionCount: 30 },
-          { id: "bio-ch1-t3", name: "কোষ বিভাজন", questionCount: 20 },
-        ],
-      },
-      {
-        id: "bio-ch2",
-        name: "জীবের পরিবেশ",
-        topics: [
-          { id: "bio-ch2-t1", name: "বাস্তুতন্ত্র", questionCount: 18 },
-          { id: "bio-ch2-t2", name: "খাদ্য শৃঙ্খল", questionCount: 22 },
-        ],
-      },
-    ],
-  },
-  {
-    id: "chemistry",
-    name: "রসায়ন",
-    chapters: [
-      {
-        id: "chem-ch1",
-        name: "পরমাণুর গঠন",
-        topics: [
-          { id: "chem-ch1-t1", name: "ইলেকট্রন বিন্যাস", questionCount: 20 },
-          { id: "chem-ch1-t2", name: "আইসোটোপ", questionCount: 15 },
-        ],
-      },
-    ],
-  },
-  {
-    id: "physics",
-    name: "পদার্থবিজ্ঞান",
-    chapters: [
-      {
-        id: "phy-ch1",
-        name: "গতিবিদ্যা",
-        topics: [
-          { id: "phy-ch1-t1", name: "সরল রৈখিক গতি", questionCount: 30 },
-          { id: "phy-ch1-t2", name: "নিউটনের সূত্র", questionCount: 35 },
-        ],
-      },
-    ],
-  },
-  {
-    id: "math",
-    name: "উচ্চতর গণিত",
-    chapters: [
-      {
-        id: "math-ch1",
-        name: "বীজগণিত",
-        topics: [
-          { id: "math-ch1-t1", name: "সমীকরণ", questionCount: 40 },
-          { id: "math-ch1-t2", name: "অসমতা", questionCount: 25 },
-        ],
-      },
-    ],
-  },
-  {
-    id: "english",
-    name: "ইংরেজি",
-    chapters: [
-      {
-        id: "eng-ch1",
-        name: "Grammar",
-        topics: [
-          { id: "eng-ch1-t1", name: "Tense", questionCount: 35 },
-          { id: "eng-ch1-t2", name: "Voice", questionCount: 25 },
-        ],
-      },
-    ],
-  },
-];
+// Generate or retrieve session ID
+function getSessionId(): string {
+  if (typeof window === "undefined") return "";
+
+  let sessionId = localStorage.getItem("mcq-practice-session-id");
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+    localStorage.setItem("mcq-practice-session-id", sessionId);
+  }
+  return sessionId;
+}
 
 export const McqPracticeService = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const trpc = useTRPC();
+
+  const attemptId = searchParams.get("attemptId");
+  const demoExamId = searchParams.get("demoExamId");
+
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [selectedChapters, setSelectedChapters] = useState<string[]>([]);
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
@@ -128,50 +66,67 @@ export const McqPracticeService = () => {
   const [expandedSubjects, setExpandedSubjects] = useState<string[]>([]);
   const [expandedChapters, setExpandedChapters] = useState<string[]>([]);
 
+  // Fetch subjects with chapters from tRPC
+  const { data: subjects = [], isLoading: subjectsLoading } = useQuery(
+    trpc.home.demoExam.getSubjectsWithChapters.queryOptions()
+  );
+
+  const createSessionMutation = useMutation(
+    trpc.home.demoExam.createPracticeSession.mutationOptions({
+      onSuccess: (data) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("attemptId", data.attemptId);
+        params.set("demoExamId", data.demoExamId);
+        router.push(`/services/mcq-practice?${params.toString()}`);
+      },
+      onError: (error) => {
+        toast.error("Failed to create practice session");
+        console.error(error);
+      },
+    })
+  );
+
   const availableChapters = useMemo(() => {
     if (selectedSubjects.length === 0) return [];
-    return subjectsData
-      .filter((s) => selectedSubjects.includes(s.id))
-      .flatMap((s) =>
-        s.chapters.map((ch) => ({
+    return subjects
+      .filter((s: any) => selectedSubjects.includes(s.id))
+      .flatMap((s: any) =>
+        s.chapters.map((ch: any) => ({
           ...ch,
           subjectId: s.id,
           subjectName: s.name,
         })),
       );
-  }, [selectedSubjects]);
+  }, [selectedSubjects, subjects]);
 
   const availableTopics = useMemo(() => {
     if (selectedChapters.length === 0) return [];
     return availableChapters
-      .filter((ch) => selectedChapters.includes(ch.id))
-      .flatMap((ch) =>
-        ch.topics.map((t) => ({
+      .filter((ch: any) => selectedChapters.includes(ch.id))
+      .flatMap((ch: any) =>
+        ch.topics?.map((t: any) => ({
           ...t,
           chapterId: ch.id,
           chapterName: ch.name,
-        })),
+        })) || [],
       );
   }, [selectedChapters, availableChapters]);
 
   const totalQuestionsAvailable = useMemo(() => {
     if (selectedTopics.length > 0) {
       return availableTopics
-        .filter((t) => selectedTopics.includes(t.id))
-        .reduce((sum, t) => sum + t.questionCount, 0);
+        .filter((t: any) => selectedTopics.includes(t.id))
+        .reduce((sum: number, t: any) => sum + (t.questionCount || 0), 0);
     }
     if (selectedChapters.length > 0) {
       return availableChapters
-        .filter((ch) => selectedChapters.includes(ch.id))
-        .flatMap((ch) => ch.topics)
-        .reduce((sum, t) => sum + t.questionCount, 0);
+        .filter((ch: any) => selectedChapters.includes(ch.id))
+        .reduce((sum: number, ch: any) => sum + (ch.questionCount || 0), 0);
     }
     if (selectedSubjects.length > 0) {
-      return subjectsData
-        .filter((s) => selectedSubjects.includes(s.id))
-        .flatMap((s) => s.chapters)
-        .flatMap((ch) => ch.topics)
-        .reduce((sum, t) => sum + t.questionCount, 0);
+      return subjects
+        .filter((s: any) => selectedSubjects.includes(s.id))
+        .reduce((sum: number, s: any) => sum + (s.questionCount || 0), 0);
     }
     return 0;
   }, [
@@ -180,6 +135,7 @@ export const McqPracticeService = () => {
     selectedTopics,
     availableChapters,
     availableTopics,
+    subjects,
   ]);
 
   const toggleSubject = (subjectId: string) => {
@@ -190,13 +146,13 @@ export const McqPracticeService = () => {
 
       if (!newSelection.includes(subjectId)) {
         const subjectChapters =
-          subjectsData.find((s) => s.id === subjectId)?.chapters || [];
-        const chapterIds = subjectChapters.map((ch) => ch.id);
+          subjects.find((s: any) => s.id === subjectId)?.chapters || [];
+        const chapterIds = subjectChapters.map((ch: any) => ch.id);
         setSelectedChapters((prev) =>
           prev.filter((id) => !chapterIds.includes(id)),
         );
-        const topicIds = subjectChapters.flatMap((ch) =>
-          ch.topics.map((t) => t.id),
+        const topicIds = subjectChapters.flatMap((ch: any) =>
+          (ch.topics || []).map((t: any) => t.id),
         );
         setSelectedTopics((prev) =>
           prev.filter((id) => !topicIds.includes(id)),
@@ -214,8 +170,8 @@ export const McqPracticeService = () => {
         : [...prev, chapterId];
 
       if (!newSelection.includes(chapterId)) {
-        const chapter = availableChapters.find((ch) => ch.id === chapterId);
-        const topicIds = chapter?.topics.map((t) => t.id) || [];
+        const chapter = availableChapters.find((ch: any) => ch.id === chapterId);
+        const topicIds = chapter?.topics?.map((t: any) => t.id) || [];
         setSelectedTopics((prev) =>
           prev.filter((id) => !topicIds.includes(id)),
         );
@@ -250,16 +206,16 @@ export const McqPracticeService = () => {
   };
 
   const selectAllChaptersForSubject = (subjectId: string) => {
-    const subject = subjectsData.find((s) => s.id === subjectId);
+    const subject = subjects.find((s: any) => s.id === subjectId);
     if (!subject) return;
-    const chapterIds = subject.chapters.map((ch) => ch.id);
+    const chapterIds = subject.chapters.map((ch: any) => ch.id);
     setSelectedChapters((prev) => [...new Set([...prev, ...chapterIds])]);
   };
 
   const selectAllTopicsForChapter = (chapterId: string) => {
-    const chapter = availableChapters.find((ch) => ch.id === chapterId);
+    const chapter = availableChapters.find((ch: any) => ch.id === chapterId);
     if (!chapter) return;
-    const topicIds = chapter.topics.map((t) => t.id);
+    const topicIds = chapter.topics?.map((t: any) => t.id) || [];
     setSelectedTopics((prev) => [...new Set([...prev, ...topicIds])]);
   };
 
@@ -272,6 +228,44 @@ export const McqPracticeService = () => {
   const canStartPractice =
     selectedSubjects.length > 0 &&
     totalQuestionsAvailable >= parseInt(questionCount);
+
+  const handleStartPractice = () => {
+    if (!canStartPractice) return;
+
+    createSessionMutation.mutate({
+      sessionId: getSessionId(),
+      selectedSubjects,
+      selectedChapters,
+      selectedTopics,
+      questionCount: parseInt(questionCount),
+      timeLimit: parseInt(timeLimit),
+      shuffleQuestions,
+      hasNegativeMark: negativeMarking,
+    });
+  };
+
+  // If result view, render PracticeResultView
+  if (searchParams.get("view") === "result" && attemptId) {
+    return <PracticeResultView attemptId={attemptId} />;
+  }
+
+  // If ongoing practice session, render TakeMcqPractice
+  if (attemptId && demoExamId) {
+    return <TakeMcqPractice attemptId={attemptId} demoExamId={demoExamId} />;
+  }
+
+  if (subjectsLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-12 h-12 animate-spin text-primary" />
+          <p className="text-lg font-medium text-muted-foreground">
+            Loading subjects...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -296,14 +290,14 @@ export const McqPracticeService = () => {
               className="bg-white/20 text-white border-0"
             >
               <BookOpen className="w-3 h-3 mr-1" />
-              {subjectsData.length} বিষয়
+              {subjects.length} বিষয়
             </Badge>
             <Badge
               variant="secondary"
               className="bg-white/20 text-white border-0"
             >
               <Layers className="w-3 h-3 mr-1" />
-              {subjectsData.reduce((sum, s) => sum + s.chapters.length, 0)}{" "}
+              {subjects.reduce((sum: number, s: any) => sum + s.chapters.length, 0)}{" "}
               অধ্যায়
             </Badge>
             <Badge
@@ -311,7 +305,7 @@ export const McqPracticeService = () => {
               className="bg-white/20 text-white border-0"
             >
               <HelpCircle className="w-3 h-3 mr-1" />
-              ৫০০+ প্রশ্ন
+              {subjects.reduce((sum: number, s: any) => sum + (s.questionCount || 0), 0)}+ প্রশ্ন
             </Badge>
           </div>
         </div>
@@ -322,77 +316,77 @@ export const McqPracticeService = () => {
         {(selectedSubjects.length > 0 ||
           selectedChapters.length > 0 ||
           selectedTopics.length > 0) && (
-          <Card className="p-4 mb-6 border-primary/20 bg-primary/5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-foreground">নির্বাচিত আইটেম</h3>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearAllSelections}
-                className="text-destructive h-8"
-              >
-                <X className="w-4 h-4 mr-1" />
-                সব মুছুন
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {selectedSubjects.map((id) => {
-                const subject = subjectsData.find((s) => s.id === id);
-                return (
-                  subject && (
-                    <Badge key={id} variant="secondary" className="gap-1">
-                      {subject.name}
-                      <X
-                        className="w-3 h-3 cursor-pointer"
-                        onClick={() => toggleSubject(id)}
-                      />
-                    </Badge>
-                  )
-                );
-              })}
-              {selectedChapters.map((id) => {
-                const chapter = availableChapters.find((ch) => ch.id === id);
-                return (
-                  chapter && (
-                    <Badge key={id} variant="outline" className="gap-1">
-                      {chapter.name}
-                      <X
-                        className="w-3 h-3 cursor-pointer"
-                        onClick={() => toggleChapter(id)}
-                      />
-                    </Badge>
-                  )
-                );
-              })}
-              {selectedTopics.map((id) => {
-                const topic = availableTopics.find((t) => t.id === id);
-                return (
-                  topic && (
-                    <Badge
-                      key={id}
-                      variant="outline"
-                      className="gap-1 bg-muted"
-                    >
-                      {topic.name}
-                      <X
-                        className="w-3 h-3 cursor-pointer"
-                        onClick={() => toggleTopic(id)}
-                      />
-                    </Badge>
-                  )
-                );
-              })}
-            </div>
-            <div className="mt-3 pt-3 border-t border-border">
-              <p className="text-sm text-muted-foreground">
-                মোট প্রশ্ন উপলব্ধ:{" "}
-                <span className="font-semibold text-foreground">
-                  {totalQuestionsAvailable}
-                </span>
-              </p>
-            </div>
-          </Card>
-        )}
+            <Card className="p-4 mb-6 border-primary/20 bg-primary/5">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-foreground">নির্বাচিত আইটেম</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearAllSelections}
+                  className="text-destructive h-8"
+                >
+                  <X className="w-4 h-4 mr-1" />
+                  সব মুছুন
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {selectedSubjects.map((id) => {
+                  const subject = subjects.find((s: any) => s.id === id);
+                  return (
+                    subject && (
+                      <Badge key={id} variant="secondary" className="gap-1">
+                        {subject.name}
+                        <X
+                          className="w-3 h-3 cursor-pointer"
+                          onClick={() => toggleSubject(id)}
+                        />
+                      </Badge>
+                    )
+                  );
+                })}
+                {selectedChapters.map((id) => {
+                  const chapter = availableChapters.find((ch: any) => ch.id === id);
+                  return (
+                    chapter && (
+                      <Badge key={id} variant="outline" className="gap-1">
+                        {(chapter as any).name}
+                        <X
+                          className="w-3 h-3 cursor-pointer"
+                          onClick={() => toggleChapter(id)}
+                        />
+                      </Badge>
+                    )
+                  );
+                })}
+                {selectedTopics.map((id) => {
+                  const topic = availableTopics.find((t: any) => t.id === id);
+                  return (
+                    topic && (
+                      <Badge
+                        key={id}
+                        variant="outline"
+                        className="gap-1 bg-muted"
+                      >
+                        {(topic as any).name}
+                        <X
+                          className="w-3 h-3 cursor-pointer"
+                          onClick={() => toggleTopic(id)}
+                        />
+                      </Badge>
+                    )
+                  );
+                })}
+              </div>
+              <div className="mt-3 pt-3 border-t border-border">
+                <p className="text-sm text-muted-foreground">
+                  মোট প্রশ্ন উপলব্ধ:{" "}
+                  <span className="font-semibold text-foreground">
+                    {totalQuestionsAvailable}
+                  </span>
+                </p>
+              </div>
+            </Card>
+          )}
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Selection Panel */}
@@ -403,7 +397,7 @@ export const McqPracticeService = () => {
             </h2>
 
             <div className="space-y-3">
-              {subjectsData.map((subject) => {
+              {subjects.map((subject: any) => {
                 const isSelected = selectedSubjects.includes(subject.id);
                 const isExpanded = expandedSubjects.includes(subject.id);
                 const Icon = getSubjectIcon(subject.name);
@@ -469,7 +463,7 @@ export const McqPracticeService = () => {
                     {/* Chapters */}
                     {isExpanded && isSelected && (
                       <div className="border-t border-border">
-                        {subject.chapters.map((chapter) => {
+                        {subject.chapters.map((chapter: any) => {
                           const isChapterSelected = selectedChapters.includes(
                             chapter.id,
                           );
@@ -532,7 +526,7 @@ export const McqPracticeService = () => {
                               {/* Topics */}
                               {isChapterExpanded && isChapterSelected && (
                                 <div className="bg-muted/30 py-2">
-                                  {chapter.topics.map((topic) => {
+                                  {chapter.topics.map((topic: any) => {
                                     const isTopicSelected =
                                       selectedTopics.includes(topic.id);
 
@@ -581,12 +575,12 @@ export const McqPracticeService = () => {
             <Card className="p-4 sticky top-4">
               <h3 className="font-semibold text-foreground flex items-center gap-2 mb-4">
                 <Settings2 className="w-5 h-5 text-primary" />
-                পরীক্ষার সেটিংস
+                Exam Settings
               </h3>
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-sm">প্রশ্ন সংখ্যা</Label>
+                  <Label className="text-sm">Question Count</Label>
                   <Select
                     value={questionCount}
                     onValueChange={setQuestionCount}
@@ -607,7 +601,7 @@ export const McqPracticeService = () => {
                 <div className="space-y-2">
                   <Label className="text-sm flex items-center gap-2">
                     <Clock className="w-4 h-4" />
-                    সময়সীমা (মিনিট)
+                    Time Limit (Minutes)
                   </Label>
                   <Select value={timeLimit} onValueChange={setTimeLimit}>
                     <SelectTrigger className="w-full">
@@ -624,63 +618,39 @@ export const McqPracticeService = () => {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm">নেগেটিভ মার্কিং</Label>
+                  <Label className="text-sm">Negative Marking</Label>
                   <Switch
                     checked={negativeMarking}
                     onCheckedChange={setNegativeMarking}
                   />
                 </div>
-              </div>
 
-              <div className="mt-6 pt-4 border-t border-border">
-                <div className="text-sm text-muted-foreground mb-4">
-                  <div className="flex justify-between mb-1">
-                    <span>নির্বাচিত বিষয়:</span>
-                    <span className="font-medium text-foreground">
-                      {selectedSubjects.length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between mb-1">
-                    <span>নির্বাচিত অধ্যায়:</span>
-                    <span className="font-medium text-foreground">
-                      {selectedChapters.length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between mb-1">
-                    <span>নির্বাচিত টপিক:</span>
-                    <span className="font-medium text-foreground">
-                      {selectedTopics.length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between pt-2 border-t border-border mt-2">
-                    <span>মোট প্রশ্ন উপলব্ধ:</span>
-                    <span className="font-semibold text-primary">
-                      {totalQuestionsAvailable}
-                    </span>
-                  </div>
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Shuffle Questions</Label>
+                  <Switch
+                    checked={shuffleQuestions}
+                    onCheckedChange={setShuffleQuestions}
+                  />
                 </div>
 
                 <Button
-                  className="w-full gap-2"
+                  className="w-full mt-4"
                   size="lg"
-                  disabled={!canStartPractice}
+                  disabled={!canStartPractice || createSessionMutation.isPending}
+                  onClick={handleStartPractice}
                 >
-                  <Play className="w-5 h-5" />
-                  প্র্যাকটিস শুরু করুন
+                  {createSessionMutation.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Starting Session...
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-4 h-4 mr-2" />
+                      Start Practice
+                    </>
+                  )}
                 </Button>
-
-                {!canStartPractice && selectedSubjects.length > 0 && (
-                  <p className="text-xs text-destructive mt-2 text-center">
-                    পর্যাপ্ত প্রশ্ন নেই। কম প্রশ্ন নির্বাচন করুন বা আরও টপিক যোগ
-                    করুন।
-                  </p>
-                )}
-
-                {selectedSubjects.length === 0 && (
-                  <p className="text-xs text-muted-foreground mt-2 text-center">
-                    শুরু করতে অন্তত একটি বিষয় নির্বাচন করুন
-                  </p>
-                )}
               </div>
             </Card>
           </div>

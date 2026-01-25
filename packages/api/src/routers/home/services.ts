@@ -268,6 +268,52 @@ export const serviceRouter = createTRPCRouter({
       }));
     }),
 
+  // Get Materials (Subjects with Chapters and Topics)
+  getMaterials: publicProcedure
+    .input(
+      z
+        .object({
+          level: z.string().optional(),
+          subjectId: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      const subjects = await ctx.db.subject.findMany({
+        where: {
+          ...(input?.level ? { level: input.level } : {}),
+          ...(input?.subjectId ? { id: input.subjectId } : {}),
+        },
+        include: {
+          chapters: {
+            include: {
+              topics: {
+                orderBy: { position: "asc" },
+              },
+            },
+            orderBy: { position: "asc" },
+          },
+        },
+        orderBy: { position: "asc" },
+      });
+
+      return subjects.map((subject) => ({
+        id: subject.id,
+        name: subject.name,
+        level: subject.level,
+        chapters: subject.chapters.map((chapter) => ({
+          id: chapter.id,
+          name: chapter.name,
+          position: chapter.position,
+          topics: chapter.topics.map((topic) => ({
+            id: topic.id,
+            name: topic.name,
+            position: topic.position,
+          })),
+        })),
+      }));
+    }),
+
   // Get all question types count for a subject
   getSubjectQuestionStats: publicProcedure
     .input(

@@ -31,6 +31,7 @@ export type CognitiveMinAggregateOutputType = {
   subjectId: string | null
   chapterId: string | null
   topicId: string | null
+  subTopicId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +43,7 @@ export type CognitiveMaxAggregateOutputType = {
   subjectId: string | null
   chapterId: string | null
   topicId: string | null
+  subTopicId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +56,7 @@ export type CognitiveCountAggregateOutputType = {
   subjectId: number
   chapterId: number
   topicId: number
+  subTopicId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -67,6 +70,7 @@ export type CognitiveMinAggregateInputType = {
   subjectId?: true
   chapterId?: true
   topicId?: true
+  subTopicId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -78,6 +82,7 @@ export type CognitiveMaxAggregateInputType = {
   subjectId?: true
   chapterId?: true
   topicId?: true
+  subTopicId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -90,6 +95,7 @@ export type CognitiveCountAggregateInputType = {
   subjectId?: true
   chapterId?: true
   topicId?: true
+  subTopicId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -175,6 +181,7 @@ export type CognitiveGroupByOutputType = {
   subjectId: string
   chapterId: string
   topicId: string | null
+  subTopicId: string | null
   createdAt: Date
   updatedAt: Date
   _count: CognitiveCountAggregateOutputType | null
@@ -208,11 +215,13 @@ export type CognitiveWhereInput = {
   subjectId?: Prisma.StringFilter<"Cognitive"> | string
   chapterId?: Prisma.StringFilter<"Cognitive"> | string
   topicId?: Prisma.StringNullableFilter<"Cognitive"> | string | null
+  subTopicId?: Prisma.StringNullableFilter<"Cognitive"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Cognitive"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Cognitive"> | Date | string
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
   chapter?: Prisma.XOR<Prisma.ChapterScalarRelationFilter, Prisma.ChapterWhereInput>
   topic?: Prisma.XOR<Prisma.TopicNullableScalarRelationFilter, Prisma.TopicWhereInput> | null
+  subTopic?: Prisma.XOR<Prisma.SubTopicNullableScalarRelationFilter, Prisma.SubTopicWhereInput> | null
 }
 
 export type CognitiveOrderByWithRelationInput = {
@@ -223,11 +232,13 @@ export type CognitiveOrderByWithRelationInput = {
   subjectId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   topicId?: Prisma.SortOrderInput | Prisma.SortOrder
+  subTopicId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   subject?: Prisma.SubjectOrderByWithRelationInput
   chapter?: Prisma.ChapterOrderByWithRelationInput
   topic?: Prisma.TopicOrderByWithRelationInput
+  subTopic?: Prisma.SubTopicOrderByWithRelationInput
 }
 
 export type CognitiveWhereUniqueInput = Prisma.AtLeast<{
@@ -241,11 +252,13 @@ export type CognitiveWhereUniqueInput = Prisma.AtLeast<{
   subjectId?: Prisma.StringFilter<"Cognitive"> | string
   chapterId?: Prisma.StringFilter<"Cognitive"> | string
   topicId?: Prisma.StringNullableFilter<"Cognitive"> | string | null
+  subTopicId?: Prisma.StringNullableFilter<"Cognitive"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Cognitive"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Cognitive"> | Date | string
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
   chapter?: Prisma.XOR<Prisma.ChapterScalarRelationFilter, Prisma.ChapterWhereInput>
   topic?: Prisma.XOR<Prisma.TopicNullableScalarRelationFilter, Prisma.TopicWhereInput> | null
+  subTopic?: Prisma.XOR<Prisma.SubTopicNullableScalarRelationFilter, Prisma.SubTopicWhereInput> | null
 }, "id">
 
 export type CognitiveOrderByWithAggregationInput = {
@@ -256,6 +269,7 @@ export type CognitiveOrderByWithAggregationInput = {
   subjectId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   topicId?: Prisma.SortOrderInput | Prisma.SortOrder
+  subTopicId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CognitiveCountOrderByAggregateInput
@@ -274,6 +288,7 @@ export type CognitiveScalarWhereWithAggregatesInput = {
   subjectId?: Prisma.StringWithAggregatesFilter<"Cognitive"> | string
   chapterId?: Prisma.StringWithAggregatesFilter<"Cognitive"> | string
   topicId?: Prisma.StringNullableWithAggregatesFilter<"Cognitive"> | string | null
+  subTopicId?: Prisma.StringNullableWithAggregatesFilter<"Cognitive"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Cognitive"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Cognitive"> | Date | string
 }
@@ -288,6 +303,7 @@ export type CognitiveCreateInput = {
   subject: Prisma.SubjectCreateNestedOneWithoutCognitivesInput
   chapter: Prisma.ChapterCreateNestedOneWithoutCognitivesInput
   topic?: Prisma.TopicCreateNestedOneWithoutCognitivesInput
+  subTopic?: Prisma.SubTopicCreateNestedOneWithoutCognitivesInput
 }
 
 export type CognitiveUncheckedCreateInput = {
@@ -298,6 +314,7 @@ export type CognitiveUncheckedCreateInput = {
   subjectId: string
   chapterId: string
   topicId?: string | null
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -312,6 +329,7 @@ export type CognitiveUpdateInput = {
   subject?: Prisma.SubjectUpdateOneRequiredWithoutCognitivesNestedInput
   chapter?: Prisma.ChapterUpdateOneRequiredWithoutCognitivesNestedInput
   topic?: Prisma.TopicUpdateOneWithoutCognitivesNestedInput
+  subTopic?: Prisma.SubTopicUpdateOneWithoutCognitivesNestedInput
 }
 
 export type CognitiveUncheckedUpdateInput = {
@@ -322,6 +340,7 @@ export type CognitiveUncheckedUpdateInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
   topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -334,6 +353,7 @@ export type CognitiveCreateManyInput = {
   subjectId: string
   chapterId: string
   topicId?: string | null
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -355,6 +375,7 @@ export type CognitiveUncheckedUpdateManyInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
   topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -377,6 +398,7 @@ export type CognitiveCountOrderByAggregateInput = {
   subjectId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   topicId?: Prisma.SortOrder
+  subTopicId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -388,6 +410,7 @@ export type CognitiveMaxOrderByAggregateInput = {
   subjectId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   topicId?: Prisma.SortOrder
+  subTopicId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -399,6 +422,7 @@ export type CognitiveMinOrderByAggregateInput = {
   subjectId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   topicId?: Prisma.SortOrder
+  subTopicId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -529,6 +553,48 @@ export type CognitiveUncheckedUpdateManyWithoutTopicNestedInput = {
   deleteMany?: Prisma.CognitiveScalarWhereInput | Prisma.CognitiveScalarWhereInput[]
 }
 
+export type CognitiveCreateNestedManyWithoutSubTopicInput = {
+  create?: Prisma.XOR<Prisma.CognitiveCreateWithoutSubTopicInput, Prisma.CognitiveUncheckedCreateWithoutSubTopicInput> | Prisma.CognitiveCreateWithoutSubTopicInput[] | Prisma.CognitiveUncheckedCreateWithoutSubTopicInput[]
+  connectOrCreate?: Prisma.CognitiveCreateOrConnectWithoutSubTopicInput | Prisma.CognitiveCreateOrConnectWithoutSubTopicInput[]
+  createMany?: Prisma.CognitiveCreateManySubTopicInputEnvelope
+  connect?: Prisma.CognitiveWhereUniqueInput | Prisma.CognitiveWhereUniqueInput[]
+}
+
+export type CognitiveUncheckedCreateNestedManyWithoutSubTopicInput = {
+  create?: Prisma.XOR<Prisma.CognitiveCreateWithoutSubTopicInput, Prisma.CognitiveUncheckedCreateWithoutSubTopicInput> | Prisma.CognitiveCreateWithoutSubTopicInput[] | Prisma.CognitiveUncheckedCreateWithoutSubTopicInput[]
+  connectOrCreate?: Prisma.CognitiveCreateOrConnectWithoutSubTopicInput | Prisma.CognitiveCreateOrConnectWithoutSubTopicInput[]
+  createMany?: Prisma.CognitiveCreateManySubTopicInputEnvelope
+  connect?: Prisma.CognitiveWhereUniqueInput | Prisma.CognitiveWhereUniqueInput[]
+}
+
+export type CognitiveUpdateManyWithoutSubTopicNestedInput = {
+  create?: Prisma.XOR<Prisma.CognitiveCreateWithoutSubTopicInput, Prisma.CognitiveUncheckedCreateWithoutSubTopicInput> | Prisma.CognitiveCreateWithoutSubTopicInput[] | Prisma.CognitiveUncheckedCreateWithoutSubTopicInput[]
+  connectOrCreate?: Prisma.CognitiveCreateOrConnectWithoutSubTopicInput | Prisma.CognitiveCreateOrConnectWithoutSubTopicInput[]
+  upsert?: Prisma.CognitiveUpsertWithWhereUniqueWithoutSubTopicInput | Prisma.CognitiveUpsertWithWhereUniqueWithoutSubTopicInput[]
+  createMany?: Prisma.CognitiveCreateManySubTopicInputEnvelope
+  set?: Prisma.CognitiveWhereUniqueInput | Prisma.CognitiveWhereUniqueInput[]
+  disconnect?: Prisma.CognitiveWhereUniqueInput | Prisma.CognitiveWhereUniqueInput[]
+  delete?: Prisma.CognitiveWhereUniqueInput | Prisma.CognitiveWhereUniqueInput[]
+  connect?: Prisma.CognitiveWhereUniqueInput | Prisma.CognitiveWhereUniqueInput[]
+  update?: Prisma.CognitiveUpdateWithWhereUniqueWithoutSubTopicInput | Prisma.CognitiveUpdateWithWhereUniqueWithoutSubTopicInput[]
+  updateMany?: Prisma.CognitiveUpdateManyWithWhereWithoutSubTopicInput | Prisma.CognitiveUpdateManyWithWhereWithoutSubTopicInput[]
+  deleteMany?: Prisma.CognitiveScalarWhereInput | Prisma.CognitiveScalarWhereInput[]
+}
+
+export type CognitiveUncheckedUpdateManyWithoutSubTopicNestedInput = {
+  create?: Prisma.XOR<Prisma.CognitiveCreateWithoutSubTopicInput, Prisma.CognitiveUncheckedCreateWithoutSubTopicInput> | Prisma.CognitiveCreateWithoutSubTopicInput[] | Prisma.CognitiveUncheckedCreateWithoutSubTopicInput[]
+  connectOrCreate?: Prisma.CognitiveCreateOrConnectWithoutSubTopicInput | Prisma.CognitiveCreateOrConnectWithoutSubTopicInput[]
+  upsert?: Prisma.CognitiveUpsertWithWhereUniqueWithoutSubTopicInput | Prisma.CognitiveUpsertWithWhereUniqueWithoutSubTopicInput[]
+  createMany?: Prisma.CognitiveCreateManySubTopicInputEnvelope
+  set?: Prisma.CognitiveWhereUniqueInput | Prisma.CognitiveWhereUniqueInput[]
+  disconnect?: Prisma.CognitiveWhereUniqueInput | Prisma.CognitiveWhereUniqueInput[]
+  delete?: Prisma.CognitiveWhereUniqueInput | Prisma.CognitiveWhereUniqueInput[]
+  connect?: Prisma.CognitiveWhereUniqueInput | Prisma.CognitiveWhereUniqueInput[]
+  update?: Prisma.CognitiveUpdateWithWhereUniqueWithoutSubTopicInput | Prisma.CognitiveUpdateWithWhereUniqueWithoutSubTopicInput[]
+  updateMany?: Prisma.CognitiveUpdateManyWithWhereWithoutSubTopicInput | Prisma.CognitiveUpdateManyWithWhereWithoutSubTopicInput[]
+  deleteMany?: Prisma.CognitiveScalarWhereInput | Prisma.CognitiveScalarWhereInput[]
+}
+
 export type CognitiveCreatereferenceInput = {
   set: string[]
 }
@@ -547,6 +613,7 @@ export type CognitiveCreateWithoutSubjectInput = {
   updatedAt?: Date | string
   chapter: Prisma.ChapterCreateNestedOneWithoutCognitivesInput
   topic?: Prisma.TopicCreateNestedOneWithoutCognitivesInput
+  subTopic?: Prisma.SubTopicCreateNestedOneWithoutCognitivesInput
 }
 
 export type CognitiveUncheckedCreateWithoutSubjectInput = {
@@ -556,6 +623,7 @@ export type CognitiveUncheckedCreateWithoutSubjectInput = {
   answer: string
   chapterId: string
   topicId?: string | null
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -597,6 +665,7 @@ export type CognitiveScalarWhereInput = {
   subjectId?: Prisma.StringFilter<"Cognitive"> | string
   chapterId?: Prisma.StringFilter<"Cognitive"> | string
   topicId?: Prisma.StringNullableFilter<"Cognitive"> | string | null
+  subTopicId?: Prisma.StringNullableFilter<"Cognitive"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Cognitive"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Cognitive"> | Date | string
 }
@@ -610,6 +679,7 @@ export type CognitiveCreateWithoutChapterInput = {
   updatedAt?: Date | string
   subject: Prisma.SubjectCreateNestedOneWithoutCognitivesInput
   topic?: Prisma.TopicCreateNestedOneWithoutCognitivesInput
+  subTopic?: Prisma.SubTopicCreateNestedOneWithoutCognitivesInput
 }
 
 export type CognitiveUncheckedCreateWithoutChapterInput = {
@@ -619,6 +689,7 @@ export type CognitiveUncheckedCreateWithoutChapterInput = {
   answer: string
   subjectId: string
   topicId?: string | null
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -658,6 +729,7 @@ export type CognitiveCreateWithoutTopicInput = {
   updatedAt?: Date | string
   subject: Prisma.SubjectCreateNestedOneWithoutCognitivesInput
   chapter: Prisma.ChapterCreateNestedOneWithoutCognitivesInput
+  subTopic?: Prisma.SubTopicCreateNestedOneWithoutCognitivesInput
 }
 
 export type CognitiveUncheckedCreateWithoutTopicInput = {
@@ -667,6 +739,7 @@ export type CognitiveUncheckedCreateWithoutTopicInput = {
   answer: string
   subjectId: string
   chapterId: string
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -697,6 +770,56 @@ export type CognitiveUpdateManyWithWhereWithoutTopicInput = {
   data: Prisma.XOR<Prisma.CognitiveUpdateManyMutationInput, Prisma.CognitiveUncheckedUpdateManyWithoutTopicInput>
 }
 
+export type CognitiveCreateWithoutSubTopicInput = {
+  id?: string
+  reference?: Prisma.CognitiveCreatereferenceInput | string[]
+  isMath?: boolean
+  answer: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subject: Prisma.SubjectCreateNestedOneWithoutCognitivesInput
+  chapter: Prisma.ChapterCreateNestedOneWithoutCognitivesInput
+  topic?: Prisma.TopicCreateNestedOneWithoutCognitivesInput
+}
+
+export type CognitiveUncheckedCreateWithoutSubTopicInput = {
+  id?: string
+  reference?: Prisma.CognitiveCreatereferenceInput | string[]
+  isMath?: boolean
+  answer: string
+  subjectId: string
+  chapterId: string
+  topicId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CognitiveCreateOrConnectWithoutSubTopicInput = {
+  where: Prisma.CognitiveWhereUniqueInput
+  create: Prisma.XOR<Prisma.CognitiveCreateWithoutSubTopicInput, Prisma.CognitiveUncheckedCreateWithoutSubTopicInput>
+}
+
+export type CognitiveCreateManySubTopicInputEnvelope = {
+  data: Prisma.CognitiveCreateManySubTopicInput | Prisma.CognitiveCreateManySubTopicInput[]
+  skipDuplicates?: boolean
+}
+
+export type CognitiveUpsertWithWhereUniqueWithoutSubTopicInput = {
+  where: Prisma.CognitiveWhereUniqueInput
+  update: Prisma.XOR<Prisma.CognitiveUpdateWithoutSubTopicInput, Prisma.CognitiveUncheckedUpdateWithoutSubTopicInput>
+  create: Prisma.XOR<Prisma.CognitiveCreateWithoutSubTopicInput, Prisma.CognitiveUncheckedCreateWithoutSubTopicInput>
+}
+
+export type CognitiveUpdateWithWhereUniqueWithoutSubTopicInput = {
+  where: Prisma.CognitiveWhereUniqueInput
+  data: Prisma.XOR<Prisma.CognitiveUpdateWithoutSubTopicInput, Prisma.CognitiveUncheckedUpdateWithoutSubTopicInput>
+}
+
+export type CognitiveUpdateManyWithWhereWithoutSubTopicInput = {
+  where: Prisma.CognitiveScalarWhereInput
+  data: Prisma.XOR<Prisma.CognitiveUpdateManyMutationInput, Prisma.CognitiveUncheckedUpdateManyWithoutSubTopicInput>
+}
+
 export type CognitiveCreateManySubjectInput = {
   id?: string
   reference?: Prisma.CognitiveCreatereferenceInput | string[]
@@ -704,6 +827,7 @@ export type CognitiveCreateManySubjectInput = {
   answer: string
   chapterId: string
   topicId?: string | null
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -717,6 +841,7 @@ export type CognitiveUpdateWithoutSubjectInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chapter?: Prisma.ChapterUpdateOneRequiredWithoutCognitivesNestedInput
   topic?: Prisma.TopicUpdateOneWithoutCognitivesNestedInput
+  subTopic?: Prisma.SubTopicUpdateOneWithoutCognitivesNestedInput
 }
 
 export type CognitiveUncheckedUpdateWithoutSubjectInput = {
@@ -726,6 +851,7 @@ export type CognitiveUncheckedUpdateWithoutSubjectInput = {
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
   topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -737,6 +863,7 @@ export type CognitiveUncheckedUpdateManyWithoutSubjectInput = {
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
   topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -748,6 +875,7 @@ export type CognitiveCreateManyChapterInput = {
   answer: string
   subjectId: string
   topicId?: string | null
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -761,6 +889,7 @@ export type CognitiveUpdateWithoutChapterInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subject?: Prisma.SubjectUpdateOneRequiredWithoutCognitivesNestedInput
   topic?: Prisma.TopicUpdateOneWithoutCognitivesNestedInput
+  subTopic?: Prisma.SubTopicUpdateOneWithoutCognitivesNestedInput
 }
 
 export type CognitiveUncheckedUpdateWithoutChapterInput = {
@@ -770,6 +899,7 @@ export type CognitiveUncheckedUpdateWithoutChapterInput = {
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -781,6 +911,7 @@ export type CognitiveUncheckedUpdateManyWithoutChapterInput = {
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -792,6 +923,7 @@ export type CognitiveCreateManyTopicInput = {
   answer: string
   subjectId: string
   chapterId: string
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -805,6 +937,7 @@ export type CognitiveUpdateWithoutTopicInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subject?: Prisma.SubjectUpdateOneRequiredWithoutCognitivesNestedInput
   chapter?: Prisma.ChapterUpdateOneRequiredWithoutCognitivesNestedInput
+  subTopic?: Prisma.SubTopicUpdateOneWithoutCognitivesNestedInput
 }
 
 export type CognitiveUncheckedUpdateWithoutTopicInput = {
@@ -814,6 +947,7 @@ export type CognitiveUncheckedUpdateWithoutTopicInput = {
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -825,6 +959,55 @@ export type CognitiveUncheckedUpdateManyWithoutTopicInput = {
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CognitiveCreateManySubTopicInput = {
+  id?: string
+  reference?: Prisma.CognitiveCreatereferenceInput | string[]
+  isMath?: boolean
+  answer: string
+  subjectId: string
+  chapterId: string
+  topicId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CognitiveUpdateWithoutSubTopicInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.CognitiveUpdatereferenceInput | string[]
+  isMath?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  answer?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutCognitivesNestedInput
+  chapter?: Prisma.ChapterUpdateOneRequiredWithoutCognitivesNestedInput
+  topic?: Prisma.TopicUpdateOneWithoutCognitivesNestedInput
+}
+
+export type CognitiveUncheckedUpdateWithoutSubTopicInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.CognitiveUpdatereferenceInput | string[]
+  isMath?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  answer?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterId?: Prisma.StringFieldUpdateOperationsInput | string
+  topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CognitiveUncheckedUpdateManyWithoutSubTopicInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.CognitiveUpdatereferenceInput | string[]
+  isMath?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  answer?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterId?: Prisma.StringFieldUpdateOperationsInput | string
+  topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -839,11 +1022,13 @@ export type CognitiveSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   subjectId?: boolean
   chapterId?: boolean
   topicId?: boolean
+  subTopicId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.Cognitive$topicArgs<ExtArgs>
+  subTopic?: boolean | Prisma.Cognitive$subTopicArgs<ExtArgs>
 }, ExtArgs["result"]["cognitive"]>
 
 export type CognitiveSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -854,11 +1039,13 @@ export type CognitiveSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   subjectId?: boolean
   chapterId?: boolean
   topicId?: boolean
+  subTopicId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.Cognitive$topicArgs<ExtArgs>
+  subTopic?: boolean | Prisma.Cognitive$subTopicArgs<ExtArgs>
 }, ExtArgs["result"]["cognitive"]>
 
 export type CognitiveSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -869,11 +1056,13 @@ export type CognitiveSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   subjectId?: boolean
   chapterId?: boolean
   topicId?: boolean
+  subTopicId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.Cognitive$topicArgs<ExtArgs>
+  subTopic?: boolean | Prisma.Cognitive$subTopicArgs<ExtArgs>
 }, ExtArgs["result"]["cognitive"]>
 
 export type CognitiveSelectScalar = {
@@ -884,25 +1073,29 @@ export type CognitiveSelectScalar = {
   subjectId?: boolean
   chapterId?: boolean
   topicId?: boolean
+  subTopicId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CognitiveOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reference" | "isMath" | "answer" | "subjectId" | "chapterId" | "topicId" | "createdAt" | "updatedAt", ExtArgs["result"]["cognitive"]>
+export type CognitiveOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reference" | "isMath" | "answer" | "subjectId" | "chapterId" | "topicId" | "subTopicId" | "createdAt" | "updatedAt", ExtArgs["result"]["cognitive"]>
 export type CognitiveInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.Cognitive$topicArgs<ExtArgs>
+  subTopic?: boolean | Prisma.Cognitive$subTopicArgs<ExtArgs>
 }
 export type CognitiveIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.Cognitive$topicArgs<ExtArgs>
+  subTopic?: boolean | Prisma.Cognitive$subTopicArgs<ExtArgs>
 }
 export type CognitiveIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.Cognitive$topicArgs<ExtArgs>
+  subTopic?: boolean | Prisma.Cognitive$subTopicArgs<ExtArgs>
 }
 
 export type $CognitivePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -911,6 +1104,7 @@ export type $CognitivePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     subject: Prisma.$SubjectPayload<ExtArgs>
     chapter: Prisma.$ChapterPayload<ExtArgs>
     topic: Prisma.$TopicPayload<ExtArgs> | null
+    subTopic: Prisma.$SubTopicPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -920,6 +1114,7 @@ export type $CognitivePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     subjectId: string
     chapterId: string
     topicId: string | null
+    subTopicId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["cognitive"]>
@@ -1319,6 +1514,7 @@ export interface Prisma__CognitiveClient<T, Null = never, ExtArgs extends runtim
   subject<T extends Prisma.SubjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubjectDefaultArgs<ExtArgs>>): Prisma.Prisma__SubjectClient<runtime.Types.Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   chapter<T extends Prisma.ChapterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ChapterDefaultArgs<ExtArgs>>): Prisma.Prisma__ChapterClient<runtime.Types.Result.GetResult<Prisma.$ChapterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   topic<T extends Prisma.Cognitive$topicArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Cognitive$topicArgs<ExtArgs>>): Prisma.Prisma__TopicClient<runtime.Types.Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  subTopic<T extends Prisma.Cognitive$subTopicArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Cognitive$subTopicArgs<ExtArgs>>): Prisma.Prisma__SubTopicClient<runtime.Types.Result.GetResult<Prisma.$SubTopicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1355,6 +1551,7 @@ export interface CognitiveFieldRefs {
   readonly subjectId: Prisma.FieldRef<"Cognitive", 'String'>
   readonly chapterId: Prisma.FieldRef<"Cognitive", 'String'>
   readonly topicId: Prisma.FieldRef<"Cognitive", 'String'>
+  readonly subTopicId: Prisma.FieldRef<"Cognitive", 'String'>
   readonly createdAt: Prisma.FieldRef<"Cognitive", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Cognitive", 'DateTime'>
 }
@@ -1769,6 +1966,25 @@ export type Cognitive$topicArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.TopicInclude<ExtArgs> | null
   where?: Prisma.TopicWhereInput
+}
+
+/**
+ * Cognitive.subTopic
+ */
+export type Cognitive$subTopicArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SubTopic
+   */
+  select?: Prisma.SubTopicSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SubTopic
+   */
+  omit?: Prisma.SubTopicOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubTopicInclude<ExtArgs> | null
+  where?: Prisma.SubTopicWhereInput
 }
 
 /**

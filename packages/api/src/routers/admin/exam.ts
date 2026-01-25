@@ -131,7 +131,7 @@ export const examRouter = {
           {
             timeout: 60000,
             maxWait: 60000,
-          }
+          },
         );
 
         return { success: true, message: "Exam created", newExam };
@@ -149,7 +149,7 @@ export const examRouter = {
       z.object({
         data: ExamSchema,
         id: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { id, data } = input;
@@ -291,7 +291,7 @@ export const examRouter = {
           {
             timeout: 60000,
             maxWait: 60000,
-          }
+          },
         );
 
         return { success: true, message: "Exam updated" };
@@ -311,7 +311,7 @@ export const examRouter = {
     .input(
       z.object({
         search: z.string().nullish(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { search } = input;
@@ -582,15 +582,15 @@ export const examRouter = {
       }
 
       const completedAttempts = attempts.filter((a) =>
-        ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"].includes(a.status)
+        ["Submitted", "Auto-TimeUp", "Auto-TabSwitch"].includes(a.status),
       );
       const inProgress = attempts.filter(
-        (a) => a.status === "In Progress"
+        (a) => a.status === "In Progress",
       ).length;
 
       // Calculate scores based on totalQuestions from each attempt
       const scores = completedAttempts.map(
-        (a) => (a.score / a.totalQuestions) * 100
+        (a) => (a.score / a.totalQuestions) * 100,
       );
 
       const avgScore =
@@ -612,7 +612,7 @@ export const examRouter = {
 
       const tabSwitchViolations = attempts.reduce(
         (sum, a) => sum + a.tabSwitches,
-        0
+        0,
       );
 
       return {
@@ -634,7 +634,7 @@ export const examRouter = {
         examId: z.string(),
         page: z.number().min(1).default(1),
         limit: z.number().min(1).max(50).default(10),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { examId, page, limit } = input;
@@ -684,7 +684,7 @@ export const examRouter = {
             score: attempt.score,
             totalQuestions: attempt.totalQuestions,
             percentage: parseFloat(
-              ((attempt.score / attempt.totalQuestions) * 100).toFixed(1)
+              ((attempt.score / attempt.totalQuestions) * 100).toFixed(1),
             ),
             correctAnswers: attempt.correctAnswers,
             wrongAnswers: attempt.wrongAnswers,
@@ -731,7 +731,7 @@ export const examRouter = {
           score: attempt.score,
           totalQuestions: attempt.totalQuestions,
           percentage: parseFloat(
-            ((attempt.score / attempt.totalQuestions) * 100).toFixed(1)
+            ((attempt.score / attempt.totalQuestions) * 100).toFixed(1),
           ),
           correctAnswers: attempt.correctAnswers,
           wrongAnswers: attempt.wrongAnswers,
@@ -903,12 +903,12 @@ export const examRouter = {
 
       const totalCorrect = attempts.reduce(
         (sum, a) => sum + a.correctAnswers,
-        0
+        0,
       );
       const totalWrong = attempts.reduce((sum, a) => sum + a.wrongAnswers, 0);
       const totalSkipped = attempts.reduce(
         (sum, a) => sum + a.skippedQuestions,
-        0
+        0,
       );
 
       return [
@@ -1016,13 +1016,13 @@ export const examRouter = {
 
       const totalTabSwitches = attempts.reduce(
         (sum, a) => sum + a.tabSwitches,
-        0
+        0,
       );
       const studentsWithViolations = attempts.filter(
-        (a) => a.tabSwitches > 0
+        (a) => a.tabSwitches > 0,
       ).length;
       const autoSubmittedTabSwitch = attempts.filter(
-        (a) => a.submissionType === "Auto-TabSwitch"
+        (a) => a.submissionType === "Auto-TabSwitch",
       ).length;
 
       return {
@@ -1089,7 +1089,7 @@ export const examRouter = {
       const lowestScore = Math.min(...scores);
       const tabSwitchViolations = attempts.reduce(
         (sum, a) => sum + a.tabSwitches,
-        0
+        0,
       );
 
       return {
@@ -1280,7 +1280,7 @@ export const examRouter = {
         batchId: z.string().nullish(),
         subjectId: z.string().nullish(),
         status: z.string().nullish(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const {
@@ -1337,26 +1337,6 @@ export const examRouter = {
             ...(status && status !== "All" && { status }),
           },
           include: {
-            classNames: {
-              select: {
-                className: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
-              },
-            },
-            batches: {
-              select: {
-                batch: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
-              },
-            },
             subjects: {
               select: {
                 subject: {

@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 
 import {
   Video,
@@ -26,7 +27,10 @@ import {
   StaggerItem,
 } from "@/components/scroll-animation";
 
+import LiveClassVideo from "../components/live-class-video";
+
 import { getSubjectBgColor, getSubjectIcon } from "@workspace/utils";
+
 
 const subjects = [
   {
@@ -40,27 +44,11 @@ const subjects = [
     videos: [
       {
         id: 1,
-        title: "কোষ বিভাজন - মাইটোসিস",
-        thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        title: "কোষ ও এর গঠন",
+        thumbnail: "/thumbnail-biology.png",
         duration: "45:30",
         views: "12.5K",
-        instructor: "ড. আহমেদ হোসেন",
-      },
-      {
-        id: 2,
-        title: "জেনেটিক্স পরিচিতি",
-        thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        duration: "38:15",
-        views: "8.2K",
-        instructor: "ড. আহমেদ হোসেন",
-      },
-      {
-        id: 3,
-        title: "বংশগতি ও বিবর্তন",
-        thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        duration: "52:00",
-        views: "15.1K",
-        instructor: "ড. আহমেদ হোসেন",
+        instructor: "আজমল হোসেন (DMC)",
       },
     ],
   },
@@ -75,20 +63,12 @@ const subjects = [
     videos: [
       {
         id: 1,
-        title: "জৈব রসায়ন বেসিক",
+        title: "গুণগত রসায়ন",
         thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
         duration: "42:20",
         views: "9.8K",
-        instructor: "প্রফেসর করিম",
-      },
-      {
-        id: 2,
-        title: "রাসায়নিক বন্ধন",
-        thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        duration: "35:45",
-        views: "7.5K",
-        instructor: "প্রফেসর করিম",
-      },
+        instructor: "ওয়ালিউল মোরশেদ হাসনাত (SSMC)",
+      }
     ],
   },
   {
@@ -102,28 +82,12 @@ const subjects = [
     videos: [
       {
         id: 1,
-        title: "নিউটনের গতিসূত্র",
+        title: "কাজ, ক্ষমতা ও শক্তি",
         thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
         duration: "48:10",
         views: "18.3K",
-        instructor: "ড. রহমান",
-      },
-      {
-        id: 2,
-        title: "তরঙ্গ ও শব্দ",
-        thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        duration: "40:00",
-        views: "11.2K",
-        instructor: "ড. রহমান",
-      },
-      {
-        id: 3,
-        title: "আলোর প্রতিফলন",
-        thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        duration: "36:25",
-        views: "9.4K",
-        instructor: "ড. রহমান",
-      },
+        instructor: "এস. এম. শাহ নেওয়াজ (BUET)",
+      }
     ],
   },
   {
@@ -137,79 +101,18 @@ const subjects = [
     videos: [
       {
         id: 1,
-        title: "ক্যালকুলাস পরিচিতি",
+        title: "অন্তরীকরণ",
         thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
         duration: "55:00",
         views: "14.7K",
-        instructor: "জনাব আলী",
-      },
-      {
-        id: 2,
-        title: "ত্রিকোণমিতি বেসিক",
-        thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        duration: "44:30",
-        views: "10.9K",
-        instructor: "জনাব আলী",
-      },
+        instructor: "ডা. ইমদাদুল কবির",
+      }
     ],
-  },
-  {
-    id: 5,
-    name: "আইসিটি",
-    nameEn: "ICT",
-    icon: Cpu,
-    color: "bg-yellow-500",
-    lightColor: "bg-yellow-50",
-    textColor: "text-yellow-600",
-    videos: [
-      {
-        id: 1,
-        title: "প্রোগ্রামিং বেসিক",
-        thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        duration: "50:15",
-        views: "20.1K",
-        instructor: "ইঞ্জিনিয়ার সাকিব",
-      },
-      {
-        id: 2,
-        title: "ডেটাবেস পরিচিতি",
-        thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        duration: "38:40",
-        views: "8.6K",
-        instructor: "ইঞ্জিনিয়ার সাকিব",
-      },
-    ],
-  },
-  {
-    id: 6,
-    name: "ইংরেজি",
-    nameEn: "English",
-    icon: BookOpen,
-    color: "bg-red-500",
-    lightColor: "bg-red-50",
-    textColor: "text-red-600",
-    videos: [
-      {
-        id: 1,
-        title: "Grammar Fundamentals",
-        thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        duration: "42:00",
-        views: "16.4K",
-        instructor: "Ms. Sarah Khan",
-      },
-      {
-        id: 2,
-        title: "Essay Writing Tips",
-        thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        duration: "35:20",
-        views: "12.8K",
-        instructor: "Ms. Sarah Khan",
-      },
-    ],
-  },
+  }
 ];
 
 export const LiveClassServices = () => {
+  const [activeSubject, setActiveSubject] = useState<string | null>(null);
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Hero Section */}
@@ -245,44 +148,63 @@ export const LiveClassServices = () => {
         </div>
       </div>
 
+
       {/* Subjects Grid */}
       <div className="container mx-auto px-4 py-6 md:py-8 space-y-8">
         {subjects.map((subject) => {
           const Icon = getSubjectIcon(subject.name);
           const bgColor = getSubjectBgColor(subject.name);
+          const isPlaying = activeSubject === subject.nameEn;
           return (
             <FadeUp key={subject.id}>
-              <div className="space-y-4">
+              <div
+                className={cn(
+                  "space-y-6 p-6 rounded-3xl transition-all duration-500",
+                  isPlaying ? "bg-muted shadow-lg ring-1 ring-primary/20" : "hover:bg-muted/30"
+                )}
+              >
                 {/* Subject Header */}
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={cn(`p-2.5 rounded-xl`, bgColor)}>
-                      <Icon className="h-5 w-5 text-white" />
+                  <div className="flex items-center gap-4">
+                    <div className={cn(`p-3 rounded-2xl shadow-sm`, bgColor)}>
+                      <Icon className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-lg md:text-xl font-bold text-foreground">
+                      <h2 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">
                         {subject.name}
                       </h2>
-                      <p className="text-xs text-muted-foreground">
-                        {subject.videos.length} টি ইন্ট্রো ভিডিও
+                      <p className="text-sm text-muted-foreground">
+                        {subject.videos.length} টি প্রি-রেকর্ডেড ক্লাস
                       </p>
                     </div>
                   </div>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={cn(`hover:bg-muted`, subject.textColor)}
+                    className={cn(`hover:bg-white/50 rounded-xl`, subject.textColor)}
                   >
                     সব দেখুন
                     <ChevronRight className="h-4 w-4 ml-1" />
                   </Button>
                 </div>
 
+                {/* Inline Video Player */}
+                {isPlaying && (
+                  <FadeUp>
+                    <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-border/50 bg-black">
+                      <LiveClassVideo subject={subject.nameEn} />
+                    </div>
+                  </FadeUp>
+                )}
+
                 {/* Videos Horizontal Scroll */}
                 <StaggerContainer className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
                   {subject.videos.map((video) => (
                     <StaggerItem key={video.id}>
-                      <Card className="group min-w-[280px] md:min-w-[320px] overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer">
+                      <Card
+                        onClick={() => setActiveSubject(subject.nameEn)}
+                        className="group min-w-[280px] md:min-w-[320px] overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer"
+                      >
                         {/* Thumbnail */}
                         <div className="relative aspect-video overflow-hidden">
                           <Image
@@ -318,10 +240,6 @@ export const LiveClassServices = () => {
                           </h3>
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span>{video.instructor}</span>
-                            <div className="flex items-center gap-1">
-                              <Eye className="h-3 w-3" />
-                              {video.views}
-                            </div>
                           </div>
                         </CardContent>
                       </Card>

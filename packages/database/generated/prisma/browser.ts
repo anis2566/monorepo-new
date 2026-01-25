@@ -53,16 +53,6 @@ export type ClassName = Prisma.ClassNameModel
  */
 export type Institute = Prisma.InstituteModel
 /**
- * Model Student
- * 
- */
-export type Student = Prisma.StudentModel
-/**
- * Model StudentStatus
- * 
- */
-export type StudentStatus = Prisma.StudentStatusModel
-/**
  * Model Subject
  * 
  */
@@ -77,6 +67,26 @@ export type Chapter = Prisma.ChapterModel
  * 
  */
 export type Topic = Prisma.TopicModel
+/**
+ * Model SubTopic
+ * 
+ */
+export type SubTopic = Prisma.SubTopicModel
+/**
+ * Model Batch
+ * 
+ */
+export type Batch = Prisma.BatchModel
+/**
+ * Model Student
+ * 
+ */
+export type Student = Prisma.StudentModel
+/**
+ * Model StudentStatus
+ * 
+ */
+export type StudentStatus = Prisma.StudentStatusModel
 /**
  * Model Mcq
  * 
@@ -113,10 +123,10 @@ export type CourseClass = Prisma.CourseClassModel
  */
 export type CourseSubject = Prisma.CourseSubjectModel
 /**
- * Model Batch
+ * Model Teacher
  * 
  */
-export type Batch = Prisma.BatchModel
+export type Teacher = Prisma.TeacherModel
 /**
  * Model Exam
  * 
@@ -163,6 +173,31 @@ export type ExamAttempt = Prisma.ExamAttemptModel
  */
 export type AnswerHistory = Prisma.AnswerHistoryModel
 /**
+ * Model PublicExam
+ * 
+ */
+export type PublicExam = Prisma.PublicExamModel
+/**
+ * Model PublicExamMcq
+ * 
+ */
+export type PublicExamMcq = Prisma.PublicExamMcqModel
+/**
+ * Model PublicExamSubject
+ * 
+ */
+export type PublicExamSubject = Prisma.PublicExamSubjectModel
+/**
+ * Model PublicExamClassName
+ * 
+ */
+export type PublicExamClassName = Prisma.PublicExamClassNameModel
+/**
+ * Model PublicExamChapter
+ * 
+ */
+export type PublicExamChapter = Prisma.PublicExamChapterModel
+/**
  * Model PublicExamParticipant
  * 
  */
@@ -177,3 +212,18 @@ export type PublicExamAttempt = Prisma.PublicExamAttemptModel
  * 
  */
 export type PublicAnswerHistory = Prisma.PublicAnswerHistoryModel
+/**
+ * Model DemoExam
+ * 
+ */
+export type DemoExam = Prisma.DemoExamModel
+/**
+ * Model DemoExamMcq
+ * 
+ */
+export type DemoExamMcq = Prisma.DemoExamMcqModel
+/**
+ * Model DemoExamAttempt
+ * 
+ */
+export type DemoExamAttempt = Prisma.DemoExamAttemptModel

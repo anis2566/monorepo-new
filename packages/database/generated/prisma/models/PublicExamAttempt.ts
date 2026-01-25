@@ -436,7 +436,7 @@ export type PublicExamAttemptWhereInput = {
   participantId?: Prisma.StringFilter<"PublicExamAttempt"> | string
   createdAt?: Prisma.DateTimeFilter<"PublicExamAttempt"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PublicExamAttempt"> | Date | string
-  exam?: Prisma.XOR<Prisma.ExamScalarRelationFilter, Prisma.ExamWhereInput>
+  exam?: Prisma.XOR<Prisma.PublicExamScalarRelationFilter, Prisma.PublicExamWhereInput>
   participant?: Prisma.XOR<Prisma.PublicExamParticipantScalarRelationFilter, Prisma.PublicExamParticipantWhereInput>
   answerHistory?: Prisma.PublicAnswerHistoryListRelationFilter
 }
@@ -471,7 +471,7 @@ export type PublicExamAttemptOrderByWithRelationInput = {
   participantId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  exam?: Prisma.ExamOrderByWithRelationInput
+  exam?: Prisma.PublicExamOrderByWithRelationInput
   participant?: Prisma.PublicExamParticipantOrderByWithRelationInput
   answerHistory?: Prisma.PublicAnswerHistoryOrderByRelationAggregateInput
 }
@@ -509,7 +509,7 @@ export type PublicExamAttemptWhereUniqueInput = Prisma.AtLeast<{
   participantId?: Prisma.StringFilter<"PublicExamAttempt"> | string
   createdAt?: Prisma.DateTimeFilter<"PublicExamAttempt"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PublicExamAttempt"> | Date | string
-  exam?: Prisma.XOR<Prisma.ExamScalarRelationFilter, Prisma.ExamWhereInput>
+  exam?: Prisma.XOR<Prisma.PublicExamScalarRelationFilter, Prisma.PublicExamWhereInput>
   participant?: Prisma.XOR<Prisma.PublicExamParticipantScalarRelationFilter, Prisma.PublicExamParticipantWhereInput>
   answerHistory?: Prisma.PublicAnswerHistoryListRelationFilter
 }, "id">
@@ -614,7 +614,7 @@ export type PublicExamAttemptCreateInput = {
   warnings?: Prisma.PublicExamAttemptCreatewarningsInput | runtime.InputJsonValue[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  exam: Prisma.ExamCreateNestedOneWithoutPublicAttemptsInput
+  exam: Prisma.PublicExamCreateNestedOneWithoutAttemptsInput
   participant: Prisma.PublicExamParticipantCreateNestedOneWithoutAttemptsInput
   answerHistory?: Prisma.PublicAnswerHistoryCreateNestedManyWithoutAttemptInput
 }
@@ -680,7 +680,7 @@ export type PublicExamAttemptUpdateInput = {
   warnings?: Prisma.PublicExamAttemptUpdatewarningsInput | runtime.InputJsonValue[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  exam?: Prisma.ExamUpdateOneRequiredWithoutPublicAttemptsNestedInput
+  exam?: Prisma.PublicExamUpdateOneRequiredWithoutAttemptsNestedInput
   participant?: Prisma.PublicExamParticipantUpdateOneRequiredWithoutAttemptsNestedInput
   answerHistory?: Prisma.PublicAnswerHistoryUpdateManyWithoutAttemptNestedInput
 }
@@ -1232,7 +1232,7 @@ export type PublicExamAttemptCreateWithoutParticipantInput = {
   warnings?: Prisma.PublicExamAttemptCreatewarningsInput | runtime.InputJsonValue[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  exam: Prisma.ExamCreateNestedOneWithoutPublicAttemptsInput
+  exam: Prisma.PublicExamCreateNestedOneWithoutAttemptsInput
   answerHistory?: Prisma.PublicAnswerHistoryCreateNestedManyWithoutAttemptInput
 }
 
@@ -1322,7 +1322,7 @@ export type PublicExamAttemptCreateWithoutAnswerHistoryInput = {
   warnings?: Prisma.PublicExamAttemptCreatewarningsInput | runtime.InputJsonValue[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  exam: Prisma.ExamCreateNestedOneWithoutPublicAttemptsInput
+  exam: Prisma.PublicExamCreateNestedOneWithoutAttemptsInput
   participant: Prisma.PublicExamParticipantCreateNestedOneWithoutAttemptsInput
 }
 
@@ -1402,7 +1402,7 @@ export type PublicExamAttemptUpdateWithoutAnswerHistoryInput = {
   warnings?: Prisma.PublicExamAttemptUpdatewarningsInput | runtime.InputJsonValue[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  exam?: Prisma.ExamUpdateOneRequiredWithoutPublicAttemptsNestedInput
+  exam?: Prisma.PublicExamUpdateOneRequiredWithoutAttemptsNestedInput
   participant?: Prisma.PublicExamParticipantUpdateOneRequiredWithoutAttemptsNestedInput
 }
 
@@ -1623,7 +1623,7 @@ export type PublicExamAttemptUpdateWithoutParticipantInput = {
   warnings?: Prisma.PublicExamAttemptUpdatewarningsInput | runtime.InputJsonValue[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  exam?: Prisma.ExamUpdateOneRequiredWithoutPublicAttemptsNestedInput
+  exam?: Prisma.PublicExamUpdateOneRequiredWithoutAttemptsNestedInput
   answerHistory?: Prisma.PublicAnswerHistoryUpdateManyWithoutAttemptNestedInput
 }
 
@@ -1751,7 +1751,7 @@ export type PublicExamAttemptSelect<ExtArgs extends runtime.Types.Extensions.Int
   participantId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
+  exam?: boolean | Prisma.PublicExamDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.PublicExamParticipantDefaultArgs<ExtArgs>
   answerHistory?: boolean | Prisma.PublicExamAttempt$answerHistoryArgs<ExtArgs>
   _count?: boolean | Prisma.PublicExamAttemptCountOutputTypeDefaultArgs<ExtArgs>
@@ -1787,7 +1787,7 @@ export type PublicExamAttemptSelectCreateManyAndReturn<ExtArgs extends runtime.T
   participantId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
+  exam?: boolean | Prisma.PublicExamDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.PublicExamParticipantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["publicExamAttempt"]>
 
@@ -1821,7 +1821,7 @@ export type PublicExamAttemptSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   participantId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
+  exam?: boolean | Prisma.PublicExamDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.PublicExamParticipantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["publicExamAttempt"]>
 
@@ -1859,24 +1859,24 @@ export type PublicExamAttemptSelectScalar = {
 
 export type PublicExamAttemptOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "answers" | "score" | "correctAnswers" | "wrongAnswers" | "skippedQuestions" | "currentStreak" | "bestStreak" | "startTime" | "endTime" | "duration" | "lastActivityAt" | "totalQuestions" | "answeredCount" | "flaggedQuestions" | "status" | "submissionType" | "hasNegativeMark" | "negativeMark" | "hasShuffle" | "hasRandom" | "tabSwitches" | "tabSwitchTimes" | "warnings" | "examId" | "participantId" | "createdAt" | "updatedAt", ExtArgs["result"]["publicExamAttempt"]>
 export type PublicExamAttemptInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
+  exam?: boolean | Prisma.PublicExamDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.PublicExamParticipantDefaultArgs<ExtArgs>
   answerHistory?: boolean | Prisma.PublicExamAttempt$answerHistoryArgs<ExtArgs>
   _count?: boolean | Prisma.PublicExamAttemptCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PublicExamAttemptIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
+  exam?: boolean | Prisma.PublicExamDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.PublicExamParticipantDefaultArgs<ExtArgs>
 }
 export type PublicExamAttemptIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
+  exam?: boolean | Prisma.PublicExamDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.PublicExamParticipantDefaultArgs<ExtArgs>
 }
 
 export type $PublicExamAttemptPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PublicExamAttempt"
   objects: {
-    exam: Prisma.$ExamPayload<ExtArgs>
+    exam: Prisma.$PublicExamPayload<ExtArgs>
     participant: Prisma.$PublicExamParticipantPayload<ExtArgs>
     answerHistory: Prisma.$PublicAnswerHistoryPayload<ExtArgs>[]
   }
@@ -2304,7 +2304,7 @@ readonly fields: PublicExamAttemptFieldRefs;
  */
 export interface Prisma__PublicExamAttemptClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  exam<T extends Prisma.ExamDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamDefaultArgs<ExtArgs>>): Prisma.Prisma__ExamClient<runtime.Types.Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  exam<T extends Prisma.PublicExamDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PublicExamDefaultArgs<ExtArgs>>): Prisma.Prisma__PublicExamClient<runtime.Types.Result.GetResult<Prisma.$PublicExamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   participant<T extends Prisma.PublicExamParticipantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PublicExamParticipantDefaultArgs<ExtArgs>>): Prisma.Prisma__PublicExamParticipantClient<runtime.Types.Result.GetResult<Prisma.$PublicExamParticipantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   answerHistory<T extends Prisma.PublicExamAttempt$answerHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PublicExamAttempt$answerHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PublicAnswerHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**

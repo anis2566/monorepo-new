@@ -12,7 +12,9 @@
         "BETTER_AUTH_URL",
         "BETTER_AUTH_SECRET",
         "GOOGLE_CLIENT_ID",
-        "GOOGLE_CLIENT_SECRET"
+        "GOOGLE_CLIENT_SECRET",
+        "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME",
+        "NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET"
       ]
     },
     "lint": {
@@ -24,7 +26,17 @@
     "dev": {
       "dependsOn": ["^db:generate"],
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": [
+        "DATABASE_URL",
+        "NEXT_PUBLIC_APP_URL",
+        "BETTER_AUTH_URL",
+        "BETTER_AUTH_SECRET",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME",
+        "NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET"
+      ]
     },
     "db:generate": {
       "cache": false

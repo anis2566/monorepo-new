@@ -63,6 +63,15 @@ export const ChapterSchema = z.object({
 
 export type ChapterSchemaType = z.infer<typeof ChapterSchema>;
 
+export const TeacherSchema = z.object({
+  name: requiredString,
+  institute: requiredString,
+  imageUrl: requiredString,
+  subject: requiredString,
+});
+
+export type TeacherSchemaType = z.infer<typeof TeacherSchema>;
+
 const McqSchema = z.object({
   question: requiredString,
   answer: requiredString,
@@ -140,6 +149,50 @@ export const ExamSchema = z
   });
 
 export type ExamSchemaType = z.infer<typeof ExamSchema>;
+
+export const PublicExamSchema = z
+  .object({
+    title: requiredString,
+    cq: z.string().optional(),
+    mcq: z.string().optional(),
+    duration: requiredString,
+    startDate: requiredString,
+    endDate: requiredString,
+    type: requiredString,
+    hasSuffle: z.boolean({ message: "required" }),
+    hasRandom: z.boolean({ message: "required" }),
+    hasNegativeMark: z.boolean({ message: "required" }),
+    negativeMark: z.string().optional(),
+    classNameIds: z.array(z.string()).min(1, { message: "required" }),
+    subjectIds: z.array(z.string()).min(1, { message: "required" }),
+    chapterIds: z.array(z.string()).optional(),
+  })
+  .superRefine((data, ctx) => {
+    // Validate that at least one of cq or mcq is provided
+    if (!data.cq && !data.mcq) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "At least one of cq, mcq is required",
+        path: ["cq"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "At least one of cq, mcq is required",
+        path: ["mcq"],
+      });
+    }
+
+    // Validate negativeMark is required when hasNegativeMark is true
+    if (data.hasNegativeMark && !data.negativeMark) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Negative mark is required when negative marking is enabled",
+        path: ["negativeMark"],
+      });
+    }
+  });
+
+export type PublicExamSchemaType = z.infer<typeof PublicExamSchema>;
 
 export const CourseFormSchema = z.object({
   // Basic Info

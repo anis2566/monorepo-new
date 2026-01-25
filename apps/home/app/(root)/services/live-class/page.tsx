@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 
 import { LiveClassServices } from "@/modules/services/ui/views/live-class-service";
+import { HydrateClient } from "@/trpc/server";
 
 export const metadata: Metadata = {
   title: "Live Class",
@@ -8,7 +9,11 @@ export const metadata: Metadata = {
 };
 
 const LiveClassPage = () => {
-  return <LiveClassServices />;
+  return (
+    <HydrateClient>
+      <LiveClassServices />
+    </HydrateClient>
+  );
 };
 
 export default LiveClassPage;

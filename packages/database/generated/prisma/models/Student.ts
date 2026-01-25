@@ -1042,20 +1042,6 @@ export type StudentUncheckedUpdateManyWithoutInstituteNestedInput = {
   deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
 }
 
-export type StudentCreateNestedOneWithoutStudentStatusInput = {
-  create?: Prisma.XOR<Prisma.StudentCreateWithoutStudentStatusInput, Prisma.StudentUncheckedCreateWithoutStudentStatusInput>
-  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutStudentStatusInput
-  connect?: Prisma.StudentWhereUniqueInput
-}
-
-export type StudentUpdateOneRequiredWithoutStudentStatusNestedInput = {
-  create?: Prisma.XOR<Prisma.StudentCreateWithoutStudentStatusInput, Prisma.StudentUncheckedCreateWithoutStudentStatusInput>
-  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutStudentStatusInput
-  upsert?: Prisma.StudentUpsertWithoutStudentStatusInput
-  connect?: Prisma.StudentWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutStudentStatusInput, Prisma.StudentUpdateWithoutStudentStatusInput>, Prisma.StudentUncheckedUpdateWithoutStudentStatusInput>
-}
-
 export type StudentCreateNestedManyWithoutBatchInput = {
   create?: Prisma.XOR<Prisma.StudentCreateWithoutBatchInput, Prisma.StudentUncheckedCreateWithoutBatchInput> | Prisma.StudentCreateWithoutBatchInput[] | Prisma.StudentUncheckedCreateWithoutBatchInput[]
   connectOrCreate?: Prisma.StudentCreateOrConnectWithoutBatchInput | Prisma.StudentCreateOrConnectWithoutBatchInput[]
@@ -1096,6 +1082,20 @@ export type StudentUncheckedUpdateManyWithoutBatchNestedInput = {
   update?: Prisma.StudentUpdateWithWhereUniqueWithoutBatchInput | Prisma.StudentUpdateWithWhereUniqueWithoutBatchInput[]
   updateMany?: Prisma.StudentUpdateManyWithWhereWithoutBatchInput | Prisma.StudentUpdateManyWithWhereWithoutBatchInput[]
   deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
+}
+
+export type StudentCreateNestedOneWithoutStudentStatusInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutStudentStatusInput, Prisma.StudentUncheckedCreateWithoutStudentStatusInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutStudentStatusInput
+  connect?: Prisma.StudentWhereUniqueInput
+}
+
+export type StudentUpdateOneRequiredWithoutStudentStatusNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutStudentStatusInput, Prisma.StudentUncheckedCreateWithoutStudentStatusInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutStudentStatusInput
+  upsert?: Prisma.StudentUpsertWithoutStudentStatusInput
+  connect?: Prisma.StudentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutStudentStatusInput, Prisma.StudentUpdateWithoutStudentStatusInput>, Prisma.StudentUncheckedUpdateWithoutStudentStatusInput>
 }
 
 export type StudentCreateNestedOneWithoutExamsInput = {
@@ -1519,6 +1519,104 @@ export type StudentUpdateManyWithWhereWithoutInstituteInput = {
   data: Prisma.XOR<Prisma.StudentUpdateManyMutationInput, Prisma.StudentUncheckedUpdateManyWithoutInstituteInput>
 }
 
+export type StudentCreateWithoutBatchInput = {
+  id?: string
+  studentId: string
+  name: string
+  nameBangla: string
+  fName: string
+  mName: string
+  gender: string
+  dob: Date | string
+  nationality: string
+  religion: string
+  imageUrl?: string | null
+  section?: string | null
+  shift: string
+  group: string
+  roll: string
+  fPhone: string
+  mPhone: string
+  presentHouseNo: string
+  presentMoholla: string
+  presentPost: string
+  presentThana: string
+  permanentVillage: string
+  permanentPost: string
+  permanentThana: string
+  permanentDistrict: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentStatus?: Prisma.StudentStatusCreateNestedOneWithoutStudentInput
+  user?: Prisma.UserCreateNestedOneWithoutStudentInput
+  institute: Prisma.InstituteCreateNestedOneWithoutStudentsInput
+  className: Prisma.ClassNameCreateNestedOneWithoutStudentsInput
+  exams?: Prisma.ExamStudentCreateNestedManyWithoutStudentInput
+  attempts?: Prisma.ExamAttemptCreateNestedManyWithoutStudentInput
+}
+
+export type StudentUncheckedCreateWithoutBatchInput = {
+  id?: string
+  studentId: string
+  name: string
+  nameBangla: string
+  fName: string
+  mName: string
+  gender: string
+  dob: Date | string
+  nationality: string
+  religion: string
+  imageUrl?: string | null
+  section?: string | null
+  shift: string
+  group: string
+  roll: string
+  fPhone: string
+  mPhone: string
+  presentHouseNo: string
+  presentMoholla: string
+  presentPost: string
+  presentThana: string
+  permanentVillage: string
+  permanentPost: string
+  permanentThana: string
+  permanentDistrict: string
+  userId?: string | null
+  instituteId: string
+  classNameId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentStatus?: Prisma.StudentStatusUncheckedCreateNestedOneWithoutStudentInput
+  exams?: Prisma.ExamStudentUncheckedCreateNestedManyWithoutStudentInput
+  attempts?: Prisma.ExamAttemptUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type StudentCreateOrConnectWithoutBatchInput = {
+  where: Prisma.StudentWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCreateWithoutBatchInput, Prisma.StudentUncheckedCreateWithoutBatchInput>
+}
+
+export type StudentCreateManyBatchInputEnvelope = {
+  data: Prisma.StudentCreateManyBatchInput | Prisma.StudentCreateManyBatchInput[]
+  skipDuplicates?: boolean
+}
+
+export type StudentUpsertWithWhereUniqueWithoutBatchInput = {
+  where: Prisma.StudentWhereUniqueInput
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutBatchInput, Prisma.StudentUncheckedUpdateWithoutBatchInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutBatchInput, Prisma.StudentUncheckedCreateWithoutBatchInput>
+}
+
+export type StudentUpdateWithWhereUniqueWithoutBatchInput = {
+  where: Prisma.StudentWhereUniqueInput
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutBatchInput, Prisma.StudentUncheckedUpdateWithoutBatchInput>
+}
+
+export type StudentUpdateManyWithWhereWithoutBatchInput = {
+  where: Prisma.StudentScalarWhereInput
+  data: Prisma.XOR<Prisma.StudentUpdateManyMutationInput, Prisma.StudentUncheckedUpdateManyWithoutBatchInput>
+}
+
 export type StudentCreateWithoutStudentStatusInput = {
   id?: string
   studentId: string
@@ -1677,104 +1775,6 @@ export type StudentUncheckedUpdateWithoutStudentStatusInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exams?: Prisma.ExamStudentUncheckedUpdateManyWithoutStudentNestedInput
   attempts?: Prisma.ExamAttemptUncheckedUpdateManyWithoutStudentNestedInput
-}
-
-export type StudentCreateWithoutBatchInput = {
-  id?: string
-  studentId: string
-  name: string
-  nameBangla: string
-  fName: string
-  mName: string
-  gender: string
-  dob: Date | string
-  nationality: string
-  religion: string
-  imageUrl?: string | null
-  section?: string | null
-  shift: string
-  group: string
-  roll: string
-  fPhone: string
-  mPhone: string
-  presentHouseNo: string
-  presentMoholla: string
-  presentPost: string
-  presentThana: string
-  permanentVillage: string
-  permanentPost: string
-  permanentThana: string
-  permanentDistrict: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  studentStatus?: Prisma.StudentStatusCreateNestedOneWithoutStudentInput
-  user?: Prisma.UserCreateNestedOneWithoutStudentInput
-  institute: Prisma.InstituteCreateNestedOneWithoutStudentsInput
-  className: Prisma.ClassNameCreateNestedOneWithoutStudentsInput
-  exams?: Prisma.ExamStudentCreateNestedManyWithoutStudentInput
-  attempts?: Prisma.ExamAttemptCreateNestedManyWithoutStudentInput
-}
-
-export type StudentUncheckedCreateWithoutBatchInput = {
-  id?: string
-  studentId: string
-  name: string
-  nameBangla: string
-  fName: string
-  mName: string
-  gender: string
-  dob: Date | string
-  nationality: string
-  religion: string
-  imageUrl?: string | null
-  section?: string | null
-  shift: string
-  group: string
-  roll: string
-  fPhone: string
-  mPhone: string
-  presentHouseNo: string
-  presentMoholla: string
-  presentPost: string
-  presentThana: string
-  permanentVillage: string
-  permanentPost: string
-  permanentThana: string
-  permanentDistrict: string
-  userId?: string | null
-  instituteId: string
-  classNameId: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  studentStatus?: Prisma.StudentStatusUncheckedCreateNestedOneWithoutStudentInput
-  exams?: Prisma.ExamStudentUncheckedCreateNestedManyWithoutStudentInput
-  attempts?: Prisma.ExamAttemptUncheckedCreateNestedManyWithoutStudentInput
-}
-
-export type StudentCreateOrConnectWithoutBatchInput = {
-  where: Prisma.StudentWhereUniqueInput
-  create: Prisma.XOR<Prisma.StudentCreateWithoutBatchInput, Prisma.StudentUncheckedCreateWithoutBatchInput>
-}
-
-export type StudentCreateManyBatchInputEnvelope = {
-  data: Prisma.StudentCreateManyBatchInput | Prisma.StudentCreateManyBatchInput[]
-  skipDuplicates?: boolean
-}
-
-export type StudentUpsertWithWhereUniqueWithoutBatchInput = {
-  where: Prisma.StudentWhereUniqueInput
-  update: Prisma.XOR<Prisma.StudentUpdateWithoutBatchInput, Prisma.StudentUncheckedUpdateWithoutBatchInput>
-  create: Prisma.XOR<Prisma.StudentCreateWithoutBatchInput, Prisma.StudentUncheckedCreateWithoutBatchInput>
-}
-
-export type StudentUpdateWithWhereUniqueWithoutBatchInput = {
-  where: Prisma.StudentWhereUniqueInput
-  data: Prisma.XOR<Prisma.StudentUpdateWithoutBatchInput, Prisma.StudentUncheckedUpdateWithoutBatchInput>
-}
-
-export type StudentUpdateManyWithWhereWithoutBatchInput = {
-  where: Prisma.StudentScalarWhereInput
-  data: Prisma.XOR<Prisma.StudentUpdateManyMutationInput, Prisma.StudentUncheckedUpdateManyWithoutBatchInput>
 }
 
 export type StudentCreateWithoutExamsInput = {

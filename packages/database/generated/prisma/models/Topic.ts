@@ -238,6 +238,7 @@ export type TopicWhereInput = {
   cqs?: Prisma.CqListRelationFilter
   cognitives?: Prisma.CognitiveListRelationFilter
   perceptuals?: Prisma.PerceptualListRelationFilter
+  subTopics?: Prisma.SubTopicListRelationFilter
 }
 
 export type TopicOrderByWithRelationInput = {
@@ -254,6 +255,7 @@ export type TopicOrderByWithRelationInput = {
   cqs?: Prisma.CqOrderByRelationAggregateInput
   cognitives?: Prisma.CognitiveOrderByRelationAggregateInput
   perceptuals?: Prisma.PerceptualOrderByRelationAggregateInput
+  subTopics?: Prisma.SubTopicOrderByRelationAggregateInput
 }
 
 export type TopicWhereUniqueInput = Prisma.AtLeast<{
@@ -273,6 +275,7 @@ export type TopicWhereUniqueInput = Prisma.AtLeast<{
   cqs?: Prisma.CqListRelationFilter
   cognitives?: Prisma.CognitiveListRelationFilter
   perceptuals?: Prisma.PerceptualListRelationFilter
+  subTopics?: Prisma.SubTopicListRelationFilter
 }, "id">
 
 export type TopicOrderByWithAggregationInput = {
@@ -315,6 +318,7 @@ export type TopicCreateInput = {
   cqs?: Prisma.CqCreateNestedManyWithoutTopicInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutTopicInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateInput = {
@@ -329,6 +333,7 @@ export type TopicUncheckedCreateInput = {
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutTopicInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutTopicInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUpdateInput = {
@@ -343,6 +348,7 @@ export type TopicUpdateInput = {
   cqs?: Prisma.CqUpdateManyWithoutTopicNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutTopicNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateInput = {
@@ -357,6 +363,7 @@ export type TopicUncheckedUpdateInput = {
   cqs?: Prisma.CqUncheckedUpdateManyWithoutTopicNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutTopicNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicCreateManyInput = {
@@ -433,6 +440,11 @@ export type TopicMinOrderByAggregateInput = {
 
 export type TopicSumOrderByAggregateInput = {
   position?: Prisma.SortOrder
+}
+
+export type TopicScalarRelationFilter = {
+  is?: Prisma.TopicWhereInput
+  isNot?: Prisma.TopicWhereInput
 }
 
 export type TopicNullableScalarRelationFilter = {
@@ -524,6 +536,20 @@ export type TopicUncheckedUpdateManyWithoutChapterNestedInput = {
   deleteMany?: Prisma.TopicScalarWhereInput | Prisma.TopicScalarWhereInput[]
 }
 
+export type TopicCreateNestedOneWithoutSubTopicsInput = {
+  create?: Prisma.XOR<Prisma.TopicCreateWithoutSubTopicsInput, Prisma.TopicUncheckedCreateWithoutSubTopicsInput>
+  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutSubTopicsInput
+  connect?: Prisma.TopicWhereUniqueInput
+}
+
+export type TopicUpdateOneRequiredWithoutSubTopicsNestedInput = {
+  create?: Prisma.XOR<Prisma.TopicCreateWithoutSubTopicsInput, Prisma.TopicUncheckedCreateWithoutSubTopicsInput>
+  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutSubTopicsInput
+  upsert?: Prisma.TopicUpsertWithoutSubTopicsInput
+  connect?: Prisma.TopicWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TopicUpdateToOneWithWhereWithoutSubTopicsInput, Prisma.TopicUpdateWithoutSubTopicsInput>, Prisma.TopicUncheckedUpdateWithoutSubTopicsInput>
+}
+
 export type TopicCreateNestedOneWithoutMcqsInput = {
   create?: Prisma.XOR<Prisma.TopicCreateWithoutMcqsInput, Prisma.TopicUncheckedCreateWithoutMcqsInput>
   connectOrCreate?: Prisma.TopicCreateOrConnectWithoutMcqsInput
@@ -599,6 +625,7 @@ export type TopicCreateWithoutSubjectInput = {
   cqs?: Prisma.CqCreateNestedManyWithoutTopicInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutTopicInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateWithoutSubjectInput = {
@@ -612,6 +639,7 @@ export type TopicUncheckedCreateWithoutSubjectInput = {
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutTopicInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutTopicInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicCreateOrConnectWithoutSubjectInput = {
@@ -664,6 +692,7 @@ export type TopicCreateWithoutChapterInput = {
   cqs?: Prisma.CqCreateNestedManyWithoutTopicInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutTopicInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateWithoutChapterInput = {
@@ -677,6 +706,7 @@ export type TopicUncheckedCreateWithoutChapterInput = {
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutTopicInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutTopicInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicCreateOrConnectWithoutChapterInput = {
@@ -705,6 +735,78 @@ export type TopicUpdateManyWithWhereWithoutChapterInput = {
   data: Prisma.XOR<Prisma.TopicUpdateManyMutationInput, Prisma.TopicUncheckedUpdateManyWithoutChapterInput>
 }
 
+export type TopicCreateWithoutSubTopicsInput = {
+  id?: string
+  name: string
+  position?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  chapter: Prisma.ChapterCreateNestedOneWithoutTopicsInput
+  subject: Prisma.SubjectCreateNestedOneWithoutTopicsInput
+  mcqs?: Prisma.McqCreateNestedManyWithoutTopicInput
+  cqs?: Prisma.CqCreateNestedManyWithoutTopicInput
+  cognitives?: Prisma.CognitiveCreateNestedManyWithoutTopicInput
+  perceptuals?: Prisma.PerceptualCreateNestedManyWithoutTopicInput
+}
+
+export type TopicUncheckedCreateWithoutSubTopicsInput = {
+  id?: string
+  name: string
+  position?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  chapterId: string
+  subjectId: string
+  mcqs?: Prisma.McqUncheckedCreateNestedManyWithoutTopicInput
+  cqs?: Prisma.CqUncheckedCreateNestedManyWithoutTopicInput
+  cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutTopicInput
+  perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutTopicInput
+}
+
+export type TopicCreateOrConnectWithoutSubTopicsInput = {
+  where: Prisma.TopicWhereUniqueInput
+  create: Prisma.XOR<Prisma.TopicCreateWithoutSubTopicsInput, Prisma.TopicUncheckedCreateWithoutSubTopicsInput>
+}
+
+export type TopicUpsertWithoutSubTopicsInput = {
+  update: Prisma.XOR<Prisma.TopicUpdateWithoutSubTopicsInput, Prisma.TopicUncheckedUpdateWithoutSubTopicsInput>
+  create: Prisma.XOR<Prisma.TopicCreateWithoutSubTopicsInput, Prisma.TopicUncheckedCreateWithoutSubTopicsInput>
+  where?: Prisma.TopicWhereInput
+}
+
+export type TopicUpdateToOneWithWhereWithoutSubTopicsInput = {
+  where?: Prisma.TopicWhereInput
+  data: Prisma.XOR<Prisma.TopicUpdateWithoutSubTopicsInput, Prisma.TopicUncheckedUpdateWithoutSubTopicsInput>
+}
+
+export type TopicUpdateWithoutSubTopicsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chapter?: Prisma.ChapterUpdateOneRequiredWithoutTopicsNestedInput
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutTopicsNestedInput
+  mcqs?: Prisma.McqUpdateManyWithoutTopicNestedInput
+  cqs?: Prisma.CqUpdateManyWithoutTopicNestedInput
+  cognitives?: Prisma.CognitiveUpdateManyWithoutTopicNestedInput
+  perceptuals?: Prisma.PerceptualUpdateManyWithoutTopicNestedInput
+}
+
+export type TopicUncheckedUpdateWithoutSubTopicsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chapterId?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  mcqs?: Prisma.McqUncheckedUpdateManyWithoutTopicNestedInput
+  cqs?: Prisma.CqUncheckedUpdateManyWithoutTopicNestedInput
+  cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutTopicNestedInput
+  perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutTopicNestedInput
+}
+
 export type TopicCreateWithoutMcqsInput = {
   id?: string
   name: string
@@ -716,6 +818,7 @@ export type TopicCreateWithoutMcqsInput = {
   cqs?: Prisma.CqCreateNestedManyWithoutTopicInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutTopicInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateWithoutMcqsInput = {
@@ -729,6 +832,7 @@ export type TopicUncheckedCreateWithoutMcqsInput = {
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutTopicInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutTopicInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicCreateOrConnectWithoutMcqsInput = {
@@ -758,6 +862,7 @@ export type TopicUpdateWithoutMcqsInput = {
   cqs?: Prisma.CqUpdateManyWithoutTopicNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutTopicNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateWithoutMcqsInput = {
@@ -771,6 +876,7 @@ export type TopicUncheckedUpdateWithoutMcqsInput = {
   cqs?: Prisma.CqUncheckedUpdateManyWithoutTopicNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutTopicNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicCreateWithoutCqsInput = {
@@ -784,6 +890,7 @@ export type TopicCreateWithoutCqsInput = {
   mcqs?: Prisma.McqCreateNestedManyWithoutTopicInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutTopicInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateWithoutCqsInput = {
@@ -797,6 +904,7 @@ export type TopicUncheckedCreateWithoutCqsInput = {
   mcqs?: Prisma.McqUncheckedCreateNestedManyWithoutTopicInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutTopicInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicCreateOrConnectWithoutCqsInput = {
@@ -826,6 +934,7 @@ export type TopicUpdateWithoutCqsInput = {
   mcqs?: Prisma.McqUpdateManyWithoutTopicNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutTopicNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateWithoutCqsInput = {
@@ -839,6 +948,7 @@ export type TopicUncheckedUpdateWithoutCqsInput = {
   mcqs?: Prisma.McqUncheckedUpdateManyWithoutTopicNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutTopicNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicCreateWithoutCognitivesInput = {
@@ -852,6 +962,7 @@ export type TopicCreateWithoutCognitivesInput = {
   mcqs?: Prisma.McqCreateNestedManyWithoutTopicInput
   cqs?: Prisma.CqCreateNestedManyWithoutTopicInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateWithoutCognitivesInput = {
@@ -865,6 +976,7 @@ export type TopicUncheckedCreateWithoutCognitivesInput = {
   mcqs?: Prisma.McqUncheckedCreateNestedManyWithoutTopicInput
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutTopicInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicCreateOrConnectWithoutCognitivesInput = {
@@ -894,6 +1006,7 @@ export type TopicUpdateWithoutCognitivesInput = {
   mcqs?: Prisma.McqUpdateManyWithoutTopicNestedInput
   cqs?: Prisma.CqUpdateManyWithoutTopicNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateWithoutCognitivesInput = {
@@ -907,6 +1020,7 @@ export type TopicUncheckedUpdateWithoutCognitivesInput = {
   mcqs?: Prisma.McqUncheckedUpdateManyWithoutTopicNestedInput
   cqs?: Prisma.CqUncheckedUpdateManyWithoutTopicNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicCreateWithoutPerceptualsInput = {
@@ -920,6 +1034,7 @@ export type TopicCreateWithoutPerceptualsInput = {
   mcqs?: Prisma.McqCreateNestedManyWithoutTopicInput
   cqs?: Prisma.CqCreateNestedManyWithoutTopicInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateWithoutPerceptualsInput = {
@@ -933,6 +1048,7 @@ export type TopicUncheckedCreateWithoutPerceptualsInput = {
   mcqs?: Prisma.McqUncheckedCreateNestedManyWithoutTopicInput
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutTopicInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutTopicInput
+  subTopics?: Prisma.SubTopicUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicCreateOrConnectWithoutPerceptualsInput = {
@@ -962,6 +1078,7 @@ export type TopicUpdateWithoutPerceptualsInput = {
   mcqs?: Prisma.McqUpdateManyWithoutTopicNestedInput
   cqs?: Prisma.CqUpdateManyWithoutTopicNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateWithoutPerceptualsInput = {
@@ -975,6 +1092,7 @@ export type TopicUncheckedUpdateWithoutPerceptualsInput = {
   mcqs?: Prisma.McqUncheckedUpdateManyWithoutTopicNestedInput
   cqs?: Prisma.CqUncheckedUpdateManyWithoutTopicNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicCreateManySubjectInput = {
@@ -997,6 +1115,7 @@ export type TopicUpdateWithoutSubjectInput = {
   cqs?: Prisma.CqUpdateManyWithoutTopicNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutTopicNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateWithoutSubjectInput = {
@@ -1010,6 +1129,7 @@ export type TopicUncheckedUpdateWithoutSubjectInput = {
   cqs?: Prisma.CqUncheckedUpdateManyWithoutTopicNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutTopicNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateManyWithoutSubjectInput = {
@@ -1041,6 +1161,7 @@ export type TopicUpdateWithoutChapterInput = {
   cqs?: Prisma.CqUpdateManyWithoutTopicNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutTopicNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateWithoutChapterInput = {
@@ -1054,6 +1175,7 @@ export type TopicUncheckedUpdateWithoutChapterInput = {
   cqs?: Prisma.CqUncheckedUpdateManyWithoutTopicNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutTopicNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutTopicNestedInput
+  subTopics?: Prisma.SubTopicUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateManyWithoutChapterInput = {
@@ -1075,6 +1197,7 @@ export type TopicCountOutputType = {
   cqs: number
   cognitives: number
   perceptuals: number
+  subTopics: number
 }
 
 export type TopicCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1082,6 +1205,7 @@ export type TopicCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   cqs?: boolean | TopicCountOutputTypeCountCqsArgs
   cognitives?: boolean | TopicCountOutputTypeCountCognitivesArgs
   perceptuals?: boolean | TopicCountOutputTypeCountPerceptualsArgs
+  subTopics?: boolean | TopicCountOutputTypeCountSubTopicsArgs
 }
 
 /**
@@ -1122,6 +1246,13 @@ export type TopicCountOutputTypeCountPerceptualsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.PerceptualWhereInput
 }
 
+/**
+ * TopicCountOutputType without action
+ */
+export type TopicCountOutputTypeCountSubTopicsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SubTopicWhereInput
+}
+
 
 export type TopicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1137,6 +1268,7 @@ export type TopicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   cqs?: boolean | Prisma.Topic$cqsArgs<ExtArgs>
   cognitives?: boolean | Prisma.Topic$cognitivesArgs<ExtArgs>
   perceptuals?: boolean | Prisma.Topic$perceptualsArgs<ExtArgs>
+  subTopics?: boolean | Prisma.Topic$subTopicsArgs<ExtArgs>
   _count?: boolean | Prisma.TopicCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["topic"]>
 
@@ -1182,6 +1314,7 @@ export type TopicInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   cqs?: boolean | Prisma.Topic$cqsArgs<ExtArgs>
   cognitives?: boolean | Prisma.Topic$cognitivesArgs<ExtArgs>
   perceptuals?: boolean | Prisma.Topic$perceptualsArgs<ExtArgs>
+  subTopics?: boolean | Prisma.Topic$subTopicsArgs<ExtArgs>
   _count?: boolean | Prisma.TopicCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TopicIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1202,6 +1335,7 @@ export type $TopicPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     cqs: Prisma.$CqPayload<ExtArgs>[]
     cognitives: Prisma.$CognitivePayload<ExtArgs>[]
     perceptuals: Prisma.$PerceptualPayload<ExtArgs>[]
+    subTopics: Prisma.$SubTopicPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1611,6 +1745,7 @@ export interface Prisma__TopicClient<T, Null = never, ExtArgs extends runtime.Ty
   cqs<T extends Prisma.Topic$cqsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$cqsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CqPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cognitives<T extends Prisma.Topic$cognitivesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$cognitivesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CognitivePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   perceptuals<T extends Prisma.Topic$perceptualsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$perceptualsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PerceptualPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  subTopics<T extends Prisma.Topic$subTopicsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$subTopicsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubTopicPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2136,6 +2271,30 @@ export type Topic$perceptualsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.PerceptualScalarFieldEnum | Prisma.PerceptualScalarFieldEnum[]
+}
+
+/**
+ * Topic.subTopics
+ */
+export type Topic$subTopicsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SubTopic
+   */
+  select?: Prisma.SubTopicSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SubTopic
+   */
+  omit?: Prisma.SubTopicOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubTopicInclude<ExtArgs> | null
+  where?: Prisma.SubTopicWhereInput
+  orderBy?: Prisma.SubTopicOrderByWithRelationInput | Prisma.SubTopicOrderByWithRelationInput[]
+  cursor?: Prisma.SubTopicWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SubTopicScalarFieldEnum | Prisma.SubTopicScalarFieldEnum[]
 }
 
 /**

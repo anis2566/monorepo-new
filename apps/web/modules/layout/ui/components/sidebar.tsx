@@ -18,6 +18,7 @@ import {
   Layers3,
   FileStack,
   Target,
+  UserPen,
 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -34,6 +35,7 @@ const navItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard, exact: true },
   { title: "Courses", url: "/courses", icon: BookOpen },
   { title: "Students", url: "/students", icon: GraduationCap },
+  { title: "Teachers", url: "/teachers", icon: UserPen },
   { title: "Exams", url: "/exams", icon: ClipboardList },
   { title: "Results", url: "/results", icon: BarChart3 },
   { title: "Batches", url: "/batches", icon: FileStack },
@@ -80,7 +82,7 @@ function SidebarContent({
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
                 collapsed && "justify-center px-2",
                 active &&
-                  "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
+                "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
               )}
             >
               <item.icon className="h-5 w-5 shrink-0" />

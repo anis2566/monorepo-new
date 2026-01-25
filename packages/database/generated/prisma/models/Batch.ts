@@ -308,11 +308,6 @@ export type BatchOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type BatchNullableScalarRelationFilter = {
-  is?: Prisma.BatchWhereInput | null
-  isNot?: Prisma.BatchWhereInput | null
-}
-
 export type BatchClassNameIdNameCompoundUniqueInput = {
   classNameId: string
   name: string
@@ -340,6 +335,11 @@ export type BatchMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   classNameId?: Prisma.SortOrder
+}
+
+export type BatchNullableScalarRelationFilter = {
+  is?: Prisma.BatchWhereInput | null
+  isNot?: Prisma.BatchWhereInput | null
 }
 
 export type BatchScalarRelationFilter = {

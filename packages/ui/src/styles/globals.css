@@ -1,6 +1,8 @@
 @import url("https://fonts.maateen.me/solaiman-lipi/font.css");
 @import url("https://fonts.maateen.me/kalpurush/font.css");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
+
 @source "../../../apps/**/*.{ts,tsx}";
 @source "../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
@@ -49,6 +51,9 @@
   /* Font */
   --font-sans: "Plus Jakarta Sans", sans-serif, var(--font-sans);
 
+  /* Custom Shadow Fix - Moving complex shadow to theme */
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
   /* Radius */
   --radius: var(--radius);
   --radius-sm: calc(var(--radius) - 0.25rem);
@@ -61,9 +66,7 @@
 }
 
 :root {
-  /* LIGHT MODE (OKLCH Approximations & Custom Variables) */
-
-  /* Default/Background Colors (OKLCH) */
+  /* LIGHT MODE */
   --background: oklch(0.978 0.005 240);
   --foreground: oklch(0.198 0.016 260);
   --card: oklch(1 0 0);
@@ -71,7 +74,6 @@
   --popover: var(--card);
   --popover-foreground: var(--foreground);
 
-  /* Action/Semantic Colors (OKLCH) */
   --primary: oklch(0.485 0.138 270.8);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.957 0.005 240);
@@ -81,7 +83,6 @@
   --accent: oklch(0.58 0.16 168);
   --accent-foreground: oklch(1 0 0);
 
-  /* FIXED: Success is now defined properly here only */
   --success: oklch(0.61 0.16 142);
   --success-foreground: oklch(1 0 0);
 
@@ -90,12 +91,10 @@
   --destructive: oklch(0.605 0.17 25);
   --destructive-foreground: oklch(1 0 0);
 
-  /* Border/Input/Ring Colors (OKLCH) */
   --border: oklch(0.91 0.008 240);
   --input: var(--border);
   --ring: var(--primary);
 
-  /* Sidebar Colors (OKLCH) */
   --sidebar-background: oklch(0.99 0.001 240);
   --sidebar-foreground: oklch(0.25 0.007 240);
   --sidebar-primary: oklch(0.18 0.007 240);
@@ -105,56 +104,20 @@
   --sidebar-border: oklch(0.91 0.008 240);
   --sidebar-ring: oklch(0.67 0.14 270);
 
-  /* Custom tokens */
-  /* Note: These raw HSL values are strictly for use inside hsl() wrappers */
-  --celebration-start: 243 75% 59%;
-  --celebration-end: 280 70% 55%;
-  --step-inactive: 240 5% 85%;
-  --step-active: 243 75% 59%;
-
-  /* REMOVED DUPLICATE RAW HSL --success HERE */
-
-  /* Radius */
   --radius: 0.75rem;
 
-  /* --- Original Gradients & Shadows --- */
-  --gradient-primary: linear-gradient(
-    135deg,
-    hsl(231 48% 48%) 0%,
-    hsl(250 60% 58%) 100%
-  );
-  --gradient-accent: linear-gradient(
-    135deg,
-    hsl(168 76% 42%) 0%,
-    hsl(180 70% 50%) 100%
-  );
-  --gradient-card: linear-gradient(
-    180deg,
-    hsl(0 0% 100%) 0%,
-    hsl(210 40% 98%) 100%
-  );
-  --gradient-hero: linear-gradient(
-    135deg,
-    hsl(231 48% 48% / 0.1) 0%,
-    hsl(168 76% 42% / 0.1) 100%
-  );
-
-  --shadow-sm: 0 1px 2px 0 hsl(222 47% 11% / 0.05);
-  --shadow-md:
-    0 4px 6px -1px hsl(222 47% 11% / 0.08),
-    0 2px 4px -2px hsl(222 47% 11% / 0.05);
-  --shadow-lg:
-    0 10px 15px -3px hsl(222 47% 11% / 0.08),
-    0 4px 6px -4px hsl(222 47% 11% / 0.05);
-  --shadow-card: 0 4px 20px -4px hsl(231 48% 48% / 0.12);
-
-  /* --- Primary Gradient Stop Variables --- */
+  /* Custom Gradient Variables */
   --primary-start: 231 48% 48%;
   --primary-end: 250 60% 58%;
+
+  --gradient-primary: linear-gradient(135deg, hsl(var(--primary-start)) 0%, hsl(var(--primary-end)) 100%);
+  --gradient-accent: linear-gradient(135deg, hsl(168 76% 42%) 0%, hsl(180 70% 50%) 100%);
+  --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
+  --gradient-hero: linear-gradient(135deg, hsl(231 48% 48% / 0.1) 0%, hsl(168 76% 42% / 0.1) 100%);
 }
 
 .dark {
-  /* DARK MODE (OKLCH Approximations) */
+  /* DARK MODE */
   --background: oklch(0.14 0.016 260);
   --foreground: oklch(0.98 0.005 240);
   --card: oklch(0.2 0.016 260);
@@ -169,26 +132,17 @@
   --muted-foreground: oklch(0.7 0.01 240);
   --accent: oklch(0.65 0.16 168);
   --accent-foreground: oklch(1 0 0);
-
-  /* FIXED: Success is now defined properly here only */
   --success: oklch(0.65 0.16 142);
   --success-foreground: oklch(1 0 0);
-
   --warning: oklch(0.7 0.12 68);
   --warning-foreground: oklch(1 0 0);
   --destructive: oklch(0.35 0.11 25);
   --destructive-foreground: var(--foreground);
 
-  --celebration-start: 243 75% 65%;
-  --celebration-end: 280 70% 60%;
-
-  /* REMOVED DUPLICATE RAW HSL --success HERE */
-
-  --step-inactive: 230 15% 25%;
-  --step-active: 243 75% 65%;
   --border: var(--secondary);
   --input: var(--secondary);
   --ring: var(--primary);
+
   --sidebar-background: oklch(0.18 0.007 240);
   --sidebar-foreground: oklch(0.96 0.004 240);
   --sidebar-primary: oklch(0.55 0.12 258);
@@ -196,19 +150,19 @@
   --sidebar-accent: oklch(0.27 0.004 240);
   --sidebar-accent-foreground: var(--sidebar-foreground);
   --sidebar-border: var(--sidebar-accent);
-  --sidebar-ring: var(--sidebar-ring);
 
-  /* --- Dark Mode Primary Gradient Stop Variables --- */
   --primary-start: 231 60% 60%;
   --primary-end: 250 70% 70%;
 }
 
-/* --- Keyframes (Placed Globally) --- */
+/* Keyframes */
 @keyframes float {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
   }
@@ -219,6 +173,7 @@
     transform: translateY(0) rotate(0deg);
     opacity: 1;
   }
+
   100% {
     transform: translateY(-100px) rotate(720deg);
     opacity: 0;
@@ -226,10 +181,12 @@
 }
 
 @keyframes pulse-soft {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.7;
   }
@@ -240,6 +197,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -250,6 +208,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -262,28 +221,25 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
     font-family: "Plus Jakarta Sans", sans-serif;
   }
 }
 
 @layer utilities {
-  /* --- Original Gradients/Effects --- */
   .gradient-primary {
     background: var(--gradient-primary);
   }
+
   .gradient-accent {
     background: var(--gradient-accent);
   }
+
   .gradient-card {
     background: var(--gradient-card);
   }
+
   .gradient-hero {
     background: var(--gradient-hero);
-  }
-
-  .shadow-card {
-    box-shadow: var(--shadow-card);
   }
 
   .text-gradient {
@@ -293,62 +249,36 @@
     background-clip: text;
   }
 
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom, 1rem);
-  }
-
+  /* FIXED UTILITY */
   .glass-card {
-    @apply bg-card/30 backdrop-blur-xl border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
+    /* shadow-glass refers to the variable we defined in the @theme block above */
+    @apply bg-card/30 backdrop-blur-xl border-white/10 shadow-glass;
   }
 
-  .auth-gradient {
-    background: radial-gradient(
-      circle at center,
-      oklch(0.205 0 0) 0%,
-      oklch(0.145 0 0) 100%
-    );
-  }
-
-  .bg-grid-white {
-    background-size: 40px 40px;
-    background-image:
-      linear-gradient(to right, oklch(1 0 0 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, oklch(1 0 0 / 0.05) 1px, transparent 1px);
-  }
-
-  /* --- UPDATED: Custom Utilities --- */
-  .gradient-celebration {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--primary-start)) 0%,
-      hsl(var(--primary-end)) 100%
-    );
-  }
-
-  /* Font Utilities (Moved out of nesting so they work globally) */
   .font-solaimanlipi {
     font-family: "SolaimanLipi", sans-serif;
   }
+
   .font-kalpurush {
     font-family: "Kalpurush", sans-serif;
   }
-  .font-noto-bengali {
-    font-family: "Noto Sans Bengali", sans-serif;
-  }
 
-  /* Animation utility classes */
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
+
   .animate-confetti {
     animation: confetti 1s ease-out forwards;
   }
+
   .animate-pulse-soft {
     animation: pulse-soft 2s ease-in-out infinite;
   }
+
   .animate-slide-up {
     animation: slide-up 0.4s ease-out forwards;
   }
+
   .animate-fade-in {
     animation: fade-in 0.3s ease-out forwards;
   }

@@ -2,22 +2,20 @@
 
 import { useState } from "react";
 import {
-  BookOpen,
   Calendar,
   ClipboardList,
   Clock,
   Edit,
   Eye,
-  Layers3,
-  School,
   Trash,
   Users,
   MoreHorizontal,
   Crown,
   FileQuestionIcon,
-  Globe,
   Copy,
   Check,
+  Shuffle,
+  AlertCircle,
 } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
@@ -64,9 +62,6 @@ interface ExamWithRelations extends Exam {
   }[];
   _count: {
     attempts: number;
-    students: number;
-    batches: number;
-    classNames: number;
     subjects: number;
   };
 }
@@ -147,10 +142,7 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                 <TableHead>Schedule</TableHead>
                 <TableHead>Duration</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Class</TableHead>
-                <TableHead>Batch</TableHead>
-                <TableHead>Subjects</TableHead>
-                <TableHead>Students</TableHead>
+                <TableHead>Features</TableHead>
                 <TableHead>Attempts</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
@@ -160,28 +152,15 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                 <TableRow key={exam.id}>
                   <TableCell>
                     <div>
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">{exam.title}</p>
-                        {exam.isPublic && (
-                          <Badge
-                            variant="outline"
-                            className="bg-primary/10 text-primary border-primary/20 text-xs"
-                          >
-                            <Globe className="h-3 w-3 mr-1" />
-                            Public
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="flex gap-1 mt-1">
-                        {exam.subjects.map((subject, index) => (
+                      <p className="font-medium">{exam.title}</p>
+                      <div className="flex gap-1 mt-1 flex-wrap">
+                        {exam.subjects.map((item, index) => (
                           <Badge
                             key={index}
                             variant="secondary"
                             className="text-xs"
                           >
-                            {exam.subjects
-                              .map((subject) => subject.subject.name)
-                              .join(", ")}
+                            {item.subject.name}
                           </Badge>
                         ))}
                       </div>
@@ -211,27 +190,22 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1 text-muted-foreground">
-                      <School className="h-3 w-3" />
-                      {exam._count.classNames}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1 text-muted-foreground">
-                      <Layers3 className="h-3 w-3" />
-                      {exam._count.batches}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1 text-muted-foreground">
-                      <BookOpen className="h-3 w-3" />
-                      {exam._count.subjects}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1 text-muted-foreground">
-                      <Users className="h-3 w-3" />
-                      {exam._count.students}
+                    <div className="flex gap-1">
+                      {exam.hasSuffle && (
+                        <Badge variant="outline" className="text-xs">
+                          <Shuffle className="h-3 w-3 mr-1" />
+                          Shuffle
+                        </Badge>
+                      )}
+                      {exam.hasNegativeMark && (
+                        <Badge
+                          variant="outline"
+                          className="text-xs text-warning border-warning/30"
+                        >
+                          <AlertCircle className="h-3 w-3 mr-1" />-
+                          {exam.negativeMark}
+                        </Badge>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -272,20 +246,6 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                             Merit List
                           </Link>
                         </DropdownMenuItem>
-                        {exam.isPublic && (
-                          <DropdownMenuItem
-                            onClick={() => handleCopyPublicLink(exam.id)}
-                          >
-                            {copiedId === exam.id ? (
-                              <Check className="h-4 w-4" />
-                            ) : (
-                              <Copy className="h-4 w-4" />
-                            )}
-                            {copiedId === exam.id
-                              ? "Copied!"
-                              : "Copy Public Link"}
-                          </DropdownMenuItem>
-                        )}
                         <DropdownMenuItem
                           className="text-destructive"
                           onClick={() => handleDeleteExam(exam.id, exam.title)}
@@ -308,26 +268,15 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
             <MobileDataCard key={exam.id}>
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="font-medium">{exam.title}</p>
-                    {exam.isPublic && (
-                      <Badge
-                        variant="outline"
-                        className="bg-primary/10 text-primary border-primary/20 text-xs"
-                      >
-                        <Globe className="h-3 w-3 mr-1" />
-                        Public
-                      </Badge>
-                    )}
-                  </div>
+                  <p className="font-medium">{exam.title}</p>
                   <div className="flex flex-wrap gap-1 mt-1">
-                    {exam.subjects.map((subject, index) => (
+                    {exam.subjects.map((item, index) => (
                       <Badge
                         key={index}
                         variant="secondary"
                         className="text-xs"
                       >
-                        {subject.subject.name}
+                        {item.subject.name}
                       </Badge>
                     ))}
                   </div>
@@ -390,6 +339,20 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                   {exam.status}
                 </Badge>
                 <Badge variant="outline">{exam.type}</Badge>
+                {exam.hasSuffle && (
+                  <Badge variant="outline" className="text-xs">
+                    <Shuffle className="h-3 w-3 mr-1" />
+                    Shuffle
+                  </Badge>
+                )}
+                {exam.hasNegativeMark && (
+                  <Badge
+                    variant="outline"
+                    className="text-xs text-warning border-warning/30"
+                  >
+                    -{exam.negativeMark}
+                  </Badge>
+                )}
               </div>
               <MobileDataRow
                 label="Schedule"
@@ -401,10 +364,6 @@ export const ExamList = ({ exams, totalCount }: ExamListProps) => {
                 }
               />
               <MobileDataRow label="Duration" value={`${exam.duration} min`} />
-              <MobileDataRow label="Classes" value={exam._count.classNames} />
-              <MobileDataRow label="Batches" value={exam._count.batches} />
-              <MobileDataRow label="Subjects" value={exam._count.subjects} />
-              <MobileDataRow label="Students" value={exam._count.students} />
               <MobileDataRow label="Attempts" value={exam._count.attempts} />
             </MobileDataCard>
           ))}

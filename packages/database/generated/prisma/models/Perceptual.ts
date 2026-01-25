@@ -31,6 +31,7 @@ export type PerceptualMinAggregateOutputType = {
   subjectId: string | null
   chapterId: string | null
   topicId: string | null
+  subTopicId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +43,7 @@ export type PerceptualMaxAggregateOutputType = {
   subjectId: string | null
   chapterId: string | null
   topicId: string | null
+  subTopicId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +56,7 @@ export type PerceptualCountAggregateOutputType = {
   subjectId: number
   chapterId: number
   topicId: number
+  subTopicId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -67,6 +70,7 @@ export type PerceptualMinAggregateInputType = {
   subjectId?: true
   chapterId?: true
   topicId?: true
+  subTopicId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -78,6 +82,7 @@ export type PerceptualMaxAggregateInputType = {
   subjectId?: true
   chapterId?: true
   topicId?: true
+  subTopicId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -90,6 +95,7 @@ export type PerceptualCountAggregateInputType = {
   subjectId?: true
   chapterId?: true
   topicId?: true
+  subTopicId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -175,6 +181,7 @@ export type PerceptualGroupByOutputType = {
   subjectId: string
   chapterId: string
   topicId: string | null
+  subTopicId: string | null
   createdAt: Date
   updatedAt: Date
   _count: PerceptualCountAggregateOutputType | null
@@ -208,11 +215,13 @@ export type PerceptualWhereInput = {
   subjectId?: Prisma.StringFilter<"Perceptual"> | string
   chapterId?: Prisma.StringFilter<"Perceptual"> | string
   topicId?: Prisma.StringNullableFilter<"Perceptual"> | string | null
+  subTopicId?: Prisma.StringNullableFilter<"Perceptual"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Perceptual"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Perceptual"> | Date | string
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
   chapter?: Prisma.XOR<Prisma.ChapterScalarRelationFilter, Prisma.ChapterWhereInput>
   topic?: Prisma.XOR<Prisma.TopicNullableScalarRelationFilter, Prisma.TopicWhereInput> | null
+  subTopic?: Prisma.XOR<Prisma.SubTopicNullableScalarRelationFilter, Prisma.SubTopicWhereInput> | null
 }
 
 export type PerceptualOrderByWithRelationInput = {
@@ -223,11 +232,13 @@ export type PerceptualOrderByWithRelationInput = {
   subjectId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   topicId?: Prisma.SortOrderInput | Prisma.SortOrder
+  subTopicId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   subject?: Prisma.SubjectOrderByWithRelationInput
   chapter?: Prisma.ChapterOrderByWithRelationInput
   topic?: Prisma.TopicOrderByWithRelationInput
+  subTopic?: Prisma.SubTopicOrderByWithRelationInput
 }
 
 export type PerceptualWhereUniqueInput = Prisma.AtLeast<{
@@ -241,11 +252,13 @@ export type PerceptualWhereUniqueInput = Prisma.AtLeast<{
   subjectId?: Prisma.StringFilter<"Perceptual"> | string
   chapterId?: Prisma.StringFilter<"Perceptual"> | string
   topicId?: Prisma.StringNullableFilter<"Perceptual"> | string | null
+  subTopicId?: Prisma.StringNullableFilter<"Perceptual"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Perceptual"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Perceptual"> | Date | string
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
   chapter?: Prisma.XOR<Prisma.ChapterScalarRelationFilter, Prisma.ChapterWhereInput>
   topic?: Prisma.XOR<Prisma.TopicNullableScalarRelationFilter, Prisma.TopicWhereInput> | null
+  subTopic?: Prisma.XOR<Prisma.SubTopicNullableScalarRelationFilter, Prisma.SubTopicWhereInput> | null
 }, "id">
 
 export type PerceptualOrderByWithAggregationInput = {
@@ -256,6 +269,7 @@ export type PerceptualOrderByWithAggregationInput = {
   subjectId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   topicId?: Prisma.SortOrderInput | Prisma.SortOrder
+  subTopicId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PerceptualCountOrderByAggregateInput
@@ -274,6 +288,7 @@ export type PerceptualScalarWhereWithAggregatesInput = {
   subjectId?: Prisma.StringWithAggregatesFilter<"Perceptual"> | string
   chapterId?: Prisma.StringWithAggregatesFilter<"Perceptual"> | string
   topicId?: Prisma.StringNullableWithAggregatesFilter<"Perceptual"> | string | null
+  subTopicId?: Prisma.StringNullableWithAggregatesFilter<"Perceptual"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Perceptual"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Perceptual"> | Date | string
 }
@@ -288,6 +303,7 @@ export type PerceptualCreateInput = {
   subject: Prisma.SubjectCreateNestedOneWithoutPerceptualsInput
   chapter: Prisma.ChapterCreateNestedOneWithoutPerceptualsInput
   topic?: Prisma.TopicCreateNestedOneWithoutPerceptualsInput
+  subTopic?: Prisma.SubTopicCreateNestedOneWithoutPerceptualsInput
 }
 
 export type PerceptualUncheckedCreateInput = {
@@ -298,6 +314,7 @@ export type PerceptualUncheckedCreateInput = {
   subjectId: string
   chapterId: string
   topicId?: string | null
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -312,6 +329,7 @@ export type PerceptualUpdateInput = {
   subject?: Prisma.SubjectUpdateOneRequiredWithoutPerceptualsNestedInput
   chapter?: Prisma.ChapterUpdateOneRequiredWithoutPerceptualsNestedInput
   topic?: Prisma.TopicUpdateOneWithoutPerceptualsNestedInput
+  subTopic?: Prisma.SubTopicUpdateOneWithoutPerceptualsNestedInput
 }
 
 export type PerceptualUncheckedUpdateInput = {
@@ -322,6 +340,7 @@ export type PerceptualUncheckedUpdateInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
   topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -334,6 +353,7 @@ export type PerceptualCreateManyInput = {
   subjectId: string
   chapterId: string
   topicId?: string | null
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -355,6 +375,7 @@ export type PerceptualUncheckedUpdateManyInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
   topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -377,6 +398,7 @@ export type PerceptualCountOrderByAggregateInput = {
   subjectId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   topicId?: Prisma.SortOrder
+  subTopicId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -388,6 +410,7 @@ export type PerceptualMaxOrderByAggregateInput = {
   subjectId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   topicId?: Prisma.SortOrder
+  subTopicId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -399,6 +422,7 @@ export type PerceptualMinOrderByAggregateInput = {
   subjectId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   topicId?: Prisma.SortOrder
+  subTopicId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -529,6 +553,48 @@ export type PerceptualUncheckedUpdateManyWithoutTopicNestedInput = {
   deleteMany?: Prisma.PerceptualScalarWhereInput | Prisma.PerceptualScalarWhereInput[]
 }
 
+export type PerceptualCreateNestedManyWithoutSubTopicInput = {
+  create?: Prisma.XOR<Prisma.PerceptualCreateWithoutSubTopicInput, Prisma.PerceptualUncheckedCreateWithoutSubTopicInput> | Prisma.PerceptualCreateWithoutSubTopicInput[] | Prisma.PerceptualUncheckedCreateWithoutSubTopicInput[]
+  connectOrCreate?: Prisma.PerceptualCreateOrConnectWithoutSubTopicInput | Prisma.PerceptualCreateOrConnectWithoutSubTopicInput[]
+  createMany?: Prisma.PerceptualCreateManySubTopicInputEnvelope
+  connect?: Prisma.PerceptualWhereUniqueInput | Prisma.PerceptualWhereUniqueInput[]
+}
+
+export type PerceptualUncheckedCreateNestedManyWithoutSubTopicInput = {
+  create?: Prisma.XOR<Prisma.PerceptualCreateWithoutSubTopicInput, Prisma.PerceptualUncheckedCreateWithoutSubTopicInput> | Prisma.PerceptualCreateWithoutSubTopicInput[] | Prisma.PerceptualUncheckedCreateWithoutSubTopicInput[]
+  connectOrCreate?: Prisma.PerceptualCreateOrConnectWithoutSubTopicInput | Prisma.PerceptualCreateOrConnectWithoutSubTopicInput[]
+  createMany?: Prisma.PerceptualCreateManySubTopicInputEnvelope
+  connect?: Prisma.PerceptualWhereUniqueInput | Prisma.PerceptualWhereUniqueInput[]
+}
+
+export type PerceptualUpdateManyWithoutSubTopicNestedInput = {
+  create?: Prisma.XOR<Prisma.PerceptualCreateWithoutSubTopicInput, Prisma.PerceptualUncheckedCreateWithoutSubTopicInput> | Prisma.PerceptualCreateWithoutSubTopicInput[] | Prisma.PerceptualUncheckedCreateWithoutSubTopicInput[]
+  connectOrCreate?: Prisma.PerceptualCreateOrConnectWithoutSubTopicInput | Prisma.PerceptualCreateOrConnectWithoutSubTopicInput[]
+  upsert?: Prisma.PerceptualUpsertWithWhereUniqueWithoutSubTopicInput | Prisma.PerceptualUpsertWithWhereUniqueWithoutSubTopicInput[]
+  createMany?: Prisma.PerceptualCreateManySubTopicInputEnvelope
+  set?: Prisma.PerceptualWhereUniqueInput | Prisma.PerceptualWhereUniqueInput[]
+  disconnect?: Prisma.PerceptualWhereUniqueInput | Prisma.PerceptualWhereUniqueInput[]
+  delete?: Prisma.PerceptualWhereUniqueInput | Prisma.PerceptualWhereUniqueInput[]
+  connect?: Prisma.PerceptualWhereUniqueInput | Prisma.PerceptualWhereUniqueInput[]
+  update?: Prisma.PerceptualUpdateWithWhereUniqueWithoutSubTopicInput | Prisma.PerceptualUpdateWithWhereUniqueWithoutSubTopicInput[]
+  updateMany?: Prisma.PerceptualUpdateManyWithWhereWithoutSubTopicInput | Prisma.PerceptualUpdateManyWithWhereWithoutSubTopicInput[]
+  deleteMany?: Prisma.PerceptualScalarWhereInput | Prisma.PerceptualScalarWhereInput[]
+}
+
+export type PerceptualUncheckedUpdateManyWithoutSubTopicNestedInput = {
+  create?: Prisma.XOR<Prisma.PerceptualCreateWithoutSubTopicInput, Prisma.PerceptualUncheckedCreateWithoutSubTopicInput> | Prisma.PerceptualCreateWithoutSubTopicInput[] | Prisma.PerceptualUncheckedCreateWithoutSubTopicInput[]
+  connectOrCreate?: Prisma.PerceptualCreateOrConnectWithoutSubTopicInput | Prisma.PerceptualCreateOrConnectWithoutSubTopicInput[]
+  upsert?: Prisma.PerceptualUpsertWithWhereUniqueWithoutSubTopicInput | Prisma.PerceptualUpsertWithWhereUniqueWithoutSubTopicInput[]
+  createMany?: Prisma.PerceptualCreateManySubTopicInputEnvelope
+  set?: Prisma.PerceptualWhereUniqueInput | Prisma.PerceptualWhereUniqueInput[]
+  disconnect?: Prisma.PerceptualWhereUniqueInput | Prisma.PerceptualWhereUniqueInput[]
+  delete?: Prisma.PerceptualWhereUniqueInput | Prisma.PerceptualWhereUniqueInput[]
+  connect?: Prisma.PerceptualWhereUniqueInput | Prisma.PerceptualWhereUniqueInput[]
+  update?: Prisma.PerceptualUpdateWithWhereUniqueWithoutSubTopicInput | Prisma.PerceptualUpdateWithWhereUniqueWithoutSubTopicInput[]
+  updateMany?: Prisma.PerceptualUpdateManyWithWhereWithoutSubTopicInput | Prisma.PerceptualUpdateManyWithWhereWithoutSubTopicInput[]
+  deleteMany?: Prisma.PerceptualScalarWhereInput | Prisma.PerceptualScalarWhereInput[]
+}
+
 export type PerceptualCreatereferenceInput = {
   set: string[]
 }
@@ -547,6 +613,7 @@ export type PerceptualCreateWithoutSubjectInput = {
   updatedAt?: Date | string
   chapter: Prisma.ChapterCreateNestedOneWithoutPerceptualsInput
   topic?: Prisma.TopicCreateNestedOneWithoutPerceptualsInput
+  subTopic?: Prisma.SubTopicCreateNestedOneWithoutPerceptualsInput
 }
 
 export type PerceptualUncheckedCreateWithoutSubjectInput = {
@@ -556,6 +623,7 @@ export type PerceptualUncheckedCreateWithoutSubjectInput = {
   answer: string
   chapterId: string
   topicId?: string | null
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -597,6 +665,7 @@ export type PerceptualScalarWhereInput = {
   subjectId?: Prisma.StringFilter<"Perceptual"> | string
   chapterId?: Prisma.StringFilter<"Perceptual"> | string
   topicId?: Prisma.StringNullableFilter<"Perceptual"> | string | null
+  subTopicId?: Prisma.StringNullableFilter<"Perceptual"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Perceptual"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Perceptual"> | Date | string
 }
@@ -610,6 +679,7 @@ export type PerceptualCreateWithoutChapterInput = {
   updatedAt?: Date | string
   subject: Prisma.SubjectCreateNestedOneWithoutPerceptualsInput
   topic?: Prisma.TopicCreateNestedOneWithoutPerceptualsInput
+  subTopic?: Prisma.SubTopicCreateNestedOneWithoutPerceptualsInput
 }
 
 export type PerceptualUncheckedCreateWithoutChapterInput = {
@@ -619,6 +689,7 @@ export type PerceptualUncheckedCreateWithoutChapterInput = {
   answer: string
   subjectId: string
   topicId?: string | null
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -658,6 +729,7 @@ export type PerceptualCreateWithoutTopicInput = {
   updatedAt?: Date | string
   subject: Prisma.SubjectCreateNestedOneWithoutPerceptualsInput
   chapter: Prisma.ChapterCreateNestedOneWithoutPerceptualsInput
+  subTopic?: Prisma.SubTopicCreateNestedOneWithoutPerceptualsInput
 }
 
 export type PerceptualUncheckedCreateWithoutTopicInput = {
@@ -667,6 +739,7 @@ export type PerceptualUncheckedCreateWithoutTopicInput = {
   answer: string
   subjectId: string
   chapterId: string
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -697,6 +770,56 @@ export type PerceptualUpdateManyWithWhereWithoutTopicInput = {
   data: Prisma.XOR<Prisma.PerceptualUpdateManyMutationInput, Prisma.PerceptualUncheckedUpdateManyWithoutTopicInput>
 }
 
+export type PerceptualCreateWithoutSubTopicInput = {
+  id?: string
+  reference?: Prisma.PerceptualCreatereferenceInput | string[]
+  isMath?: boolean
+  answer: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subject: Prisma.SubjectCreateNestedOneWithoutPerceptualsInput
+  chapter: Prisma.ChapterCreateNestedOneWithoutPerceptualsInput
+  topic?: Prisma.TopicCreateNestedOneWithoutPerceptualsInput
+}
+
+export type PerceptualUncheckedCreateWithoutSubTopicInput = {
+  id?: string
+  reference?: Prisma.PerceptualCreatereferenceInput | string[]
+  isMath?: boolean
+  answer: string
+  subjectId: string
+  chapterId: string
+  topicId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PerceptualCreateOrConnectWithoutSubTopicInput = {
+  where: Prisma.PerceptualWhereUniqueInput
+  create: Prisma.XOR<Prisma.PerceptualCreateWithoutSubTopicInput, Prisma.PerceptualUncheckedCreateWithoutSubTopicInput>
+}
+
+export type PerceptualCreateManySubTopicInputEnvelope = {
+  data: Prisma.PerceptualCreateManySubTopicInput | Prisma.PerceptualCreateManySubTopicInput[]
+  skipDuplicates?: boolean
+}
+
+export type PerceptualUpsertWithWhereUniqueWithoutSubTopicInput = {
+  where: Prisma.PerceptualWhereUniqueInput
+  update: Prisma.XOR<Prisma.PerceptualUpdateWithoutSubTopicInput, Prisma.PerceptualUncheckedUpdateWithoutSubTopicInput>
+  create: Prisma.XOR<Prisma.PerceptualCreateWithoutSubTopicInput, Prisma.PerceptualUncheckedCreateWithoutSubTopicInput>
+}
+
+export type PerceptualUpdateWithWhereUniqueWithoutSubTopicInput = {
+  where: Prisma.PerceptualWhereUniqueInput
+  data: Prisma.XOR<Prisma.PerceptualUpdateWithoutSubTopicInput, Prisma.PerceptualUncheckedUpdateWithoutSubTopicInput>
+}
+
+export type PerceptualUpdateManyWithWhereWithoutSubTopicInput = {
+  where: Prisma.PerceptualScalarWhereInput
+  data: Prisma.XOR<Prisma.PerceptualUpdateManyMutationInput, Prisma.PerceptualUncheckedUpdateManyWithoutSubTopicInput>
+}
+
 export type PerceptualCreateManySubjectInput = {
   id?: string
   reference?: Prisma.PerceptualCreatereferenceInput | string[]
@@ -704,6 +827,7 @@ export type PerceptualCreateManySubjectInput = {
   answer: string
   chapterId: string
   topicId?: string | null
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -717,6 +841,7 @@ export type PerceptualUpdateWithoutSubjectInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chapter?: Prisma.ChapterUpdateOneRequiredWithoutPerceptualsNestedInput
   topic?: Prisma.TopicUpdateOneWithoutPerceptualsNestedInput
+  subTopic?: Prisma.SubTopicUpdateOneWithoutPerceptualsNestedInput
 }
 
 export type PerceptualUncheckedUpdateWithoutSubjectInput = {
@@ -726,6 +851,7 @@ export type PerceptualUncheckedUpdateWithoutSubjectInput = {
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
   topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -737,6 +863,7 @@ export type PerceptualUncheckedUpdateManyWithoutSubjectInput = {
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
   topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -748,6 +875,7 @@ export type PerceptualCreateManyChapterInput = {
   answer: string
   subjectId: string
   topicId?: string | null
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -761,6 +889,7 @@ export type PerceptualUpdateWithoutChapterInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subject?: Prisma.SubjectUpdateOneRequiredWithoutPerceptualsNestedInput
   topic?: Prisma.TopicUpdateOneWithoutPerceptualsNestedInput
+  subTopic?: Prisma.SubTopicUpdateOneWithoutPerceptualsNestedInput
 }
 
 export type PerceptualUncheckedUpdateWithoutChapterInput = {
@@ -770,6 +899,7 @@ export type PerceptualUncheckedUpdateWithoutChapterInput = {
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -781,6 +911,7 @@ export type PerceptualUncheckedUpdateManyWithoutChapterInput = {
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -792,6 +923,7 @@ export type PerceptualCreateManyTopicInput = {
   answer: string
   subjectId: string
   chapterId: string
+  subTopicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -805,6 +937,7 @@ export type PerceptualUpdateWithoutTopicInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subject?: Prisma.SubjectUpdateOneRequiredWithoutPerceptualsNestedInput
   chapter?: Prisma.ChapterUpdateOneRequiredWithoutPerceptualsNestedInput
+  subTopic?: Prisma.SubTopicUpdateOneWithoutPerceptualsNestedInput
 }
 
 export type PerceptualUncheckedUpdateWithoutTopicInput = {
@@ -814,6 +947,7 @@ export type PerceptualUncheckedUpdateWithoutTopicInput = {
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -825,6 +959,55 @@ export type PerceptualUncheckedUpdateManyWithoutTopicInput = {
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.StringFieldUpdateOperationsInput | string
+  subTopicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PerceptualCreateManySubTopicInput = {
+  id?: string
+  reference?: Prisma.PerceptualCreatereferenceInput | string[]
+  isMath?: boolean
+  answer: string
+  subjectId: string
+  chapterId: string
+  topicId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PerceptualUpdateWithoutSubTopicInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.PerceptualUpdatereferenceInput | string[]
+  isMath?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  answer?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutPerceptualsNestedInput
+  chapter?: Prisma.ChapterUpdateOneRequiredWithoutPerceptualsNestedInput
+  topic?: Prisma.TopicUpdateOneWithoutPerceptualsNestedInput
+}
+
+export type PerceptualUncheckedUpdateWithoutSubTopicInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.PerceptualUpdatereferenceInput | string[]
+  isMath?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  answer?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterId?: Prisma.StringFieldUpdateOperationsInput | string
+  topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PerceptualUncheckedUpdateManyWithoutSubTopicInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.PerceptualUpdatereferenceInput | string[]
+  isMath?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  answer?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterId?: Prisma.StringFieldUpdateOperationsInput | string
+  topicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -839,11 +1022,13 @@ export type PerceptualSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   subjectId?: boolean
   chapterId?: boolean
   topicId?: boolean
+  subTopicId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.Perceptual$topicArgs<ExtArgs>
+  subTopic?: boolean | Prisma.Perceptual$subTopicArgs<ExtArgs>
 }, ExtArgs["result"]["perceptual"]>
 
 export type PerceptualSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -854,11 +1039,13 @@ export type PerceptualSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   subjectId?: boolean
   chapterId?: boolean
   topicId?: boolean
+  subTopicId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.Perceptual$topicArgs<ExtArgs>
+  subTopic?: boolean | Prisma.Perceptual$subTopicArgs<ExtArgs>
 }, ExtArgs["result"]["perceptual"]>
 
 export type PerceptualSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -869,11 +1056,13 @@ export type PerceptualSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   subjectId?: boolean
   chapterId?: boolean
   topicId?: boolean
+  subTopicId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.Perceptual$topicArgs<ExtArgs>
+  subTopic?: boolean | Prisma.Perceptual$subTopicArgs<ExtArgs>
 }, ExtArgs["result"]["perceptual"]>
 
 export type PerceptualSelectScalar = {
@@ -884,25 +1073,29 @@ export type PerceptualSelectScalar = {
   subjectId?: boolean
   chapterId?: boolean
   topicId?: boolean
+  subTopicId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PerceptualOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reference" | "isMath" | "answer" | "subjectId" | "chapterId" | "topicId" | "createdAt" | "updatedAt", ExtArgs["result"]["perceptual"]>
+export type PerceptualOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reference" | "isMath" | "answer" | "subjectId" | "chapterId" | "topicId" | "subTopicId" | "createdAt" | "updatedAt", ExtArgs["result"]["perceptual"]>
 export type PerceptualInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.Perceptual$topicArgs<ExtArgs>
+  subTopic?: boolean | Prisma.Perceptual$subTopicArgs<ExtArgs>
 }
 export type PerceptualIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.Perceptual$topicArgs<ExtArgs>
+  subTopic?: boolean | Prisma.Perceptual$subTopicArgs<ExtArgs>
 }
 export type PerceptualIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.Perceptual$topicArgs<ExtArgs>
+  subTopic?: boolean | Prisma.Perceptual$subTopicArgs<ExtArgs>
 }
 
 export type $PerceptualPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -911,6 +1104,7 @@ export type $PerceptualPayload<ExtArgs extends runtime.Types.Extensions.Internal
     subject: Prisma.$SubjectPayload<ExtArgs>
     chapter: Prisma.$ChapterPayload<ExtArgs>
     topic: Prisma.$TopicPayload<ExtArgs> | null
+    subTopic: Prisma.$SubTopicPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -920,6 +1114,7 @@ export type $PerceptualPayload<ExtArgs extends runtime.Types.Extensions.Internal
     subjectId: string
     chapterId: string
     topicId: string | null
+    subTopicId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["perceptual"]>
@@ -1319,6 +1514,7 @@ export interface Prisma__PerceptualClient<T, Null = never, ExtArgs extends runti
   subject<T extends Prisma.SubjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubjectDefaultArgs<ExtArgs>>): Prisma.Prisma__SubjectClient<runtime.Types.Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   chapter<T extends Prisma.ChapterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ChapterDefaultArgs<ExtArgs>>): Prisma.Prisma__ChapterClient<runtime.Types.Result.GetResult<Prisma.$ChapterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   topic<T extends Prisma.Perceptual$topicArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Perceptual$topicArgs<ExtArgs>>): Prisma.Prisma__TopicClient<runtime.Types.Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  subTopic<T extends Prisma.Perceptual$subTopicArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Perceptual$subTopicArgs<ExtArgs>>): Prisma.Prisma__SubTopicClient<runtime.Types.Result.GetResult<Prisma.$SubTopicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1355,6 +1551,7 @@ export interface PerceptualFieldRefs {
   readonly subjectId: Prisma.FieldRef<"Perceptual", 'String'>
   readonly chapterId: Prisma.FieldRef<"Perceptual", 'String'>
   readonly topicId: Prisma.FieldRef<"Perceptual", 'String'>
+  readonly subTopicId: Prisma.FieldRef<"Perceptual", 'String'>
   readonly createdAt: Prisma.FieldRef<"Perceptual", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Perceptual", 'DateTime'>
 }
@@ -1769,6 +1966,25 @@ export type Perceptual$topicArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.TopicInclude<ExtArgs> | null
   where?: Prisma.TopicWhereInput
+}
+
+/**
+ * Perceptual.subTopic
+ */
+export type Perceptual$subTopicArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SubTopic
+   */
+  select?: Prisma.SubTopicSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SubTopic
+   */
+  omit?: Prisma.SubTopicOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubTopicInclude<ExtArgs> | null
+  where?: Prisma.SubTopicWhereInput
 }
 
 /**

@@ -13,6 +13,10 @@ datasource db {
   provider = "postgresql"
 }
 
+// ============================================
+// ACCOUNT & AUTHENTICATION
+// ============================================
+
 model User {
   id String @id @default(uuid())
 
@@ -104,6 +108,10 @@ model SmsVerification {
   @@index([value])
 }
 
+// ============================================
+// ACADEMIC STRUCTURE
+// ============================================
+
 model ClassName {
   id          String  @id @default(uuid())
   name        String  @unique
@@ -112,10 +120,11 @@ model ClassName {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  students Student[]
-  batches  Batch[]
-  exams    ExamClassName[]
-  courses  CourseClass[]
+  students    Student[]
+  batches     Batch[]
+  exams       ExamClassName[]
+  publicExams PublicExamClassName[]
+  courses     CourseClass[]
 }
 
 model Institute {
@@ -129,6 +138,126 @@ model Institute {
 
   @@unique([name])
 }
+
+model Subject {
+  id       String @id @default(uuid())
+  name     String
+  level    String
+  position Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chapters    Chapter[]
+  mcqs        Mcq[]
+  cqs         Cq[]
+  exams       ExamSubject[]
+  publicExams PublicExamSubject[]
+  courses     CourseSubject[]
+  topics      Topic[]
+  subTopics   SubTopic[]
+  cognitives  Cognitive[]
+  perceptuals Perceptual[]
+
+  @@index([name])
+  @@index([level])
+}
+
+model Chapter {
+  id       String @id @default(uuid())
+  name     String
+  position Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+
+  mcqs        Mcq[]
+  cqs         Cq[]
+  exams       ExamChapter[]
+  publicExams PublicExamChapter[]
+  topics      Topic[]
+  cognitives  Cognitive[]
+  perceptuals Perceptual[]
+
+  @@index([subjectId])
+  @@index([name])
+  @@index([subjectId, name])
+}
+
+model Topic {
+  id       String @id @default(uuid())
+  name     String
+  position Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Restrict)
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+
+  mcqs        Mcq[]
+  cqs         Cq[]
+  cognitives  Cognitive[]
+  perceptuals Perceptual[]
+  subTopics   SubTopic[]
+
+  @@index([subjectId])
+  @@index([name])
+  @@index([subjectId, name])
+  @@index([chapterId])
+}
+
+model SubTopic {
+  id       String @id @default(uuid())
+  name     String
+  position Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  topicId String
+  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Restrict)
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+
+  mcqs        Mcq[]
+  cqs         Cq[]
+  cognitives  Cognitive[]
+  perceptuals Perceptual[]
+
+  @@index([subjectId])
+  @@index([name])
+  @@index([subjectId, name])
+  @@index([topicId])
+}
+
+model Batch {
+  id   String @id @default(uuid())
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  classNameId String
+  className   ClassName @relation(fields: [classNameId], references: [id], onDelete: Restrict)
+
+  students Student[]
+  exams    ExamBatch[]
+
+  @@unique([classNameId, name])
+  @@index([classNameId])
+}
+
+// ============================================
+// STUDENT
+// ============================================
 
 model Student {
   id          String   @id @default(uuid())
@@ -203,75 +332,9 @@ model StudentStatus {
   @@index([absentDate])
 }
 
-model Subject {
-  id       String @id @default(uuid())
-  name     String
-  level    String
-  position Int    @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  chapters    Chapter[]
-  mcqs        Mcq[]
-  cqs         Cq[]
-  exams       ExamSubject[]
-  courses     CourseSubject[]
-  topics      Topic[]
-  cognitives  Cognitive[]
-  perceptuals Perceptual[]
-
-  @@index([name])
-  @@index([level])
-}
-
-model Chapter {
-  id       String @id @default(uuid())
-  name     String
-  position Int    @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  subjectId String
-  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
-
-  mcqs        Mcq[]
-  cqs         Cq[]
-  exams       ExamChapter[]
-  topics      Topic[]
-  cognitives  Cognitive[]
-  perceptuals Perceptual[]
-
-  @@index([subjectId])
-  @@index([name])
-  @@index([subjectId, name])
-}
-
-model Topic {
-  id       String @id @default(uuid())
-  name     String
-  position Int    @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  chapterId String
-  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Restrict)
-
-  subjectId String
-  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
-
-  mcqs        Mcq[]
-  cqs         Cq[]
-  cognitives  Cognitive[]
-  perceptuals Perceptual[]
-
-  @@index([subjectId])
-  @@index([name])
-  @@index([subjectId, name])
-  @@index([chapterId])
-}
+// ============================================
+// RESOURCES
+// ============================================
 
 model Mcq {
   id          String   @id @default(uuid())
@@ -298,7 +361,12 @@ model Mcq {
   topicId String?
   topic   Topic?  @relation(fields: [topicId], references: [id], onDelete: SetNull)
 
-  exams ExamMcq[]
+  subTopicId String?
+  subTopic   SubTopic? @relation(fields: [subTopicId], references: [id], onDelete: SetNull)
+
+  exams       ExamMcq[]
+  publicExams PublicExamMcq[]
+  demoExams   DemoExamMcq[]
 
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
@@ -336,6 +404,9 @@ model Cq {
   topicId String?
   topic   Topic?  @relation(fields: [topicId], references: [id], onDelete: SetNull)
 
+  subTopicId String?
+  subTopic   SubTopic? @relation(fields: [subTopicId], references: [id], onDelete: SetNull)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -359,6 +430,9 @@ model Cognitive {
 
   topicId String?
   topic   Topic?  @relation(fields: [topicId], references: [id], onDelete: SetNull)
+
+  subTopicId String?
+  subTopic   SubTopic? @relation(fields: [subTopicId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -384,6 +458,9 @@ model Perceptual {
   topicId String?
   topic   Topic?  @relation(fields: [topicId], references: [id], onDelete: SetNull)
 
+  subTopicId String?
+  subTopic   SubTopic? @relation(fields: [subTopicId], references: [id], onDelete: SetNull)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -392,6 +469,10 @@ model Perceptual {
   @@index([isMath])
   @@index([subjectId, chapterId])
 }
+
+// ============================================
+// COURSES
+// ============================================
 
 model Course {
   id          String  @id @default(cuid())
@@ -436,10 +517,6 @@ model Course {
   @@index([isPopular])
 }
 
-// ============================================
-// PROGRAM ASSOCIATIONS
-// ============================================
-
 model CourseClass {
   id        String    @id @default(cuid())
   courseId  String
@@ -474,22 +551,24 @@ model CourseSubject {
   @@index([subjectId])
 }
 
-model Batch {
-  id   String @id @default(uuid())
-  name String
+// ============================================
+// TEACHERS
+// ============================================
+
+model Teacher {
+  id        String @id @default(cuid())
+  name      String
+  institute String
+  imageUrl  String
+  subject   String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  classNameId String
-  className   ClassName @relation(fields: [classNameId], references: [id], onDelete: Restrict)
-
-  students Student[]
-  exams    ExamBatch[]
-
-  @@unique([classNameId, name])
-  @@index([classNameId])
 }
+
+// ============================================
+// EXAMS
+// ============================================
 
 model Exam {
   id              String   @id @default(uuid())
@@ -509,14 +588,13 @@ model Exam {
 
   status String @default("Pending")
 
-  subjects       ExamSubject[]
-  batches        ExamBatch[]
-  classNames     ExamClassName[]
-  students       ExamStudent[]
-  mcqs           ExamMcq[]
-  attempts       ExamAttempt[]
-  chapters       ExamChapter[]
-  publicAttempts PublicExamAttempt[]
+  subjects   ExamSubject[]
+  batches    ExamBatch[]
+  classNames ExamClassName[]
+  students   ExamStudent[]
+  mcqs       ExamMcq[]
+  attempts   ExamAttempt[]
+  chapters   ExamChapter[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -624,9 +702,6 @@ model ExamMcq {
   @@index([mcqId])
 }
 
-// ============================================
-// IMPROVED EXAM ATTEMPT MODEL
-// ============================================
 model ExamAttempt {
   id   String @id @default(uuid())
   type String
@@ -705,10 +780,6 @@ model ExamAttempt {
   @@index([bestStreak])
 }
 
-// ============================================
-// ANSWER HISTORY MODEL (OPTIONAL BUT RECOMMENDED)
-// ============================================
-// Stores individual answer records for detailed analytics
 model AnswerHistory {
   id String @id @default(uuid())
 
@@ -744,8 +815,104 @@ model AnswerHistory {
 }
 
 // ============================================
-// PUBLIC EXAM MODELS
+// PUBLIC EXAMS
 // ============================================
+
+model PublicExam {
+  id              String   @id @default(uuid())
+  title           String
+  total           Int
+  duration        Int
+  cq              Int?
+  mcq             Int?
+  startDate       DateTime
+  endDate         DateTime
+  hasSuffle       Boolean  @default(true)
+  hasRandom       Boolean  @default(true)
+  hasNegativeMark Boolean  @default(false)
+  negativeMark    Float    @default(0)
+  type            String
+
+  status String @default("Pending")
+
+  subjects   PublicExamSubject[]
+  classNames PublicExamClassName[]
+  chapters   PublicExamChapter[]
+  mcqs       PublicExamMcq[]
+  attempts   PublicExamAttempt[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([title])
+  @@index([status])
+  @@index([createdAt])
+  @@index([status, createdAt])
+}
+
+model PublicExamMcq {
+  id String @id @default(uuid())
+
+  examId String
+  exam   PublicExam @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  mcqId String
+  mcq   Mcq    @relation(fields: [mcqId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([examId])
+  @@index([mcqId])
+}
+
+model PublicExamSubject {
+  id String @id @default(uuid())
+
+  examId String
+  exam   PublicExam @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([examId])
+  @@index([subjectId])
+}
+
+model PublicExamClassName {
+  id String @id @default(uuid())
+
+  examId String
+  exam   PublicExam @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  classNameId String
+  className   ClassName @relation(fields: [classNameId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([examId])
+  @@index([classNameId])
+}
+
+model PublicExamChapter {
+  id String @id @default(uuid())
+
+  examId String
+  exam   PublicExam @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([examId])
+  @@index([chapterId])
+}
 
 model PublicExamParticipant {
   id         String  @id @default(uuid())
@@ -814,7 +981,7 @@ model PublicExamAttempt {
 
   // Relations
   examId String
-  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+  exam   PublicExam @relation(fields: [examId], references: [id], onDelete: Cascade)
 
   participantId String
   participant   PublicExamParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
@@ -868,4 +1035,109 @@ model PublicAnswerHistory {
   @@index([attemptId, questionNumber])
   @@index([answeredAt])
   @@index([isCorrect])
+}
+
+// ============================================
+// DEMO EXAM MODELS (No Authentication Required)
+// ============================================
+
+model DemoExam {
+  id              String  @id @default(uuid())
+  title           String  @default("Demo Exam")
+  total           Int
+  duration        Int
+  mcq             Int
+  hasNegativeMark Boolean @default(false)
+  negativeMark    Float   @default(0.25)
+  hasShuffle      Boolean @default(false)
+  hasRandom       Boolean @default(false)
+
+  // Subject and chapter filters for question selection
+  subjects String[] @default([])
+  chapters String[] @default([])
+
+  status String @default("Active") // Active, Inactive, Archived
+
+  // Relations
+  mcqs     DemoExamMcq[]
+  attempts DemoExamAttempt[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model DemoExamMcq {
+  id String @id @default(uuid())
+
+  demoExamId String
+  demoExam   DemoExam @relation(fields: [demoExamId], references: [id], onDelete: Cascade)
+
+  mcqId String
+  mcq   Mcq    @relation(fields: [mcqId], references: [id], onDelete: Cascade)
+
+  position Int @default(0) // Order of questions in exam
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([demoExamId, mcqId])
+  @@index([demoExamId])
+  @@index([mcqId])
+  @@index([demoExamId, position])
+}
+
+model DemoExamAttempt {
+  id String @id @default(uuid())
+
+  // Answer tracking - store as JSON
+  // Format: [{mcqId, selectedOption, isCorrect}]
+  answers Json[] @default([])
+
+  // Performance metrics
+  score            Float @default(0)
+  correctAnswers   Int   @default(0)
+  wrongAnswers     Int   @default(0)
+  skippedQuestions Int   @default(0)
+
+  // Timing information
+  startTime DateTime?
+  endTime   DateTime?
+  duration  Int?      @default(0) // Total duration in seconds
+
+  // Question management
+  totalQuestions Int @default(0)
+  answeredCount  Int @default(0)
+
+  // Exam status
+  status String @default("Not Started") // Not Started, In Progress, Submitted
+
+  // Exam settings snapshot
+  hasNegativeMark Boolean @default(false)
+  negativeMark    Float   @default(0)
+
+  // Optional participant info
+  participantName  String?
+  participantEmail String?
+  participantPhone String?
+
+  // Session tracking
+  sessionId String // Browser fingerprint or session ID
+  ipAddress String?
+
+  // Relations
+  demoExamId String
+  demoExam   DemoExam @relation(fields: [demoExamId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([demoExamId])
+  @@index([status])
+  @@index([score])
+  @@index([sessionId])
+  @@index([createdAt])
+  @@index([demoExamId, status])
 }

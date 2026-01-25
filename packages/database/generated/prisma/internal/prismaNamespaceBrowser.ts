@@ -58,11 +58,13 @@ export const ModelName = {
   SmsVerification: 'SmsVerification',
   ClassName: 'ClassName',
   Institute: 'Institute',
-  Student: 'Student',
-  StudentStatus: 'StudentStatus',
   Subject: 'Subject',
   Chapter: 'Chapter',
   Topic: 'Topic',
+  SubTopic: 'SubTopic',
+  Batch: 'Batch',
+  Student: 'Student',
+  StudentStatus: 'StudentStatus',
   Mcq: 'Mcq',
   Cq: 'Cq',
   Cognitive: 'Cognitive',
@@ -70,7 +72,7 @@ export const ModelName = {
   Course: 'Course',
   CourseClass: 'CourseClass',
   CourseSubject: 'CourseSubject',
-  Batch: 'Batch',
+  Teacher: 'Teacher',
   Exam: 'Exam',
   ExamChapter: 'ExamChapter',
   ExamBatch: 'ExamBatch',
@@ -80,9 +82,17 @@ export const ModelName = {
   ExamMcq: 'ExamMcq',
   ExamAttempt: 'ExamAttempt',
   AnswerHistory: 'AnswerHistory',
+  PublicExam: 'PublicExam',
+  PublicExamMcq: 'PublicExamMcq',
+  PublicExamSubject: 'PublicExamSubject',
+  PublicExamClassName: 'PublicExamClassName',
+  PublicExamChapter: 'PublicExamChapter',
   PublicExamParticipant: 'PublicExamParticipant',
   PublicExamAttempt: 'PublicExamAttempt',
-  PublicAnswerHistory: 'PublicAnswerHistory'
+  PublicAnswerHistory: 'PublicAnswerHistory',
+  DemoExam: 'DemoExam',
+  DemoExamMcq: 'DemoExamMcq',
+  DemoExamAttempt: 'DemoExamAttempt'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -196,6 +206,67 @@ export const InstituteScalarFieldEnum = {
 export type InstituteScalarFieldEnum = (typeof InstituteScalarFieldEnum)[keyof typeof InstituteScalarFieldEnum]
 
 
+export const SubjectScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  level: 'level',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
+
+
+export const ChapterScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  subjectId: 'subjectId'
+} as const
+
+export type ChapterScalarFieldEnum = (typeof ChapterScalarFieldEnum)[keyof typeof ChapterScalarFieldEnum]
+
+
+export const TopicScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  chapterId: 'chapterId',
+  subjectId: 'subjectId'
+} as const
+
+export type TopicScalarFieldEnum = (typeof TopicScalarFieldEnum)[keyof typeof TopicScalarFieldEnum]
+
+
+export const SubTopicScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  topicId: 'topicId',
+  subjectId: 'subjectId'
+} as const
+
+export type SubTopicScalarFieldEnum = (typeof SubTopicScalarFieldEnum)[keyof typeof SubTopicScalarFieldEnum]
+
+
+export const BatchScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  classNameId: 'classNameId'
+} as const
+
+export type BatchScalarFieldEnum = (typeof BatchScalarFieldEnum)[keyof typeof BatchScalarFieldEnum]
+
+
 export const StudentScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
@@ -246,43 +317,6 @@ export const StudentStatusScalarFieldEnum = {
 export type StudentStatusScalarFieldEnum = (typeof StudentStatusScalarFieldEnum)[keyof typeof StudentStatusScalarFieldEnum]
 
 
-export const SubjectScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  level: 'level',
-  position: 'position',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
-
-
-export const ChapterScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  position: 'position',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  subjectId: 'subjectId'
-} as const
-
-export type ChapterScalarFieldEnum = (typeof ChapterScalarFieldEnum)[keyof typeof ChapterScalarFieldEnum]
-
-
-export const TopicScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  position: 'position',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  chapterId: 'chapterId',
-  subjectId: 'subjectId'
-} as const
-
-export type TopicScalarFieldEnum = (typeof TopicScalarFieldEnum)[keyof typeof TopicScalarFieldEnum]
-
-
 export const McqScalarFieldEnum = {
   id: 'id',
   question: 'question',
@@ -301,6 +335,7 @@ export const McqScalarFieldEnum = {
   subjectId: 'subjectId',
   chapterId: 'chapterId',
   topicId: 'topicId',
+  subTopicId: 'subTopicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -321,6 +356,7 @@ export const CqScalarFieldEnum = {
   subjectId: 'subjectId',
   chapterId: 'chapterId',
   topicId: 'topicId',
+  subTopicId: 'subTopicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -336,6 +372,7 @@ export const CognitiveScalarFieldEnum = {
   subjectId: 'subjectId',
   chapterId: 'chapterId',
   topicId: 'topicId',
+  subTopicId: 'subTopicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -351,6 +388,7 @@ export const PerceptualScalarFieldEnum = {
   subjectId: 'subjectId',
   chapterId: 'chapterId',
   topicId: 'topicId',
+  subTopicId: 'subTopicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -411,15 +449,17 @@ export const CourseSubjectScalarFieldEnum = {
 export type CourseSubjectScalarFieldEnum = (typeof CourseSubjectScalarFieldEnum)[keyof typeof CourseSubjectScalarFieldEnum]
 
 
-export const BatchScalarFieldEnum = {
+export const TeacherScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  institute: 'institute',
+  imageUrl: 'imageUrl',
+  subject: 'subject',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  classNameId: 'classNameId'
+  updatedAt: 'updatedAt'
 } as const
 
-export type BatchScalarFieldEnum = (typeof BatchScalarFieldEnum)[keyof typeof BatchScalarFieldEnum]
+export type TeacherScalarFieldEnum = (typeof TeacherScalarFieldEnum)[keyof typeof TeacherScalarFieldEnum]
 
 
 export const ExamScalarFieldEnum = {
@@ -569,6 +609,72 @@ export const AnswerHistoryScalarFieldEnum = {
 export type AnswerHistoryScalarFieldEnum = (typeof AnswerHistoryScalarFieldEnum)[keyof typeof AnswerHistoryScalarFieldEnum]
 
 
+export const PublicExamScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  total: 'total',
+  duration: 'duration',
+  cq: 'cq',
+  mcq: 'mcq',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  hasSuffle: 'hasSuffle',
+  hasRandom: 'hasRandom',
+  hasNegativeMark: 'hasNegativeMark',
+  negativeMark: 'negativeMark',
+  type: 'type',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PublicExamScalarFieldEnum = (typeof PublicExamScalarFieldEnum)[keyof typeof PublicExamScalarFieldEnum]
+
+
+export const PublicExamMcqScalarFieldEnum = {
+  id: 'id',
+  examId: 'examId',
+  mcqId: 'mcqId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PublicExamMcqScalarFieldEnum = (typeof PublicExamMcqScalarFieldEnum)[keyof typeof PublicExamMcqScalarFieldEnum]
+
+
+export const PublicExamSubjectScalarFieldEnum = {
+  id: 'id',
+  examId: 'examId',
+  subjectId: 'subjectId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PublicExamSubjectScalarFieldEnum = (typeof PublicExamSubjectScalarFieldEnum)[keyof typeof PublicExamSubjectScalarFieldEnum]
+
+
+export const PublicExamClassNameScalarFieldEnum = {
+  id: 'id',
+  examId: 'examId',
+  classNameId: 'classNameId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PublicExamClassNameScalarFieldEnum = (typeof PublicExamClassNameScalarFieldEnum)[keyof typeof PublicExamClassNameScalarFieldEnum]
+
+
+export const PublicExamChapterScalarFieldEnum = {
+  id: 'id',
+  examId: 'examId',
+  chapterId: 'chapterId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PublicExamChapterScalarFieldEnum = (typeof PublicExamChapterScalarFieldEnum)[keyof typeof PublicExamChapterScalarFieldEnum]
+
+
 export const PublicExamParticipantScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -634,6 +740,66 @@ export const PublicAnswerHistoryScalarFieldEnum = {
 } as const
 
 export type PublicAnswerHistoryScalarFieldEnum = (typeof PublicAnswerHistoryScalarFieldEnum)[keyof typeof PublicAnswerHistoryScalarFieldEnum]
+
+
+export const DemoExamScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  total: 'total',
+  duration: 'duration',
+  mcq: 'mcq',
+  hasNegativeMark: 'hasNegativeMark',
+  negativeMark: 'negativeMark',
+  hasShuffle: 'hasShuffle',
+  hasRandom: 'hasRandom',
+  subjects: 'subjects',
+  chapters: 'chapters',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DemoExamScalarFieldEnum = (typeof DemoExamScalarFieldEnum)[keyof typeof DemoExamScalarFieldEnum]
+
+
+export const DemoExamMcqScalarFieldEnum = {
+  id: 'id',
+  demoExamId: 'demoExamId',
+  mcqId: 'mcqId',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DemoExamMcqScalarFieldEnum = (typeof DemoExamMcqScalarFieldEnum)[keyof typeof DemoExamMcqScalarFieldEnum]
+
+
+export const DemoExamAttemptScalarFieldEnum = {
+  id: 'id',
+  answers: 'answers',
+  score: 'score',
+  correctAnswers: 'correctAnswers',
+  wrongAnswers: 'wrongAnswers',
+  skippedQuestions: 'skippedQuestions',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  duration: 'duration',
+  totalQuestions: 'totalQuestions',
+  answeredCount: 'answeredCount',
+  status: 'status',
+  hasNegativeMark: 'hasNegativeMark',
+  negativeMark: 'negativeMark',
+  participantName: 'participantName',
+  participantEmail: 'participantEmail',
+  participantPhone: 'participantPhone',
+  sessionId: 'sessionId',
+  ipAddress: 'ipAddress',
+  demoExamId: 'demoExamId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DemoExamAttemptScalarFieldEnum = (typeof DemoExamAttemptScalarFieldEnum)[keyof typeof DemoExamAttemptScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -228,6 +228,7 @@ export type ChapterWhereInput = {
   mcqs?: Prisma.McqListRelationFilter
   cqs?: Prisma.CqListRelationFilter
   exams?: Prisma.ExamChapterListRelationFilter
+  publicExams?: Prisma.PublicExamChapterListRelationFilter
   topics?: Prisma.TopicListRelationFilter
   cognitives?: Prisma.CognitiveListRelationFilter
   perceptuals?: Prisma.PerceptualListRelationFilter
@@ -244,6 +245,7 @@ export type ChapterOrderByWithRelationInput = {
   mcqs?: Prisma.McqOrderByRelationAggregateInput
   cqs?: Prisma.CqOrderByRelationAggregateInput
   exams?: Prisma.ExamChapterOrderByRelationAggregateInput
+  publicExams?: Prisma.PublicExamChapterOrderByRelationAggregateInput
   topics?: Prisma.TopicOrderByRelationAggregateInput
   cognitives?: Prisma.CognitiveOrderByRelationAggregateInput
   perceptuals?: Prisma.PerceptualOrderByRelationAggregateInput
@@ -263,6 +265,7 @@ export type ChapterWhereUniqueInput = Prisma.AtLeast<{
   mcqs?: Prisma.McqListRelationFilter
   cqs?: Prisma.CqListRelationFilter
   exams?: Prisma.ExamChapterListRelationFilter
+  publicExams?: Prisma.PublicExamChapterListRelationFilter
   topics?: Prisma.TopicListRelationFilter
   cognitives?: Prisma.CognitiveListRelationFilter
   perceptuals?: Prisma.PerceptualListRelationFilter
@@ -304,6 +307,7 @@ export type ChapterCreateInput = {
   mcqs?: Prisma.McqCreateNestedManyWithoutChapterInput
   cqs?: Prisma.CqCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutChapterInput
@@ -319,6 +323,7 @@ export type ChapterUncheckedCreateInput = {
   mcqs?: Prisma.McqUncheckedCreateNestedManyWithoutChapterInput
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterUncheckedCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutChapterInput
@@ -334,6 +339,7 @@ export type ChapterUpdateInput = {
   mcqs?: Prisma.McqUpdateManyWithoutChapterNestedInput
   cqs?: Prisma.CqUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutChapterNestedInput
@@ -349,6 +355,7 @@ export type ChapterUncheckedUpdateInput = {
   mcqs?: Prisma.McqUncheckedUpdateManyWithoutChapterNestedInput
   cqs?: Prisma.CqUncheckedUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUncheckedUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUncheckedUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUncheckedUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutChapterNestedInput
@@ -556,6 +563,20 @@ export type ChapterUpdateOneRequiredWithoutExamsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ChapterUpdateToOneWithWhereWithoutExamsInput, Prisma.ChapterUpdateWithoutExamsInput>, Prisma.ChapterUncheckedUpdateWithoutExamsInput>
 }
 
+export type ChapterCreateNestedOneWithoutPublicExamsInput = {
+  create?: Prisma.XOR<Prisma.ChapterCreateWithoutPublicExamsInput, Prisma.ChapterUncheckedCreateWithoutPublicExamsInput>
+  connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutPublicExamsInput
+  connect?: Prisma.ChapterWhereUniqueInput
+}
+
+export type ChapterUpdateOneRequiredWithoutPublicExamsNestedInput = {
+  create?: Prisma.XOR<Prisma.ChapterCreateWithoutPublicExamsInput, Prisma.ChapterUncheckedCreateWithoutPublicExamsInput>
+  connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutPublicExamsInput
+  upsert?: Prisma.ChapterUpsertWithoutPublicExamsInput
+  connect?: Prisma.ChapterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ChapterUpdateToOneWithWhereWithoutPublicExamsInput, Prisma.ChapterUpdateWithoutPublicExamsInput>, Prisma.ChapterUncheckedUpdateWithoutPublicExamsInput>
+}
+
 export type ChapterCreateWithoutSubjectInput = {
   id?: string
   name: string
@@ -565,6 +586,7 @@ export type ChapterCreateWithoutSubjectInput = {
   mcqs?: Prisma.McqCreateNestedManyWithoutChapterInput
   cqs?: Prisma.CqCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutChapterInput
@@ -579,6 +601,7 @@ export type ChapterUncheckedCreateWithoutSubjectInput = {
   mcqs?: Prisma.McqUncheckedCreateNestedManyWithoutChapterInput
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterUncheckedCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutChapterInput
@@ -632,6 +655,7 @@ export type ChapterCreateWithoutTopicsInput = {
   mcqs?: Prisma.McqCreateNestedManyWithoutChapterInput
   cqs?: Prisma.CqCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutChapterInput
 }
@@ -646,6 +670,7 @@ export type ChapterUncheckedCreateWithoutTopicsInput = {
   mcqs?: Prisma.McqUncheckedCreateNestedManyWithoutChapterInput
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterUncheckedCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutChapterInput
 }
@@ -676,6 +701,7 @@ export type ChapterUpdateWithoutTopicsInput = {
   mcqs?: Prisma.McqUpdateManyWithoutChapterNestedInput
   cqs?: Prisma.CqUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutChapterNestedInput
 }
@@ -690,6 +716,7 @@ export type ChapterUncheckedUpdateWithoutTopicsInput = {
   mcqs?: Prisma.McqUncheckedUpdateManyWithoutChapterNestedInput
   cqs?: Prisma.CqUncheckedUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUncheckedUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUncheckedUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutChapterNestedInput
 }
@@ -703,6 +730,7 @@ export type ChapterCreateWithoutMcqsInput = {
   subject: Prisma.SubjectCreateNestedOneWithoutChaptersInput
   cqs?: Prisma.CqCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutChapterInput
@@ -717,6 +745,7 @@ export type ChapterUncheckedCreateWithoutMcqsInput = {
   subjectId: string
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterUncheckedCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutChapterInput
@@ -747,6 +776,7 @@ export type ChapterUpdateWithoutMcqsInput = {
   subject?: Prisma.SubjectUpdateOneRequiredWithoutChaptersNestedInput
   cqs?: Prisma.CqUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutChapterNestedInput
@@ -761,6 +791,7 @@ export type ChapterUncheckedUpdateWithoutMcqsInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   cqs?: Prisma.CqUncheckedUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUncheckedUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUncheckedUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUncheckedUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutChapterNestedInput
@@ -775,6 +806,7 @@ export type ChapterCreateWithoutCqsInput = {
   subject: Prisma.SubjectCreateNestedOneWithoutChaptersInput
   mcqs?: Prisma.McqCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutChapterInput
@@ -789,6 +821,7 @@ export type ChapterUncheckedCreateWithoutCqsInput = {
   subjectId: string
   mcqs?: Prisma.McqUncheckedCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterUncheckedCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutChapterInput
@@ -819,6 +852,7 @@ export type ChapterUpdateWithoutCqsInput = {
   subject?: Prisma.SubjectUpdateOneRequiredWithoutChaptersNestedInput
   mcqs?: Prisma.McqUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutChapterNestedInput
@@ -833,6 +867,7 @@ export type ChapterUncheckedUpdateWithoutCqsInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   mcqs?: Prisma.McqUncheckedUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUncheckedUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUncheckedUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUncheckedUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutChapterNestedInput
@@ -848,6 +883,7 @@ export type ChapterCreateWithoutCognitivesInput = {
   mcqs?: Prisma.McqCreateNestedManyWithoutChapterInput
   cqs?: Prisma.CqCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutChapterInput
 }
@@ -862,6 +898,7 @@ export type ChapterUncheckedCreateWithoutCognitivesInput = {
   mcqs?: Prisma.McqUncheckedCreateNestedManyWithoutChapterInput
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterUncheckedCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutChapterInput
 }
@@ -892,6 +929,7 @@ export type ChapterUpdateWithoutCognitivesInput = {
   mcqs?: Prisma.McqUpdateManyWithoutChapterNestedInput
   cqs?: Prisma.CqUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutChapterNestedInput
 }
@@ -906,6 +944,7 @@ export type ChapterUncheckedUpdateWithoutCognitivesInput = {
   mcqs?: Prisma.McqUncheckedUpdateManyWithoutChapterNestedInput
   cqs?: Prisma.CqUncheckedUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUncheckedUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUncheckedUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUncheckedUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutChapterNestedInput
 }
@@ -920,6 +959,7 @@ export type ChapterCreateWithoutPerceptualsInput = {
   mcqs?: Prisma.McqCreateNestedManyWithoutChapterInput
   cqs?: Prisma.CqCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutChapterInput
 }
@@ -934,6 +974,7 @@ export type ChapterUncheckedCreateWithoutPerceptualsInput = {
   mcqs?: Prisma.McqUncheckedCreateNestedManyWithoutChapterInput
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutChapterInput
   exams?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterUncheckedCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutChapterInput
 }
@@ -964,6 +1005,7 @@ export type ChapterUpdateWithoutPerceptualsInput = {
   mcqs?: Prisma.McqUpdateManyWithoutChapterNestedInput
   cqs?: Prisma.CqUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutChapterNestedInput
 }
@@ -978,6 +1020,7 @@ export type ChapterUncheckedUpdateWithoutPerceptualsInput = {
   mcqs?: Prisma.McqUncheckedUpdateManyWithoutChapterNestedInput
   cqs?: Prisma.CqUncheckedUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUncheckedUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUncheckedUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUncheckedUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutChapterNestedInput
 }
@@ -991,6 +1034,7 @@ export type ChapterCreateWithoutExamsInput = {
   subject: Prisma.SubjectCreateNestedOneWithoutChaptersInput
   mcqs?: Prisma.McqCreateNestedManyWithoutChapterInput
   cqs?: Prisma.CqCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualCreateNestedManyWithoutChapterInput
@@ -1005,6 +1049,7 @@ export type ChapterUncheckedCreateWithoutExamsInput = {
   subjectId: string
   mcqs?: Prisma.McqUncheckedCreateNestedManyWithoutChapterInput
   cqs?: Prisma.CqUncheckedCreateNestedManyWithoutChapterInput
+  publicExams?: Prisma.PublicExamChapterUncheckedCreateNestedManyWithoutChapterInput
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutChapterInput
   cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutChapterInput
   perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutChapterInput
@@ -1035,6 +1080,7 @@ export type ChapterUpdateWithoutExamsInput = {
   subject?: Prisma.SubjectUpdateOneRequiredWithoutChaptersNestedInput
   mcqs?: Prisma.McqUpdateManyWithoutChapterNestedInput
   cqs?: Prisma.CqUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutChapterNestedInput
@@ -1049,6 +1095,83 @@ export type ChapterUncheckedUpdateWithoutExamsInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   mcqs?: Prisma.McqUncheckedUpdateManyWithoutChapterNestedInput
   cqs?: Prisma.CqUncheckedUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUncheckedUpdateManyWithoutChapterNestedInput
+  topics?: Prisma.TopicUncheckedUpdateManyWithoutChapterNestedInput
+  cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutChapterNestedInput
+  perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutChapterNestedInput
+}
+
+export type ChapterCreateWithoutPublicExamsInput = {
+  id?: string
+  name: string
+  position?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subject: Prisma.SubjectCreateNestedOneWithoutChaptersInput
+  mcqs?: Prisma.McqCreateNestedManyWithoutChapterInput
+  cqs?: Prisma.CqCreateNestedManyWithoutChapterInput
+  exams?: Prisma.ExamChapterCreateNestedManyWithoutChapterInput
+  topics?: Prisma.TopicCreateNestedManyWithoutChapterInput
+  cognitives?: Prisma.CognitiveCreateNestedManyWithoutChapterInput
+  perceptuals?: Prisma.PerceptualCreateNestedManyWithoutChapterInput
+}
+
+export type ChapterUncheckedCreateWithoutPublicExamsInput = {
+  id?: string
+  name: string
+  position?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subjectId: string
+  mcqs?: Prisma.McqUncheckedCreateNestedManyWithoutChapterInput
+  cqs?: Prisma.CqUncheckedCreateNestedManyWithoutChapterInput
+  exams?: Prisma.ExamChapterUncheckedCreateNestedManyWithoutChapterInput
+  topics?: Prisma.TopicUncheckedCreateNestedManyWithoutChapterInput
+  cognitives?: Prisma.CognitiveUncheckedCreateNestedManyWithoutChapterInput
+  perceptuals?: Prisma.PerceptualUncheckedCreateNestedManyWithoutChapterInput
+}
+
+export type ChapterCreateOrConnectWithoutPublicExamsInput = {
+  where: Prisma.ChapterWhereUniqueInput
+  create: Prisma.XOR<Prisma.ChapterCreateWithoutPublicExamsInput, Prisma.ChapterUncheckedCreateWithoutPublicExamsInput>
+}
+
+export type ChapterUpsertWithoutPublicExamsInput = {
+  update: Prisma.XOR<Prisma.ChapterUpdateWithoutPublicExamsInput, Prisma.ChapterUncheckedUpdateWithoutPublicExamsInput>
+  create: Prisma.XOR<Prisma.ChapterCreateWithoutPublicExamsInput, Prisma.ChapterUncheckedCreateWithoutPublicExamsInput>
+  where?: Prisma.ChapterWhereInput
+}
+
+export type ChapterUpdateToOneWithWhereWithoutPublicExamsInput = {
+  where?: Prisma.ChapterWhereInput
+  data: Prisma.XOR<Prisma.ChapterUpdateWithoutPublicExamsInput, Prisma.ChapterUncheckedUpdateWithoutPublicExamsInput>
+}
+
+export type ChapterUpdateWithoutPublicExamsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutChaptersNestedInput
+  mcqs?: Prisma.McqUpdateManyWithoutChapterNestedInput
+  cqs?: Prisma.CqUpdateManyWithoutChapterNestedInput
+  exams?: Prisma.ExamChapterUpdateManyWithoutChapterNestedInput
+  topics?: Prisma.TopicUpdateManyWithoutChapterNestedInput
+  cognitives?: Prisma.CognitiveUpdateManyWithoutChapterNestedInput
+  perceptuals?: Prisma.PerceptualUpdateManyWithoutChapterNestedInput
+}
+
+export type ChapterUncheckedUpdateWithoutPublicExamsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  mcqs?: Prisma.McqUncheckedUpdateManyWithoutChapterNestedInput
+  cqs?: Prisma.CqUncheckedUpdateManyWithoutChapterNestedInput
+  exams?: Prisma.ExamChapterUncheckedUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUncheckedUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutChapterNestedInput
@@ -1071,6 +1194,7 @@ export type ChapterUpdateWithoutSubjectInput = {
   mcqs?: Prisma.McqUpdateManyWithoutChapterNestedInput
   cqs?: Prisma.CqUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUpdateManyWithoutChapterNestedInput
@@ -1085,6 +1209,7 @@ export type ChapterUncheckedUpdateWithoutSubjectInput = {
   mcqs?: Prisma.McqUncheckedUpdateManyWithoutChapterNestedInput
   cqs?: Prisma.CqUncheckedUpdateManyWithoutChapterNestedInput
   exams?: Prisma.ExamChapterUncheckedUpdateManyWithoutChapterNestedInput
+  publicExams?: Prisma.PublicExamChapterUncheckedUpdateManyWithoutChapterNestedInput
   topics?: Prisma.TopicUncheckedUpdateManyWithoutChapterNestedInput
   cognitives?: Prisma.CognitiveUncheckedUpdateManyWithoutChapterNestedInput
   perceptuals?: Prisma.PerceptualUncheckedUpdateManyWithoutChapterNestedInput
@@ -1107,6 +1232,7 @@ export type ChapterCountOutputType = {
   mcqs: number
   cqs: number
   exams: number
+  publicExams: number
   topics: number
   cognitives: number
   perceptuals: number
@@ -1116,6 +1242,7 @@ export type ChapterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   mcqs?: boolean | ChapterCountOutputTypeCountMcqsArgs
   cqs?: boolean | ChapterCountOutputTypeCountCqsArgs
   exams?: boolean | ChapterCountOutputTypeCountExamsArgs
+  publicExams?: boolean | ChapterCountOutputTypeCountPublicExamsArgs
   topics?: boolean | ChapterCountOutputTypeCountTopicsArgs
   cognitives?: boolean | ChapterCountOutputTypeCountCognitivesArgs
   perceptuals?: boolean | ChapterCountOutputTypeCountPerceptualsArgs
@@ -1155,6 +1282,13 @@ export type ChapterCountOutputTypeCountExamsArgs<ExtArgs extends runtime.Types.E
 /**
  * ChapterCountOutputType without action
  */
+export type ChapterCountOutputTypeCountPublicExamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PublicExamChapterWhereInput
+}
+
+/**
+ * ChapterCountOutputType without action
+ */
 export type ChapterCountOutputTypeCountTopicsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TopicWhereInput
 }
@@ -1185,6 +1319,7 @@ export type ChapterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   mcqs?: boolean | Prisma.Chapter$mcqsArgs<ExtArgs>
   cqs?: boolean | Prisma.Chapter$cqsArgs<ExtArgs>
   exams?: boolean | Prisma.Chapter$examsArgs<ExtArgs>
+  publicExams?: boolean | Prisma.Chapter$publicExamsArgs<ExtArgs>
   topics?: boolean | Prisma.Chapter$topicsArgs<ExtArgs>
   cognitives?: boolean | Prisma.Chapter$cognitivesArgs<ExtArgs>
   perceptuals?: boolean | Prisma.Chapter$perceptualsArgs<ExtArgs>
@@ -1226,6 +1361,7 @@ export type ChapterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   mcqs?: boolean | Prisma.Chapter$mcqsArgs<ExtArgs>
   cqs?: boolean | Prisma.Chapter$cqsArgs<ExtArgs>
   exams?: boolean | Prisma.Chapter$examsArgs<ExtArgs>
+  publicExams?: boolean | Prisma.Chapter$publicExamsArgs<ExtArgs>
   topics?: boolean | Prisma.Chapter$topicsArgs<ExtArgs>
   cognitives?: boolean | Prisma.Chapter$cognitivesArgs<ExtArgs>
   perceptuals?: boolean | Prisma.Chapter$perceptualsArgs<ExtArgs>
@@ -1245,6 +1381,7 @@ export type $ChapterPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     mcqs: Prisma.$McqPayload<ExtArgs>[]
     cqs: Prisma.$CqPayload<ExtArgs>[]
     exams: Prisma.$ExamChapterPayload<ExtArgs>[]
+    publicExams: Prisma.$PublicExamChapterPayload<ExtArgs>[]
     topics: Prisma.$TopicPayload<ExtArgs>[]
     cognitives: Prisma.$CognitivePayload<ExtArgs>[]
     perceptuals: Prisma.$PerceptualPayload<ExtArgs>[]
@@ -1654,6 +1791,7 @@ export interface Prisma__ChapterClient<T, Null = never, ExtArgs extends runtime.
   mcqs<T extends Prisma.Chapter$mcqsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$mcqsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$McqPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cqs<T extends Prisma.Chapter$cqsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$cqsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CqPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   exams<T extends Prisma.Chapter$examsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$examsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamChapterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  publicExams<T extends Prisma.Chapter$publicExamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$publicExamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PublicExamChapterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   topics<T extends Prisma.Chapter$topicsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$topicsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cognitives<T extends Prisma.Chapter$cognitivesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$cognitivesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CognitivePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   perceptuals<T extends Prisma.Chapter$perceptualsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$perceptualsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PerceptualPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2157,6 +2295,30 @@ export type Chapter$examsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.ExamChapterScalarFieldEnum | Prisma.ExamChapterScalarFieldEnum[]
+}
+
+/**
+ * Chapter.publicExams
+ */
+export type Chapter$publicExamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PublicExamChapter
+   */
+  select?: Prisma.PublicExamChapterSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PublicExamChapter
+   */
+  omit?: Prisma.PublicExamChapterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PublicExamChapterInclude<ExtArgs> | null
+  where?: Prisma.PublicExamChapterWhereInput
+  orderBy?: Prisma.PublicExamChapterOrderByWithRelationInput | Prisma.PublicExamChapterOrderByWithRelationInput[]
+  cursor?: Prisma.PublicExamChapterWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PublicExamChapterScalarFieldEnum | Prisma.PublicExamChapterScalarFieldEnum[]
 }
 
 /**

@@ -1,7 +1,6 @@
 import { TRPCError, type TRPCRouterRecord } from "@trpc/server";
 import { publicProcedure } from "../../trpc";
 import { z } from "zod";
-import { Prisma } from "@workspace/db";
 import { generateOTP, sendSMS } from "../sms";
 
 // ✅ Bangla to English conversion utilities (reused from student exam)
@@ -46,7 +45,7 @@ export const publicExamRouter = {
   getPublicExam: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const exam = await ctx.db.exam.findUnique({
+      const exam = await ctx.db.publicExam.findUnique({
         where: { id: input.id },
         include: {
           mcqs: {
@@ -66,13 +65,6 @@ export const publicExamRouter = {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Exam not found",
-        });
-      }
-
-      if (!exam.isPublic) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "This exam is not available for public access",
         });
       }
 
@@ -110,7 +102,7 @@ export const publicExamRouter = {
     .input(
       z.object({
         phone: z.string().regex(/^01[0-9]{9}$/, "Invalid phone number"),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const otp = generateOTP();
@@ -121,7 +113,7 @@ export const publicExamRouter = {
         where: { identifier },
       });
 
-      await ctx.db.smsVerification.create({
+      const created = await ctx.db.smsVerification.create({
         data: {
           identifier,
           value: otp,
@@ -168,15 +160,21 @@ export const publicExamRouter = {
       z.object({
         phone: z.string().regex(/^01[0-9]{9}$/, "Invalid phone number"),
         code: z.string().length(6, "Invalid code"),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const identifier = `public:${input.phone}`;
+
+      // First, let's see all verifications for this identifier
+      const allVerifications = await ctx.db.smsVerification.findMany({
+        where: { identifier },
+      });
+
       const verification = await ctx.db.smsVerification.findFirst({
         where: {
           identifier,
           value: input.code,
-          expiresAt: { gt: new Date() },
+          // expiresAt: { gt: new Date() },
         },
       });
 
@@ -218,7 +216,7 @@ export const publicExamRouter = {
         email: z.string().email().optional().or(z.literal("")),
         isVerified: z.boolean().optional().default(false),
         otpCode: z.string().optional(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       // If otpCode is provided, verify it first
@@ -247,7 +245,7 @@ export const publicExamRouter = {
         });
       }
 
-      const exam = await ctx.db.exam.findUnique({
+      const exam = await ctx.db.publicExam.findUnique({
         where: { id: input.examId },
       });
 
@@ -255,13 +253,6 @@ export const publicExamRouter = {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Exam not found",
-        });
-      }
-
-      if (!exam.isPublic) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "This exam is not available for public access",
         });
       }
 
@@ -312,7 +303,7 @@ export const publicExamRouter = {
       }
 
       // Get total questions
-      const totalQuestions = await ctx.db.examMcq.count({
+      const totalQuestions = await ctx.db.publicExamMcq.count({
         where: { examId: input.examId },
       });
 
@@ -351,7 +342,7 @@ export const publicExamRouter = {
         selectedOption: z.string(),
         correctAnswer: z.string(),
         timeSpent: z.number(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const attempt = await ctx.db.publicExamAttempt.findUnique({
@@ -468,7 +459,7 @@ export const publicExamRouter = {
     .input(
       z.object({
         attemptId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const attempt = await ctx.db.publicExamAttempt.findUnique({
@@ -547,7 +538,7 @@ export const publicExamRouter = {
       z.object({
         attemptId: z.string(),
         submissionType: z.enum(["Manual", "Auto-TimeUp", "Auto-TabSwitch"]),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const attempt = await ctx.db.publicExamAttempt.findUnique({
@@ -655,14 +646,13 @@ export const publicExamRouter = {
       const { examId } = input;
 
       // Get exam details
-      const exam = await ctx.db.exam.findUnique({
+      const exam = await ctx.db.publicExam.findUnique({
         where: { id: examId },
         select: {
           id: true,
           title: true,
           total: true,
           status: true,
-          isPublic: true,
         },
       });
 
@@ -670,13 +660,6 @@ export const publicExamRouter = {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Exam not found",
-        });
-      }
-
-      if (!exam.isPublic) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "This exam is not public",
         });
       }
 

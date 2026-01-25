@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 
 import { McqPracticeService } from "@/modules/services/ui/views/mcq-practice-service";
+import { HydrateClient } from "@/trpc/server";
 
 export const metadata: Metadata = {
   title: "MCQ Practice",
@@ -8,7 +9,11 @@ export const metadata: Metadata = {
 };
 
 const McqPracticePage = () => {
-  return <McqPracticeService />;
+  return (
+    <HydrateClient>
+      <McqPracticeService />
+    </HydrateClient>
+  );
 };
 
 export default McqPracticePage;

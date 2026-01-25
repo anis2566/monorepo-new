@@ -50,7 +50,7 @@ export const mcqRouter = createTRPCRouter({
           isMath: z.boolean().nullable(),
           type: z.string(),
         }),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { id, data } = input;
@@ -102,7 +102,7 @@ export const mcqRouter = createTRPCRouter({
       z.object({
         examId: z.string(),
         mcqIds: z.array(z.string()),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { examId, mcqIds } = input;
@@ -131,11 +131,45 @@ export const mcqRouter = createTRPCRouter({
       }
     }),
 
+  assignQuestionToPublicExam: adminProcedure
+    .input(
+      z.object({
+        examId: z.string(),
+        mcqIds: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { examId, mcqIds } = input;
+
+      try {
+        await ctx.db.publicExamMcq.createMany({
+          data: mcqIds.map((mcqId) => ({
+            examId,
+            mcqId,
+          })),
+        });
+
+        return { success: true, message: "MCQ assigned to public exam" };
+      } catch (error) {
+        console.error("Error assigning mcq to public exam", error);
+
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Internal Server Error",
+          cause: error,
+        });
+      }
+    }),
+
   deleteOne: adminProcedure
     .input(
       z.object({
         id: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { id } = input;
@@ -180,7 +214,7 @@ export const mcqRouter = createTRPCRouter({
     .input(
       z.object({
         subjectIds: z.array(z.string()),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const { subjectIds } = input;
@@ -205,7 +239,7 @@ export const mcqRouter = createTRPCRouter({
           acc[mcq.subjectId]?.push(mcq);
           return acc;
         },
-        {} as Record<string, typeof mcqs>
+        {} as Record<string, typeof mcqs>,
       );
 
       return groupedBySubject;
@@ -216,7 +250,7 @@ export const mcqRouter = createTRPCRouter({
       z.object({
         chapterId: z.string(),
         search: z.string().optional(),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const { chapterId } = input;
@@ -249,7 +283,7 @@ export const mcqRouter = createTRPCRouter({
         chapterId: z.string().nullish(),
         type: z.string().nullish(),
         reference: z.string().nullish(),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const {

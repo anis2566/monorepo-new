@@ -2,13 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { Button } from "@workspace/ui/components/button";
-import {
-  AlertTriangle,
-  Send,
-  ShieldCheck,
-  RefreshCw,
-  Phone,
-} from "lucide-react";
+import { Send, ShieldCheck, RefreshCw, Phone } from "lucide-react";
 import { useEffect } from "react";
 import {
   InputOTP,
@@ -28,7 +22,6 @@ import {
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog";
 import { cn } from "@workspace/ui/lib/utils";
-import { useRouter } from "next/navigation";
 import { useConfetti } from "@/hooks/use-confetti";
 import { useAudioFeedback } from "@/hooks/use-audio-feedback";
 import { useTabVisibility } from "@/hooks/use-tab-visibility";
@@ -67,17 +60,16 @@ export default function TakePublicExam({
   attemptId,
   participantId,
 }: TakePublicExamProps) {
-  const router = useRouter();
   const { fireStreakConfetti, fireBestStreakConfetti } = useConfetti();
   const { playCorrectSound, playIncorrectSound } = useAudioFeedback();
   const trpc = useTRPC();
 
   const { data } = useSuspenseQuery(
-    trpc.public.exam.getPublicExam.queryOptions({ id: examId })
+    trpc.public.exam.getPublicExam.queryOptions({ id: examId }),
   );
 
   const { data: attemptData, refetch: refetchAttempt } = useSuspenseQuery(
-    trpc.public.exam.getPublicAttempt.queryOptions({ attemptId })
+    trpc.public.exam.getPublicAttempt.queryOptions({ attemptId }),
   );
 
   const [otp, setOtp] = useState("");
@@ -97,7 +89,7 @@ export default function TakePublicExam({
       mutationFn: async () => {
         throw new Error("sendPublicOtp not available");
       },
-    }
+    },
   );
 
   const verifyOtpMutation = useMutation(
@@ -105,7 +97,7 @@ export default function TakePublicExam({
       mutationFn: async () => {
         throw new Error("verifyPublicPhone not available");
       },
-    }
+    },
   );
 
   const handleSendOtp = useCallback(async () => {
@@ -118,7 +110,7 @@ export default function TakePublicExam({
       toast.success("Verification code sent to your phone");
     } catch (error: unknown) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to send OTP"
+        error instanceof Error ? error.message : "Failed to send OTP",
       );
     }
   }, [attemptData, sendOtpMutation]);
@@ -135,7 +127,7 @@ export default function TakePublicExam({
       toast.success("Phone verified successfully!");
     } catch (error: unknown) {
       toast.error(
-        error instanceof Error ? error.message : "Invalid verification code"
+        error instanceof Error ? error.message : "Invalid verification code",
       );
     } finally {
       setIsVerifying(false);
@@ -176,15 +168,15 @@ export default function TakePublicExam({
         const answerIndex = question.answer.toUpperCase().charCodeAt(0) - 65;
         const correctText = question.options[answerIndex];
         const newIndex = shuffledOptions.findIndex(
-          (opt) => opt === correctText
+          (opt) => opt === correctText,
         );
         correctAnswerEnglish = String.fromCharCode(65 + newIndex);
       } else {
         const newIndex = shuffledOptions.findIndex(
-          (opt) => opt.trim() === question.answer.trim()
+          (opt) => opt.trim() === question.answer.trim(),
         );
         correctAnswerEnglish = String.fromCharCode(
-          65 + (newIndex >= 0 ? newIndex : 0)
+          65 + (newIndex >= 0 ? newIndex : 0),
         );
       }
 
@@ -250,7 +242,7 @@ export default function TakePublicExam({
       questionIndex,
       question.id,
       selectedEnglish,
-      correctEnglish
+      correctEnglish,
     );
     triggerConfettiEffects();
   };
@@ -290,7 +282,7 @@ export default function TakePublicExam({
                     +88{" "}
                     {attemptData?.participant?.phone?.replace(
                       /(\d{3})(\d{4})(\d{4})/,
-                      "$1 **** $3"
+                      "$1 **** $3",
                     )}
                   </span>
                 </div>
@@ -342,7 +334,7 @@ export default function TakePublicExam({
                         <RefreshCw
                           className={cn(
                             "w-3 h-3",
-                            sendOtpMutation.isPending && "animate-spin"
+                            sendOtpMutation.isPending && "animate-spin",
                           )}
                         />
                         Resend Verification Code
@@ -373,7 +365,7 @@ export default function TakePublicExam({
                     const selectedOption = getSelectedOption(question.id);
                     const answerState = getAnswerState(
                       question.id,
-                      question.correctAnswerLetter
+                      question.correctAnswerLetter,
                     );
 
                     return (
@@ -448,7 +440,7 @@ export default function TakePublicExam({
                       state === "correct" &&
                         "bg-success/20 text-success border-2 border-success",
                       state === "incorrect" &&
-                        "bg-destructive/20 text-destructive border-2 border-destructive"
+                        "bg-destructive/20 text-destructive border-2 border-destructive",
                     )}
                   >
                     {index + 1}

@@ -23,6 +23,7 @@ const entityLabels: Record<
   user: { singular: "User", icon: "👤" },
   student: { singular: "Student", icon: "🎓" },
   exam: { singular: "Exam", icon: "📝" },
+  publicExam: { singular: "Public Exam", icon: "📝" },
   mcq: { singular: "Question", icon: "❓" },
   institute: { singular: "Institute", icon: "🏫" },
   subject: { singular: "Subject", icon: "📚" },
@@ -31,6 +32,7 @@ const entityLabels: Record<
   class: { singular: "Class", icon: "🏷️" },
   course: { singular: "Course", icon: "🎓" },
   topic: { singular: "Topic", icon: "🎓" },
+  teacher: { singular: "Teacher", icon: "🎓" },
 };
 
 export function DeleteConfirmModal() {

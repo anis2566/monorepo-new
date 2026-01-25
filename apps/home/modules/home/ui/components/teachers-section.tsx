@@ -2,7 +2,7 @@
 
 import { Dna, GraduationCap } from "lucide-react";
 import Image from "next/image";
-import Autoplay from "embla-carousel-autoplay";
+import AutoScroll from "embla-carousel-auto-scroll";
 
 import {
   Carousel,
@@ -15,89 +15,26 @@ import { Card, CardContent } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 
 import { FadeUp } from "@/components/scroll-animation";
-
-const teachers = [
-  {
-    id: 1,
-    name: "ড. আহমেদ হোসেন",
-    nameEn: "Dr. Ahmed Hossain",
-    designation: "প্রধান প্রভাষক",
-    subject: "জীববিজ্ঞান",
-    qualification: "MBBS, PhD (DU)",
-    experience: "১৫+ বছর",
-    specialization: "উদ্ভিদবিজ্ঞান ও প্রাণীবিজ্ঞান",
-    image:
-      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop&crop=face",
-    achievements: ["Best Teacher Award 2023", "Published 20+ Research Papers"],
-  },
-  {
-    id: 2,
-    name: "ড. ফাতেমা খাতুন",
-    nameEn: "Dr. Fatema Khatun",
-    designation: "সিনিয়র প্রভাষক",
-    subject: "রসায়ন",
-    qualification: "MSc, PhD (BUET)",
-    experience: "১২+ বছর",
-    specialization: "জৈব রসায়ন ও অজৈব রসায়ন",
-    image:
-      "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=400&h=400&fit=crop&crop=face",
-    achievements: ["National Science Award", "Chemistry Olympiad Mentor"],
-  },
-  {
-    id: 3,
-    name: "মোঃ রফিকুল ইসলাম",
-    nameEn: "Md. Rafiqul Islam",
-    designation: "প্রভাষক",
-    subject: "পদার্থবিজ্ঞান",
-    qualification: "MSc (DU), BCS (Education)",
-    experience: "১০+ বছর",
-    specialization: "তাপগতিবিদ্যা ও আলোকবিজ্ঞান",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
-    achievements: ["Expert in Medical Physics", "1000+ Students Guided"],
-  },
-  {
-    id: 4,
-    name: "ড. নাজমা বেগম",
-    nameEn: "Dr. Nazma Begum",
-    designation: "সিনিয়র প্রভাষক",
-    subject: "ইংরেজি",
-    qualification: "MA, PhD (JU)",
-    experience: "১৪+ বছর",
-    specialization: "গ্রামার ও কম্প্রিহেনশন",
-    image:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face",
-    achievements: ["IELTS Trainer", "Author of 5 Books"],
-  },
-  {
-    id: 5,
-    name: "মোঃ কামরুল হাসান",
-    nameEn: "Md. Kamrul Hasan",
-    designation: "প্রভাষক",
-    subject: "গণিত",
-    qualification: "MSc (RU)",
-    experience: "৮+ বছর",
-    specialization: "ক্যালকুলাস ও বীজগণিত",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
-    achievements: ["Math Olympiad Coach", "Problem Solving Expert"],
-  },
-  {
-    id: 6,
-    name: "ড. সালমা আক্তার",
-    nameEn: "Dr. Salma Akter",
-    designation: "প্রধান প্রভাষক",
-    subject: "জীববিজ্ঞান",
-    qualification: "MBBS, MS (DMC)",
-    experience: "১৮+ বছর",
-    specialization: "শারীরবিদ্যা ও জীববিজ্ঞান",
-    image:
-      "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face",
-    achievements: ["Former DMC Faculty", "Medical Admission Expert"],
-  },
-];
+import { useTRPC } from "@/trpc/react";
+import { useQuery } from "@tanstack/react-query";
 
 export const TeachersSection = () => {
+  const trpc = useTRPC();
+  const { data: teachers } = useQuery(trpc.home.teacher.getMany.queryOptions());
+
+  const getInstituteImage = (institute: string) => {
+    switch (institute) {
+      case "BUET":
+        return "/buet.png";
+      case "DMC":
+        return "/dmc.png";
+      case "SSMC":
+        return "/ssmc.png";
+      default:
+        return "/buet.png";
+    }
+  };
+
   return (
     <section className="py-16 md:py-24 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4">
@@ -121,13 +58,15 @@ export const TeachersSection = () => {
             }}
             className="w-full"
             plugins={[
-              Autoplay({
-                delay: 3000,
+              AutoScroll({
+                speed: 1,
+                stopOnInteraction: false,
+                stopOnMouseEnter: true,
               }),
             ]}
           >
             <CarouselContent className="-ml-2 md:-ml-4">
-              {teachers.map((teacher) => (
+              {teachers?.map((teacher) => (
                 <CarouselItem
                   key={teacher.id}
                   className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
@@ -137,7 +76,7 @@ export const TeachersSection = () => {
                       {/* Image Section */}
                       <div className="relative overflow-hidden">
                         <Image
-                          src={teacher.image}
+                          src={teacher.imageUrl}
                           alt={teacher.name}
                           width={400}
                           height={400}
@@ -146,7 +85,56 @@ export const TeachersSection = () => {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                         <div className="absolute bottom-4 left-4 right-4">
                           <Badge className="bg-primary text-white mb-2 bg-orange-500 text-md">
-                            BUET
+                            {teacher.institute}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      {/* Details Section */}
+                      <div className="p-4 flex items-center gap-3">
+                        <div
+                          className={`h-12 w-12 rounded-xl flex items-center justify-center`}
+                        >
+                          <Image
+                            src={getInstituteImage(teacher.institute)}
+                            alt={teacher.institute}
+                            width={40}
+                            height={40}
+                          />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground text-xl">
+                            {teacher.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            <Badge>{teacher.subject}</Badge>
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+              {teachers?.map((teacher) => (
+                <CarouselItem
+                  key={teacher.id}
+                  className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+                >
+                  <Card className="group overflow-hidden border-border/50 bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <CardContent className="p-0">
+                      {/* Image Section */}
+                      <div className="relative overflow-hidden">
+                        <Image
+                          src={teacher.imageUrl}
+                          alt={teacher.name}
+                          width={400}
+                          height={400}
+                          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <Badge className="bg-primary text-white mb-2 bg-orange-500 text-md">
+                            {teacher.institute}
                           </Badge>
                         </div>
                       </div>
@@ -160,7 +148,183 @@ export const TeachersSection = () => {
                         </div>
                         <div>
                           <p className="font-semibold text-foreground text-xl">
-                            {teacher.nameEn}
+                            {teacher.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            <Badge>{teacher.subject}</Badge>
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+              {teachers?.map((teacher) => (
+                <CarouselItem
+                  key={teacher.id}
+                  className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+                >
+                  <Card className="group overflow-hidden border-border/50 bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <CardContent className="p-0">
+                      {/* Image Section */}
+                      <div className="relative overflow-hidden">
+                        <Image
+                          src={teacher.imageUrl}
+                          alt={teacher.name}
+                          width={400}
+                          height={400}
+                          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <Badge className="bg-primary text-white mb-2 bg-orange-500 text-md">
+                            {teacher.institute}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      {/* Details Section */}
+                      <div className="p-4 flex items-center gap-3">
+                        <div
+                          className={`h-12 w-12 rounded-xl bg-orange-500 flex items-center justify-center`}
+                        >
+                          <Dna className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground text-xl">
+                            {teacher.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            <Badge>{teacher.subject}</Badge>
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+              {teachers?.map((teacher) => (
+                <CarouselItem
+                  key={teacher.id}
+                  className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+                >
+                  <Card className="group overflow-hidden border-border/50 bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <CardContent className="p-0">
+                      {/* Image Section */}
+                      <div className="relative overflow-hidden">
+                        <Image
+                          src={teacher.imageUrl}
+                          alt={teacher.name}
+                          width={400}
+                          height={400}
+                          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <Badge className="bg-primary text-white mb-2 bg-orange-500 text-md">
+                            {teacher.institute}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      {/* Details Section */}
+                      <div className="p-4 flex items-center gap-3">
+                        <div
+                          className={`h-12 w-12 rounded-xl bg-orange-500 flex items-center justify-center`}
+                        >
+                          <Dna className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground text-xl">
+                            {teacher.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            <Badge>{teacher.subject}</Badge>
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+              {teachers?.map((teacher) => (
+                <CarouselItem
+                  key={teacher.id}
+                  className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+                >
+                  <Card className="group overflow-hidden border-border/50 bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <CardContent className="p-0">
+                      {/* Image Section */}
+                      <div className="relative overflow-hidden">
+                        <Image
+                          src={teacher.imageUrl}
+                          alt={teacher.name}
+                          width={400}
+                          height={400}
+                          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <Badge className="bg-primary text-white mb-2 bg-orange-500 text-md">
+                            {teacher.institute}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      {/* Details Section */}
+                      <div className="p-4 flex items-center gap-3">
+                        <div
+                          className={`h-12 w-12 rounded-xl bg-orange-500 flex items-center justify-center`}
+                        >
+                          <Dna className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground text-xl">
+                            {teacher.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            <Badge>{teacher.subject}</Badge>
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+              {teachers?.map((teacher) => (
+                <CarouselItem
+                  key={teacher.id}
+                  className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+                >
+                  <Card className="group overflow-hidden border-border/50 bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <CardContent className="p-0">
+                      {/* Image Section */}
+                      <div className="relative overflow-hidden">
+                        <Image
+                          src={teacher.imageUrl}
+                          alt={teacher.name}
+                          width={400}
+                          height={400}
+                          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <Badge className="bg-primary text-white mb-2 bg-orange-500 text-md">
+                            {teacher.institute}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      {/* Details Section */}
+                      <div className="p-4 flex items-center gap-3">
+                        <div
+                          className={`h-12 w-12 rounded-xl bg-orange-500 flex items-center justify-center`}
+                        >
+                          <Dna className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground text-xl">
+                            {teacher.name}
                           </p>
                           <p className="text-xs text-muted-foreground">
                             <Badge>{teacher.subject}</Badge>
